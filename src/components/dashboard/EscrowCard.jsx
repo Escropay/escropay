@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,10 +9,13 @@ import {
   Wallet,
   ArrowRight,
   User,
-  Calendar
+  Calendar,
+  Bot
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from "@/lib/utils";
+import MilestonePanel from './MilestonePanel';
+import DisputePanel from './DisputePanel';
 
 const statusConfig = {
   pending: {
@@ -47,7 +50,8 @@ const statusConfig = {
   }
 };
 
-export default function EscrowCard({ escrow, onAction, index = 0 }) {
+export default function EscrowCard({ escrow, onAction, onUpdate, index = 0 }) {
+  const [showDisputePanel, setShowDisputePanel] = useState(false);
   const status = statusConfig[escrow.status] || statusConfig.pending;
   const StatusIcon = status.icon;
 
@@ -116,7 +120,7 @@ export default function EscrowCard({ escrow, onAction, index = 0 }) {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => onAction(escrow.id, 'disputed')}
+                  onClick={() => setShowDisputePanel(true)}
                   className="border-red-300 text-red-600 hover:bg-red-50"
                 >
                   <AlertTriangle className="w-4 h-4 mr-1" />
@@ -133,17 +137,42 @@ export default function EscrowCard({ escrow, onAction, index = 0 }) {
               </>
             )}
             {escrow.status === 'disputed' && (
-              <Button
-                size="sm"
-                onClick={() => onAction(escrow.id, 'refunded')}
-                className="bg-gray-600 hover:bg-gray-700 text-white"
-              >
-                Refund
-              </Button>
+              <>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setShowDisputePanel(true)}
+                  className="border-purple-300 text-purple-600 hover:bg-purple-50"
+                >
+                  <Bot className="w-4 h-4 mr-1" />
+                  AI Resolution
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={() => onAction(escrow.id, 'refunded')}
+                  className="bg-gray-600 hover:bg-gray-700 text-white"
+                >
+                  Refund
+                </Button>
+              </>
             )}
           </div>
         </div>
+
+        {/* Milestone Panel */}
+        {onUpdate && (
+          <MilestonePanel escrow={escrow} onUpdate={onUpdate} />
+        )}
       </div>
+
+      {/* Dispute Panel Modal */}
+      {showDisputePanel && (
+        <DisputePanel
+          escrow={escrow}
+          onUpdate={onUpdate}
+          onClose={() => setShowDisputePanel(false)}
+        />
+      )}
     </motion.div>
   );
 }

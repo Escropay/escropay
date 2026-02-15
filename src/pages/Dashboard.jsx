@@ -21,6 +21,10 @@ import StatsCard from '@/components/dashboard/StatsCard';
 import EscrowCard from '@/components/dashboard/EscrowCard';
 import CreateEscrowModal from '@/components/dashboard/CreateEscrowModal';
 import ActivityTimeline from '@/components/dashboard/ActivityTimeline';
+import AnalyticsCharts from '@/components/dashboard/AnalyticsCharts';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
+import { User } from 'lucide-react';
 
 export default function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,6 +62,10 @@ export default function Dashboard() {
     updateMutation.mutate({ id, data: updates });
   };
 
+  const handleEscrowUpdate = (id, data) => {
+    updateMutation.mutate({ id, data });
+  };
+
   // Calculate stats
   const stats = {
     total: escrows.length,
@@ -89,19 +97,31 @@ export default function Dashboard() {
           <div className="max-w-7xl mx-auto px-6 py-4">
             <div className="flex items-center justify-between">
               <img src={LOGO_URL} alt="EscroPay" className="h-10 w-auto" />
-              <Button
-                onClick={() => setIsModalOpen(true)}
-                className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-medium shadow-lg shadow-purple-500/20"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                New Escrow
-              </Button>
+              <div className="flex items-center gap-3">
+                <Link to={createPageUrl('Profile')}>
+                  <Button variant="outline" size="icon" className="rounded-full">
+                    <User className="w-4 h-4" />
+                  </Button>
+                </Link>
+                <Button
+                  onClick={() => setIsModalOpen(true)}
+                  className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-medium shadow-lg shadow-purple-500/20"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  New Escrow
+                </Button>
+              </div>
             </div>
           </div>
         </header>
 
         {/* Main Content */}
         <main className="max-w-7xl mx-auto px-6 py-8">
+          {/* Analytics Charts */}
+          {escrows.length > 0 && (
+            <AnalyticsCharts escrows={escrows} />
+          )}
+
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <StatsCard
@@ -183,6 +203,7 @@ export default function Dashboard() {
                       escrow={escrow}
                       index={index}
                       onAction={handleStatusChange}
+                      onUpdate={handleEscrowUpdate}
                     />
                   ))}
                 </div>
