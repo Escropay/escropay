@@ -12,11 +12,11 @@ import { formatDistanceToNow } from 'date-fns';
 import { cn } from "@/lib/utils";
 
 const activityConfig = {
-  created: { icon: Plus, color: 'text-zinc-400', bg: 'bg-zinc-500/10' },
-  funded: { icon: Wallet, color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
-  released: { icon: CheckCircle2, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-  disputed: { icon: AlertTriangle, color: 'text-red-400', bg: 'bg-red-500/10' },
-  refunded: { icon: ArrowRight, color: 'text-zinc-400', bg: 'bg-zinc-500/10' }
+  created: { icon: Plus, color: 'text-purple-600', bg: 'bg-purple-100' },
+  funded: { icon: Wallet, color: 'text-cyan-600', bg: 'bg-cyan-100' },
+  released: { icon: CheckCircle2, color: 'text-emerald-600', bg: 'bg-emerald-100' },
+  disputed: { icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-100' },
+  refunded: { icon: ArrowRight, color: 'text-gray-600', bg: 'bg-gray-100' }
 };
 
 export default function ActivityTimeline({ escrows }) {
@@ -73,9 +73,9 @@ export default function ActivityTimeline({ escrows }) {
 
   if (activities.length === 0) {
     return (
-      <div className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800/50 rounded-2xl p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">Recent Activity</h3>
-        <div className="flex items-center justify-center py-8 text-zinc-500">
+      <div className="bg-white backdrop-blur-xl border border-gray-200 rounded-2xl p-6 shadow-sm">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+        <div className="flex items-center justify-center py-8 text-gray-500">
           <Clock className="w-5 h-5 mr-2" />
           No activity yet
         </div>
@@ -84,8 +84,8 @@ export default function ActivityTimeline({ escrows }) {
   }
 
   return (
-    <div className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800/50 rounded-2xl p-6">
-      <h3 className="text-lg font-semibold text-white mb-6">Recent Activity</h3>
+    <div className="bg-white backdrop-blur-xl border border-gray-200 rounded-2xl p-6 shadow-sm">
+      <h3 className="text-lg font-semibold text-gray-900 mb-6">Recent Activity</h3>
       <div className="space-y-1">
         {activities.map((activity, index) => {
           const config = activityConfig[activity.type] || activityConfig.created;
@@ -100,7 +100,7 @@ export default function ActivityTimeline({ escrows }) {
               className="relative flex gap-4 pb-4"
             >
               {index < activities.length - 1 && (
-                <div className="absolute left-[18px] top-10 bottom-0 w-px bg-zinc-800" />
+                <div className="absolute left-[18px] top-10 bottom-0 w-px bg-gray-200" />
               )}
               <div className={cn(
                 "relative z-10 flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center",
@@ -109,10 +109,10 @@ export default function ActivityTimeline({ escrows }) {
                 <Icon className={cn("w-4 h-4", config.color)} />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm text-zinc-300 truncate">
+                <p className="text-sm text-gray-700 truncate">
                   {getActivityMessage(activity)}
                 </p>
-                <p className="text-xs text-zinc-500 mt-0.5">
+                <p className="text-xs text-gray-500 mt-0.5">
                   {activity.date && formatDistanceToNow(new Date(activity.date), { addSuffix: true })}
                 </p>
               </div>

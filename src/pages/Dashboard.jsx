@@ -15,6 +15,8 @@ import {
   RefreshCw
 } from 'lucide-react';
 
+const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
+
 import StatsCard from '@/components/dashboard/StatsCard';
 import EscrowCard from '@/components/dashboard/EscrowCard';
 import CreateEscrowModal from '@/components/dashboard/CreateEscrowModal';
@@ -74,34 +76,22 @@ export default function Dashboard() {
     : escrows.filter(e => e.status === activeFilter);
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-gray-50 text-gray-900">
       {/* Background Effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-900 via-black to-black" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10">
         {/* Header */}
-        <header className="border-b border-zinc-800/50 backdrop-blur-xl bg-black/50 sticky top-0 z-20">
+        <header className="border-b border-gray-200 backdrop-blur-xl bg-white/80 sticky top-0 z-20">
           <div className="max-w-7xl mx-auto px-6 py-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-cyan-500 blur-lg opacity-50" />
-                  <div className="relative p-2 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl">
-                    <Shield className="w-6 h-6 text-white" />
-                  </div>
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold tracking-tight">Escropay</h1>
-                  <p className="text-xs text-zinc-500">Secure Escrow Platform</p>
-                </div>
-              </div>
+              <img src={LOGO_URL} alt="EscroPay" className="h-10 w-auto" />
               <Button
                 onClick={() => setIsModalOpen(true)}
-                className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-medium shadow-lg shadow-cyan-500/20"
+                className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-medium shadow-lg shadow-purple-500/20"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 New Escrow
@@ -150,36 +140,36 @@ export default function Dashboard() {
             {/* Escrow List */}
             <div className="lg:col-span-2 space-y-6">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold">Escrow Transactions</h2>
+                <h2 className="text-xl font-semibold text-gray-900">Escrow Transactions</h2>
                 <Tabs value={activeFilter} onValueChange={setActiveFilter}>
-                  <TabsList className="bg-zinc-900 border border-zinc-800">
-                    <TabsTrigger value="all" className="data-[state=active]:bg-zinc-800">All</TabsTrigger>
-                    <TabsTrigger value="pending" className="data-[state=active]:bg-zinc-800">Pending</TabsTrigger>
-                    <TabsTrigger value="funded" className="data-[state=active]:bg-zinc-800">Funded</TabsTrigger>
-                    <TabsTrigger value="released" className="data-[state=active]:bg-zinc-800">Released</TabsTrigger>
+                  <TabsList className="bg-white border border-gray-200">
+                    <TabsTrigger value="all" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">All</TabsTrigger>
+                    <TabsTrigger value="pending" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">Pending</TabsTrigger>
+                    <TabsTrigger value="funded" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">Funded</TabsTrigger>
+                    <TabsTrigger value="released" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">Released</TabsTrigger>
                   </TabsList>
                 </Tabs>
               </div>
 
               {isLoading ? (
                 <div className="flex items-center justify-center py-20">
-                  <RefreshCw className="w-8 h-8 text-cyan-500 animate-spin" />
+                  <RefreshCw className="w-8 h-8 text-purple-500 animate-spin" />
                 </div>
               ) : filteredEscrows.length === 0 ? (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="bg-zinc-900/60 border border-zinc-800/50 rounded-2xl p-12 text-center"
+                  className="bg-white border border-gray-200 rounded-2xl p-12 text-center shadow-sm"
                 >
-                  <div className="w-16 h-16 mx-auto mb-4 bg-zinc-800 rounded-full flex items-center justify-center">
-                    <Shield className="w-8 h-8 text-zinc-600" />
+                  <div className="w-16 h-16 mx-auto mb-4 bg-purple-100 rounded-full flex items-center justify-center">
+                    <Shield className="w-8 h-8 text-purple-600" />
                   </div>
-                  <h3 className="text-lg font-medium text-zinc-300 mb-2">No escrows found</h3>
-                  <p className="text-zinc-500 mb-6">Create your first escrow to get started</p>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">No escrows found</h3>
+                  <p className="text-gray-500 mb-6">Create your first escrow to get started</p>
                   <Button
                     onClick={() => setIsModalOpen(true)}
                     variant="outline"
-                    className="border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10"
+                    className="border-purple-500/30 text-purple-600 hover:bg-purple-50"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Create Escrow

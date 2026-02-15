@@ -17,33 +17,33 @@ import { cn } from "@/lib/utils";
 const statusConfig = {
   pending: {
     label: 'Pending',
-    color: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+    color: 'bg-amber-100 text-amber-700 border-amber-200',
     icon: Clock,
-    glow: 'shadow-amber-500/20'
+    glow: 'shadow-amber-500/10'
   },
   funded: {
     label: 'Funded',
-    color: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
+    color: 'bg-cyan-100 text-cyan-700 border-cyan-200',
     icon: Wallet,
-    glow: 'shadow-cyan-500/20'
+    glow: 'shadow-cyan-500/10'
   },
   released: {
     label: 'Released',
-    color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+    color: 'bg-emerald-100 text-emerald-700 border-emerald-200',
     icon: CheckCircle2,
-    glow: 'shadow-emerald-500/20'
+    glow: 'shadow-emerald-500/10'
   },
   disputed: {
     label: 'Disputed',
-    color: 'bg-red-500/10 text-red-400 border-red-500/20',
+    color: 'bg-red-100 text-red-700 border-red-200',
     icon: AlertTriangle,
-    glow: 'shadow-red-500/20'
+    glow: 'shadow-red-500/10'
   },
   refunded: {
     label: 'Refunded',
-    color: 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20',
+    color: 'bg-gray-100 text-gray-700 border-gray-200',
     icon: ArrowRight,
-    glow: 'shadow-zinc-500/20'
+    glow: 'shadow-gray-500/10'
   }
 };
 
@@ -62,13 +62,13 @@ export default function EscrowCard({ escrow, onAction, index = 0 }) {
         "absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl",
         status.glow
       )} />
-      <div className="relative bg-zinc-900/60 backdrop-blur-xl border border-zinc-800/50 rounded-2xl p-6 hover:border-zinc-700/50 transition-all duration-300">
+      <div className="relative bg-white backdrop-blur-xl border border-gray-200 rounded-2xl p-6 hover:border-purple-200 hover:shadow-lg transition-all duration-300">
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-white group-hover:text-cyan-400 transition-colors">
+            <h3 className="text-lg font-semibold text-gray-900 group-hover:text-purple-600 transition-colors">
               {escrow.title}
             </h3>
-            <p className="text-zinc-500 text-sm mt-1 line-clamp-2">
+            <p className="text-gray-500 text-sm mt-1 line-clamp-2">
               {escrow.description || 'No description provided'}
             </p>
           </div>
@@ -80,20 +80,20 @@ export default function EscrowCard({ escrow, onAction, index = 0 }) {
 
         <div className="flex items-center gap-6 mb-4">
           <div className="flex items-center gap-2 text-sm">
-            <User className="w-4 h-4 text-zinc-500" />
-            <span className="text-zinc-400">{escrow.buyer_name || escrow.buyer_email}</span>
-            <ArrowRight className="w-3 h-3 text-zinc-600" />
-            <span className="text-zinc-400">{escrow.seller_name || escrow.seller_email}</span>
+            <User className="w-4 h-4 text-gray-400" />
+            <span className="text-gray-600">{escrow.buyer_name || escrow.buyer_email}</span>
+            <ArrowRight className="w-3 h-3 text-gray-400" />
+            <span className="text-gray-600">{escrow.seller_name || escrow.seller_email}</span>
           </div>
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-zinc-800/50">
+        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
           <div>
-            <p className="text-2xl font-bold text-white">
+            <p className="text-2xl font-bold text-gray-900">
               ${escrow.amount?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
             </p>
             {escrow.due_date && (
-              <div className="flex items-center gap-1 text-zinc-500 text-sm mt-1">
+              <div className="flex items-center gap-1 text-gray-500 text-sm mt-1">
                 <Calendar className="w-3 h-3" />
                 <span>Due {format(new Date(escrow.due_date), 'MMM d, yyyy')}</span>
               </div>
@@ -105,7 +105,7 @@ export default function EscrowCard({ escrow, onAction, index = 0 }) {
               <Button
                 size="sm"
                 onClick={() => onAction(escrow.id, 'funded')}
-                className="bg-cyan-500 hover:bg-cyan-600 text-white"
+                className="bg-purple-600 hover:bg-purple-700 text-white"
               >
                 <Wallet className="w-4 h-4 mr-1" />
                 Fund
@@ -117,7 +117,7 @@ export default function EscrowCard({ escrow, onAction, index = 0 }) {
                   size="sm"
                   variant="outline"
                   onClick={() => onAction(escrow.id, 'disputed')}
-                  className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+                  className="border-red-300 text-red-600 hover:bg-red-50"
                 >
                   <AlertTriangle className="w-4 h-4 mr-1" />
                   Dispute
@@ -136,7 +136,7 @@ export default function EscrowCard({ escrow, onAction, index = 0 }) {
               <Button
                 size="sm"
                 onClick={() => onAction(escrow.id, 'refunded')}
-                className="bg-zinc-700 hover:bg-zinc-600 text-white"
+                className="bg-gray-600 hover:bg-gray-700 text-white"
               >
                 Refund
               </Button>

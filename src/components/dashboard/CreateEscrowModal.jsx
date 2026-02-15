@@ -49,23 +49,23 @@ export default function CreateEscrowModal({ isOpen, onClose, onSubmit, isLoading
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.3 }}
-            className="relative w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-3xl shadow-2xl overflow-hidden"
+            className="relative w-full max-w-xl bg-white border border-gray-200 rounded-3xl shadow-2xl overflow-hidden"
           >
             {/* Header */}
-            <div className="relative px-8 pt-8 pb-6 border-b border-zinc-800">
-              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
+            <div className="relative px-8 pt-8 pb-6 border-b border-gray-200">
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-xl border border-cyan-500/20">
-                  <Shield className="w-6 h-6 text-cyan-400" />
+                <div className="p-3 bg-gradient-to-br from-purple-500/20 to-cyan-500/20 rounded-xl border border-purple-500/20">
+                  <Shield className="w-6 h-6 text-purple-600" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-white">Create New Escrow</h2>
-                  <p className="text-zinc-500 text-sm">Secure your transaction with escrow protection</p>
+                  <h2 className="text-xl font-bold text-gray-900">Create New Escrow</h2>
+                  <p className="text-gray-500 text-sm">Secure your transaction with escrow protection</p>
                 </div>
               </div>
               <button
                 onClick={onClose}
-                className="absolute top-6 right-6 p-2 text-zinc-500 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors"
+                className="absolute top-6 right-6 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -74,30 +74,30 @@ export default function CreateEscrowModal({ isOpen, onClose, onSubmit, isLoading
             {/* Form */}
             <form onSubmit={handleSubmit} className="p-8 space-y-6">
               <div className="space-y-2">
-                <Label className="text-zinc-300">Transaction Title</Label>
+                <Label className="text-gray-700">Transaction Title</Label>
                 <Input
                   value={formData.title}
                   onChange={(e) => handleChange('title', e.target.value)}
                   placeholder="e.g., Website Development Project"
-                  className="bg-zinc-800/50 border-zinc-700 text-white placeholder:text-zinc-500 focus:border-cyan-500 focus:ring-cyan-500/20"
+                  className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500/20"
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label className="text-zinc-300">Description</Label>
+                <Label className="text-gray-700">Description</Label>
                 <Textarea
                   value={formData.description}
                   onChange={(e) => handleChange('description', e.target.value)}
                   placeholder="Describe the terms and deliverables..."
-                  className="bg-zinc-800/50 border-zinc-700 text-white placeholder:text-zinc-500 focus:border-cyan-500 focus:ring-cyan-500/20 min-h-[80px]"
+                  className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500/20 min-h-[80px]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-zinc-300 flex items-center gap-2">
-                    <DollarSign className="w-4 h-4 text-cyan-400" />
+                  <Label className="text-gray-700 flex items-center gap-2">
+                    <DollarSign className="w-4 h-4 text-purple-600" />
                     Amount (USD)
                   </Label>
                   <Input
@@ -107,27 +107,27 @@ export default function CreateEscrowModal({ isOpen, onClose, onSubmit, isLoading
                     value={formData.amount}
                     onChange={(e) => handleChange('amount', e.target.value)}
                     placeholder="0.00"
-                    className="bg-zinc-800/50 border-zinc-700 text-white placeholder:text-zinc-500 focus:border-cyan-500 focus:ring-cyan-500/20"
+                    className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500/20"
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-zinc-300 flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-cyan-400" />
+                  <Label className="text-gray-700 flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-purple-600" />
                     Due Date
                   </Label>
                   <Input
                     type="date"
                     value={formData.due_date}
                     onChange={(e) => handleChange('due_date', e.target.value)}
-                    className="bg-zinc-800/50 border-zinc-700 text-white placeholder:text-zinc-500 focus:border-cyan-500 focus:ring-cyan-500/20"
+                    className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500/20"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-4">
-                  <h4 className="text-sm font-medium text-cyan-400 flex items-center gap-2">
+                  <h4 className="text-sm font-medium text-purple-600 flex items-center gap-2">
                     <User className="w-4 h-4" />
                     Buyer Details
                   </h4>
@@ -135,19 +135,19 @@ export default function CreateEscrowModal({ isOpen, onClose, onSubmit, isLoading
                     value={formData.buyer_name}
                     onChange={(e) => handleChange('buyer_name', e.target.value)}
                     placeholder="Buyer Name"
-                    className="bg-zinc-800/50 border-zinc-700 text-white placeholder:text-zinc-500 focus:border-cyan-500 focus:ring-cyan-500/20"
+                    className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500/20"
                   />
                   <Input
                     type="email"
                     value={formData.buyer_email}
                     onChange={(e) => handleChange('buyer_email', e.target.value)}
                     placeholder="buyer@email.com"
-                    className="bg-zinc-800/50 border-zinc-700 text-white placeholder:text-zinc-500 focus:border-cyan-500 focus:ring-cyan-500/20"
+                    className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500/20"
                     required
                   />
                 </div>
                 <div className="space-y-4">
-                  <h4 className="text-sm font-medium text-emerald-400 flex items-center gap-2">
+                  <h4 className="text-sm font-medium text-cyan-600 flex items-center gap-2">
                     <User className="w-4 h-4" />
                     Seller Details
                   </h4>
@@ -155,14 +155,14 @@ export default function CreateEscrowModal({ isOpen, onClose, onSubmit, isLoading
                     value={formData.seller_name}
                     onChange={(e) => handleChange('seller_name', e.target.value)}
                     placeholder="Seller Name"
-                    className="bg-zinc-800/50 border-zinc-700 text-white placeholder:text-zinc-500 focus:border-cyan-500 focus:ring-cyan-500/20"
+                    className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500/20"
                   />
                   <Input
                     type="email"
                     value={formData.seller_email}
                     onChange={(e) => handleChange('seller_email', e.target.value)}
                     placeholder="seller@email.com"
-                    className="bg-zinc-800/50 border-zinc-700 text-white placeholder:text-zinc-500 focus:border-cyan-500 focus:ring-cyan-500/20"
+                    className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500/20"
                     required
                   />
                 </div>
@@ -173,14 +173,14 @@ export default function CreateEscrowModal({ isOpen, onClose, onSubmit, isLoading
                   type="button"
                   variant="outline"
                   onClick={onClose}
-                  className="flex-1 border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+                  className="flex-1 border-gray-300 text-gray-700 hover:bg-gray-50"
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-medium"
+                  className="flex-1 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-medium"
                 >
                   {isLoading ? (
                     <div className="flex items-center gap-2">
