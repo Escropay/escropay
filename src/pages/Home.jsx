@@ -10,7 +10,10 @@ import {
   ArrowRight,
   CheckCircle2,
   Globe,
-  Wallet
+  Wallet,
+  Phone,
+  Mail,
+  MapPin
 } from 'lucide-react';
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
@@ -53,7 +56,7 @@ export default function Home() {
           <Link to={createPageUrl('Dashboard')} className="flex items-center gap-2">
             <img src={LOGO_URL} alt="EscroPay" className="h-8 md:h-10 w-auto" />
           </Link>
-          <Link to={createPageUrl('Login')}>
+          <Link to={createPageUrl('Welcome')}>
             <Button className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white">
               <span className="hidden sm:inline">Launch App</span>
               <span className="sm:hidden">Login</span>
@@ -204,6 +207,86 @@ export default function Home() {
               </Link>
             </div>
           </motion.div>
+        </section>
+
+        {/* Contact Us Section */}
+        <section className="border-t border-gray-100 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-6 py-16">
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-3xl font-bold mb-4 text-gray-900">Contact Us</h2>
+              <p className="text-gray-500">Get in touch with our team</p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* WhatsApp */}
+              <motion.a
+                href="https://wa.me/27609292499"
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="bg-white border border-gray-200 rounded-2xl p-6 hover:border-purple-200 hover:shadow-lg transition-all duration-300 group"
+              >
+                <div className="p-3 bg-green-100 rounded-xl w-fit mb-4">
+                  <Phone className="w-6 h-6 text-green-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-1">WhatsApp</h3>
+                <p className="text-gray-500 text-sm group-hover:text-purple-600 transition-colors">+27 60 929 2499</p>
+              </motion.a>
+
+              {/* Email */}
+              <motion.a
+                href="mailto:info@escropay.app"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+                className="bg-white border border-gray-200 rounded-2xl p-6 hover:border-purple-200 hover:shadow-lg transition-all duration-300 group"
+              >
+                <div className="p-3 bg-purple-100 rounded-xl w-fit mb-4">
+                  <Mail className="w-6 h-6 text-purple-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
+                <p className="text-gray-500 text-sm group-hover:text-purple-600 transition-colors">info@escropay.app</p>
+              </motion.a>
+
+              {/* Johannesburg */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+                className="bg-white border border-gray-200 rounded-2xl p-6"
+              >
+                <div className="p-3 bg-cyan-100 rounded-xl w-fit mb-4">
+                  <MapPin className="w-6 h-6 text-cyan-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-1">Johannesburg</h3>
+                <p className="text-gray-500 text-sm">16 Baker Street, Rosebank, Johannesburg, 2196</p>
+              </motion.div>
+
+              {/* Cape Town */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3 }}
+                className="bg-white border border-gray-200 rounded-2xl p-6"
+              >
+                <div className="p-3 bg-amber-100 rounded-xl w-fit mb-4">
+                  <MapPin className="w-6 h-6 text-amber-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-1">Cape Town</h3>
+                <p className="text-gray-500 text-sm">32 Kloof St, Gardens, Cape Town, 8000</p>
+              </motion.div>
+            </div>
+          </div>
         </section>
 
         {/* Footer */}

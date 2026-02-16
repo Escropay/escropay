@@ -21,6 +21,7 @@ import StatsCard from '@/components/dashboard/StatsCard';
 import EscrowCard from '@/components/dashboard/EscrowCard';
 import CreateEscrowModal from '@/components/dashboard/CreateEscrowModal';
 import ActivityTimeline from '@/components/dashboard/ActivityTimeline';
+import NotificationCenter from '@/components/notifications/NotificationCenter';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { User } from 'lucide-react';
@@ -33,6 +34,11 @@ export default function Dashboard() {
   const { data: escrows = [], isLoading } = useQuery({
     queryKey: ['escrows'],
     queryFn: () => base44.entities.Escrow.list('-created_date')
+  });
+
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me().catch(() => null)
   });
 
   const createMutation = useMutation({
@@ -99,6 +105,7 @@ export default function Dashboard() {
                 <img src={LOGO_URL} alt="EscroPay" className="h-8 md:h-10 w-auto" />
               </Link>
               <div className="flex items-center gap-2 md:gap-3">
+                <NotificationCenter userEmail={currentUser?.email} />
                 <Link to={createPageUrl('Profile')}>
                   <Button variant="outline" size="icon" className="rounded-full">
                     <User className="w-4 h-4" />
