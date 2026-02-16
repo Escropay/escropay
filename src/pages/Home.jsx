@@ -50,12 +50,13 @@ export default function Home() {
       {/* Header */}
       <header className="relative z-10 border-b border-gray-200 backdrop-blur-xl bg-white/80">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <img src={LOGO_URL} alt="EscroPay" className="h-10 w-auto" />
-          </div>
-          <Link to={createPageUrl('Dashboard')}>
+          <Link to={createPageUrl('Dashboard')} className="flex items-center gap-2">
+            <img src={LOGO_URL} alt="EscroPay" className="h-8 md:h-10 w-auto" />
+          </Link>
+          <Link to={createPageUrl('Login')}>
             <Button className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white">
-              Launch App
+              <span className="hidden sm:inline">Launch App</span>
+              <span className="sm:hidden">Login</span>
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </Link>

@@ -23,13 +23,18 @@ import {
   Bell,
   ArrowLeft,
   Camera,
-  Loader2
+  Loader2,
+  BarChart3
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { format } from 'date-fns';
+import AnalyticsCharts from '@/components/dashboard/AnalyticsCharts';
+import StatementGenerator from '@/components/profile/StatementGenerator';
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
+
+const Escrow = base44.entities.Escrow;
 
 const kycStatusConfig = {
   not_started: { label: 'Not Started', color: 'bg-gray-100 text-gray-700', icon: Clock },
@@ -53,6 +58,11 @@ export default function Profile() {
   const { data: user, isLoading } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me()
+  });
+
+  const { data: escrows = [] } = useQuery({
+    queryKey: ['user-escrows'],
+    queryFn: () => Escrow.list('-created_date', 100)
   });
 
   const [formData, setFormData] = useState({
@@ -163,7 +173,9 @@ export default function Profile() {
                   <ArrowLeft className="w-5 h-5" />
                 </Button>
               </Link>
-              <img src={LOGO_URL} alt="EscroPay" className="h-8" />
+              <Link to={createPageUrl('Home')}>
+                <img src={LOGO_URL} alt="EscroPay" className="h-8" />
+              </Link>
             </div>
             <Button
               onClick={handleSave}
@@ -224,7 +236,13 @@ export default function Profile() {
             </TabsTrigger>
             <TabsTrigger value="kyc" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">
               <Shield className="w-4 h-4 mr-2" />
-              KYC Documents
+              <span className="hidden sm:inline">KYC Documents</span>
+              <span className="sm:hidden">KYC</span>
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">
+              <BarChart3 className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Analytics</span>
+              <span className="sm:hidden">Stats</span>
             </TabsTrigger>
             <TabsTrigger value="notifications" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">
               <Bell className="w-4 h-4 mr-2" />
@@ -409,6 +427,14 @@ export default function Profile() {
                 })}
               </div>
             </motion.div>
+          </TabsContent>
+
+          {/* Analytics Tab */}
+          <TabsContent value="analytics">
+            <div className="space-y-6">
+              <AnalyticsCharts escrows={escrows} />
+              <StatementGenerator escrows={escrows} />
+            </div>
           </TabsContent>
 
           {/* Notifications Tab */}
