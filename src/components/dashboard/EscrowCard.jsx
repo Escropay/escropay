@@ -10,12 +10,15 @@ import {
   ArrowRight,
   User,
   Calendar,
-  Bot
+  Bot,
+  MessageCircle
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from "@/lib/utils";
 import MilestonePanel from './MilestonePanel';
 import DisputePanel from './DisputePanel';
+import InAppChat from '@/components/chat/InAppChat';
+import PaymentModal from '@/components/payment/PaymentModal';
 
 const statusConfig = {
   pending: {
@@ -50,10 +53,18 @@ const statusConfig = {
   }
 };
 
-export default function EscrowCard({ escrow, onAction, onUpdate, index = 0 }) {
+export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, currentUser }) {
   const [showDisputePanel, setShowDisputePanel] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const status = statusConfig[escrow.status] || statusConfig.pending;
   const StatusIcon = status.icon;
+
+  const otherPartyEmail = currentUser?.email === escrow.buyer_email ? escrow.seller_email : escrow.buyer_email;
+  const otherPartyName = currentUser?.email === escrow.buyer_email ? escrow.seller_name : escrow.buyer_name;
+
+  const handlePaymentComplete = () => {
+    onAction(escrow.id, 'funded');
+  };
 
   return (
     <motion.div
@@ -104,11 +115,18 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0 }) {
             )}
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
+            <InAppChat
+              escrowId={escrow.id}
+              escrowTitle={escrow.title}
+              currentUser={currentUser}
+              otherPartyEmail={otherPartyEmail}
+              otherPartyName={otherPartyName}
+            />
             {escrow.status === 'pending' && (
               <Button
                 size="sm"
-                onClick={() => onAction(escrow.id, 'funded')}
+                onClick={() => setShowPaymentModal(true)}
                 className="bg-purple-600 hover:bg-purple-700 text-white"
               >
                 <Wallet className="w-4 h-4 mr-1" />
@@ -173,6 +191,14 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0 }) {
           onClose={() => setShowDisputePanel(false)}
         />
       )}
+
+      {/* Payment Modal */}
+      <PaymentModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        escrow={escrow}
+        onPaymentComplete={handlePaymentComplete}
+      />
     </motion.div>
   );
 }

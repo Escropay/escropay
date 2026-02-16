@@ -207,6 +207,7 @@ export default function Dashboard() {
                       index={index}
                       onAction={handleStatusChange}
                       onUpdate={handleEscrowUpdate}
+                      currentUser={currentUser}
                     />
                   ))}
                 </div>
