@@ -105,7 +105,7 @@ export default function Dashboard() {
           <div className="max-w-7xl mx-auto px-6 py-4">
             <div className="flex items-center justify-between">
               <Link to={createPageUrl('Home')}>
-                <img src={LOGO_URL} alt="EscroPay" className="h-8 md:h-10 w-auto" />
+                <img src={LOGO_URL} alt="Escropay" className="h-8 md:h-10 w-auto" />
               </Link>
               <div className="flex items-center gap-2 md:gap-3">
                                     <Link to={createPageUrl('Documentation')}>
@@ -256,6 +256,8 @@ export default function Dashboard() {
         onSubmit={createMutation.mutate}
         isLoading={createMutation.isPending}
       />
+      
+      <Footer minimal />
     </div>
   );
 }
