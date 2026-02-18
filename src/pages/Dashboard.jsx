@@ -139,13 +139,13 @@ export default function Dashboard() {
             <StatsCard
               title="Total Escrows"
               value={stats.total}
-              subtitle={`$${stats.totalValue.toLocaleString()} total value`}
+              subtitle={`R ${stats.totalValue.toLocaleString()} total value`}
               icon={Shield}
               delay={0}
             />
             <StatsCard
               title="Funds in Escrow"
-              value={`$${stats.fundedValue.toLocaleString()}`}
+              value={`R ${stats.fundedValue.toLocaleString()}`}
               subtitle={`${stats.funded} active escrows`}
               icon={Wallet}
               trend={12}
