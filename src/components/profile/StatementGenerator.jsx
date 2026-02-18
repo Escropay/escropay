@@ -40,11 +40,11 @@ export default function StatementGenerator({ escrows }) {
 <!DOCTYPE html>
 <html>
 <head>
-  <title>EscroPay Statement</title>
+  <title>Escropay Statement</title>
   <style>
     body { font-family: Arial, sans-serif; padding: 40px; max-width: 800px; margin: 0 auto; }
     .header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid #9333ea; padding-bottom: 20px; }
-    .header h1 { color: #9333ea; margin: 0; }
+    .header img { height: 40px; margin-bottom: 10px; }
     .header p { color: #666; margin-top: 5px; }
     .summary { background: #f8f4ff; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
     .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
@@ -65,7 +65,7 @@ export default function StatementGenerator({ escrows }) {
 </head>
 <body>
   <div class="header">
-    <h1>EscroPay</h1>
+    <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png" alt="Escropay" style="height: 40px; margin-bottom: 10px;" />
     <p>Transaction Statement</p>
     <p>${format(start, 'MMM d, yyyy')} - ${format(end, 'MMM d, yyyy')}</p>
   </div>
@@ -113,7 +113,8 @@ export default function StatementGenerator({ escrows }) {
 
   <div class="footer">
     <p>Generated on ${format(new Date(), 'MMM d, yyyy \'at\' h:mm a')}</p>
-    <p>EscroPay - Secure Escrow Platform</p>
+    <p>Escropay Financial Services (Pty) Ltd | CIPC: 2026/128185/07</p>
+    <p>info@escropay.app</p>
   </div>
 </body>
 </html>
@@ -124,7 +125,7 @@ export default function StatementGenerator({ escrows }) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `escropay-statement-${format(start, 'yyyy-MM-dd')}-to-${format(end, 'yyyy-MM-dd')}.html`;
+    a.download = `Escropay-Statement-${format(start, 'yyyy-MM-dd')}-to-${format(end, 'yyyy-MM-dd')}.html`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

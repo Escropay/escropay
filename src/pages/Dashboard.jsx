@@ -21,14 +21,17 @@ import StatsCard from '@/components/dashboard/StatsCard';
 import EscrowCard from '@/components/dashboard/EscrowCard';
 import CreateEscrowModal from '@/components/dashboard/CreateEscrowModal';
 import ActivityTimeline from '@/components/dashboard/ActivityTimeline';
+import TimelineView from '@/components/dashboard/TimelineView';
 import NotificationCenter from '@/components/notifications/NotificationCenter';
+import Footer from '@/components/common/Footer';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { User } from 'lucide-react';
+import { User, Clock, LayoutList, BookOpen } from 'lucide-react';
 
 export default function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState('all');
+  const [viewMode, setViewMode] = useState('cards'); // 'cards' or 'timeline'
   const queryClient = useQueryClient();
 
   const { data: escrows = [], isLoading } = useQuery({
@@ -105,20 +108,26 @@ export default function Dashboard() {
                 <img src={LOGO_URL} alt="EscroPay" className="h-8 md:h-10 w-auto" />
               </Link>
               <div className="flex items-center gap-2 md:gap-3">
-                <NotificationCenter userEmail={currentUser?.email} />
-                <Link to={createPageUrl('Profile')}>
-                  <Button variant="outline" size="icon" className="rounded-full">
-                    <User className="w-4 h-4" />
-                  </Button>
-                </Link>
-                <Button
-                  onClick={() => setIsModalOpen(true)}
-                  className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-medium shadow-lg shadow-purple-500/20"
-                >
-                  <Plus className="w-4 h-4 md:mr-2" />
-                  <span className="hidden md:inline">New Escrow</span>
-                </Button>
-              </div>
+                                    <Link to={createPageUrl('Documentation')}>
+                                      <Button variant="ghost" size="sm" className="text-gray-600 hover:text-purple-600">
+                                        <BookOpen className="w-4 h-4 md:mr-1" />
+                                        <span className="hidden md:inline">Docs</span>
+                                      </Button>
+                                    </Link>
+                                    <NotificationCenter userEmail={currentUser?.email} />
+                                    <Link to={createPageUrl('Profile')}>
+                                      <Button variant="outline" size="icon" className="rounded-full">
+                                        <User className="w-4 h-4" />
+                                      </Button>
+                                    </Link>
+                                    <Button
+                                      onClick={() => setIsModalOpen(true)}
+                                      className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-medium shadow-lg shadow-purple-500/20"
+                                    >
+                                      <Plus className="w-4 h-4 md:mr-2" />
+                                      <span className="hidden md:inline">New Escrow</span>
+                                    </Button>
+                                  </div>
             </div>
           </div>
         </header>
@@ -162,17 +171,33 @@ export default function Dashboard() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Escrow List */}
             <div className="lg:col-span-2 space-y-6">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-gray-900">Escrow Transactions</h2>
-                <Tabs value={activeFilter} onValueChange={setActiveFilter}>
-                  <TabsList className="bg-white border border-gray-200">
-                    <TabsTrigger value="all" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">All</TabsTrigger>
-                    <TabsTrigger value="pending" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">Pending</TabsTrigger>
-                    <TabsTrigger value="funded" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">Funded</TabsTrigger>
-                    <TabsTrigger value="released" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">Released</TabsTrigger>
-                  </TabsList>
-                </Tabs>
-              </div>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                                    <div className="flex items-center gap-4">
+                                      <h2 className="text-xl font-semibold text-gray-900">Escrow Transactions</h2>
+                                      <div className="flex items-center bg-white border border-gray-200 rounded-lg p-1">
+                                        <button
+                                          onClick={() => setViewMode('cards')}
+                                          className={`p-2 rounded ${viewMode === 'cards' ? 'bg-purple-100 text-purple-700' : 'text-gray-500 hover:text-gray-700'}`}
+                                        >
+                                          <LayoutList className="w-4 h-4" />
+                                        </button>
+                                        <button
+                                          onClick={() => setViewMode('timeline')}
+                                          className={`p-2 rounded ${viewMode === 'timeline' ? 'bg-purple-100 text-purple-700' : 'text-gray-500 hover:text-gray-700'}`}
+                                        >
+                                          <Clock className="w-4 h-4" />
+                                        </button>
+                                      </div>
+                                    </div>
+                                    <Tabs value={activeFilter} onValueChange={setActiveFilter}>
+                                      <TabsList className="bg-white border border-gray-200">
+                                        <TabsTrigger value="all" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">All</TabsTrigger>
+                                        <TabsTrigger value="pending" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">Pending</TabsTrigger>
+                                        <TabsTrigger value="funded" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">Funded</TabsTrigger>
+                                        <TabsTrigger value="released" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">Released</TabsTrigger>
+                                      </TabsList>
+                                    </Tabs>
+                                  </div>
 
               {isLoading ? (
                 <div className="flex items-center justify-center py-20">
@@ -198,20 +223,22 @@ export default function Dashboard() {
                     Create Escrow
                   </Button>
                 </motion.div>
-              ) : (
-                <div className="space-y-4">
-                  {filteredEscrows.map((escrow, index) => (
-                    <EscrowCard
-                      key={escrow.id}
-                      escrow={escrow}
-                      index={index}
-                      onAction={handleStatusChange}
-                      onUpdate={handleEscrowUpdate}
-                      currentUser={currentUser}
-                    />
-                  ))}
-                </div>
-              )}
+              ) : viewMode === 'timeline' ? (
+                                    <TimelineView escrows={filteredEscrows} />
+                                  ) : (
+                                    <div className="space-y-4">
+                                      {filteredEscrows.map((escrow, index) => (
+                                        <EscrowCard
+                                          key={escrow.id}
+                                          escrow={escrow}
+                                          index={index}
+                                          onAction={handleStatusChange}
+                                          onUpdate={handleEscrowUpdate}
+                                          currentUser={currentUser}
+                                        />
+                                      ))}
+                                    </div>
+                                  )}
             </div>
 
             {/* Activity Timeline */}

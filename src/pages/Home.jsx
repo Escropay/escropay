@@ -13,8 +13,10 @@ import {
   Wallet,
   Phone,
   Mail,
-  MapPin
+  MapPin,
+  BookOpen
 } from 'lucide-react';
+import Footer from '@/components/common/Footer';
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
 
@@ -52,19 +54,27 @@ export default function Home() {
 
       {/* Header */}
       <header className="relative z-10 border-b border-gray-200 backdrop-blur-xl bg-white/80">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link to={createPageUrl('Dashboard')} className="flex items-center gap-2">
-            <img src={LOGO_URL} alt="EscroPay" className="h-8 md:h-10 w-auto" />
-          </Link>
-          <Link to={createPageUrl('Welcome')}>
-            <Button className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white">
-              <span className="hidden sm:inline">Launch App</span>
-              <span className="sm:hidden">Login</span>
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </Link>
-        </div>
-      </header>
+                <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+                  <Link to={createPageUrl('Dashboard')} className="flex items-center gap-2">
+                    <img src={LOGO_URL} alt="Escropay" className="h-8 md:h-10 w-auto" />
+                  </Link>
+                  <div className="flex items-center gap-4">
+                    <Link to={createPageUrl('Documentation')}>
+                      <Button variant="ghost" className="text-gray-600 hover:text-purple-600">
+                        <BookOpen className="w-4 h-4 mr-2" />
+                        <span className="hidden sm:inline">Documentation</span>
+                      </Button>
+                    </Link>
+                    <Link to={createPageUrl('Welcome')}>
+                      <Button className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white">
+                        <span className="hidden sm:inline">Launch App</span>
+                        <span className="sm:hidden">Login</span>
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </header>
 
       {/* Hero */}
       <main className="relative z-10">
@@ -289,16 +299,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Footer */}
-        <footer className="border-t border-gray-200 py-8 bg-white">
-          <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-            <img src={LOGO_URL} alt="EscroPay" className="h-8 w-auto" />
-            <p className="text-gray-500 text-sm">
-              © 2026 EscroPay. Secure escrow for the modern economy.
-            </p>
-          </div>
-        </footer>
-      </main>
-    </div>
-  );
-}
+        <Footer />
+        </main>
+        </div>
+        );
+        }
