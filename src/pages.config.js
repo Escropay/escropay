@@ -52,6 +52,8 @@ import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
 import Welcome from './pages/Welcome';
+import Documentation from './pages/Documentation';
+import ApiDocs from './pages/ApiDocs';
 
 
 export const PAGES = {
@@ -60,6 +62,8 @@ export const PAGES = {
     "Home": Home,
     "Profile": Profile,
     "Welcome": Welcome,
+    "Documentation": Documentation,
+    "ApiDocs": ApiDocs,
 }
 
 export const pagesConfig = {
