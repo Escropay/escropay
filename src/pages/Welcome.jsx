@@ -37,7 +37,7 @@ export default function Welcome() {
       {/* Header */}
       <header className="relative z-10 p-6">
         <Link to={createPageUrl('Home')}>
-          <img src={LOGO_URL} alt="EscroPay" className="h-8 md:h-10 w-auto" />
+          <img src={LOGO_URL} alt="Escropay" className="h-8 md:h-10 w-auto" />
         </Link>
       </header>
 
@@ -57,7 +57,7 @@ export default function Welcome() {
             </div>
 
             <h1 className="text-2xl font-bold text-center text-gray-900 mb-2">
-              Welcome to EscroPay
+              Welcome to Escropay
             </h1>
             <p className="text-gray-500 text-center mb-8">
               Secure escrow transactions made simple
@@ -106,7 +106,23 @@ export default function Welcome() {
             </div>
 
             <p className="text-xs text-gray-400 text-center mt-6">
-              By continuing, you agree to our Terms of Service and Privacy Policy
+              By continuing, you agree to our{' '}
+              <a 
+                href="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/06b03272a_TermsConditionsAMLCTFKYCPrivacyPolicyEscropay.pdf" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-purple-600 hover:underline"
+              >
+                Terms of Service
+              </a>{' '}and{' '}
+              <a 
+                href="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/06b03272a_TermsConditionsAMLCTFKYCPrivacyPolicyEscropay.pdf" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-purple-600 hover:underline"
+              >
+                Privacy Policy
+              </a>
             </p>
           </div>
 
@@ -135,7 +151,7 @@ export default function Welcome() {
       {/* Footer */}
       <footer className="relative z-10 p-6 text-center">
         <p className="text-sm text-gray-400">
-          © 2026 EscroPay. Secure escrow for the modern economy.
+          © 2026 Escropay Financial Services (Pty) Ltd
         </p>
       </footer>
     </div>
