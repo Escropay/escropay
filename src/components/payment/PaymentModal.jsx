@@ -376,7 +376,7 @@ export default function PaymentModal({ isOpen, onClose, escrow, onPaymentComplet
                   ) : null}
                   {selectedGateway.id === 'bank_transfer' || selectedGateway.id === 'zaru'
                     ? 'I\'ve Made the Payment'
-                    : `Pay R ${escrow?.amount?.toLocaleString()}`}
+                    : `Pay R ${feeCalc.total?.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}`}
                 </Button>
               </motion.div>
             )}
