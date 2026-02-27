@@ -125,7 +125,7 @@ export default function MilestonePanel({ escrow, onUpdate, isLoading }) {
                       <div>
                         <p className="text-sm font-medium text-gray-900">{milestone.title}</p>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-xs text-gray-500">${milestone.amount?.toLocaleString()}</span>
+                          <span className="text-xs text-gray-500">R {milestone.amount?.toLocaleString()}</span>
                           {milestone.due_date && (
                             <span className="text-xs text-gray-400">
                               Due {format(new Date(milestone.due_date), 'MMM d')}
@@ -239,7 +239,7 @@ export default function MilestonePanel({ escrow, onUpdate, isLoading }) {
               {milestones.length > 0 && (
                 <div className="flex items-center justify-between pt-2 border-t border-gray-200 text-sm">
                   <span className="text-gray-500">Total milestone value</span>
-                  <span className="font-medium text-gray-900">${totalMilestoneAmount.toLocaleString()}</span>
+                  <span className="font-medium text-gray-900">R {totalMilestoneAmount.toLocaleString()}</span>
                 </div>
               )}
             </div>

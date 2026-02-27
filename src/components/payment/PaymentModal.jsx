@@ -60,11 +60,33 @@ const paymentGateways = [
 
 const bankDetails = {
   bankName: 'First National Bank',
-  accountName: 'EscroPay Trust Account',
+  accountName: 'Escropay Trust Account',
   accountNumber: '62XXXXXXXX',
   branchCode: '250655',
-  reference: '' // Will be set dynamically
+  reference: ''
 };
+
+function calculateFee(amount) {
+  if (!amount || amount <= 0) return { rate: 0, fee: 0, total: 0 };
+  let rate;
+  if (amount <= 100000) rate = 0.01;
+  else if (amount <= 500000) rate = 0.0085;
+  else if (amount <= 1000000) rate = 0.0065;
+  else if (amount <= 5000000) rate = 0.0045;
+  else if (amount <= 10000000) rate = 0.0035;
+  else rate = 0.0025;
+  const fee = amount * rate;
+  return { rate: rate * 100, fee, total: amount + fee };
+}
+
+const FEE_TIERS = [
+  { from: 'R0', to: 'R100 000', rate: '1.00%' },
+  { from: 'R100 001', to: 'R500 000', rate: '0.85%' },
+  { from: 'R500 001', to: 'R1 000 000', rate: '0.65%' },
+  { from: 'R1 000 001', to: 'R5 000 000', rate: '0.45%' },
+  { from: 'R5 000 001', to: 'R10 000 000', rate: '0.35%' },
+  { from: 'R10 000 001+', to: '', rate: '0.25%' },
+];
 
 export default function PaymentModal({ isOpen, onClose, escrow, onPaymentComplete }) {
   const [selectedGateway, setSelectedGateway] = useState(null);
