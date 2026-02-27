@@ -104,14 +104,9 @@ Be fair and consider both parties' perspectives.`,
   };
 
   const handleAcceptResolution = async (action) => {
-    const resolution = escrow.ai_resolution;
     let newStatus = 'refunded';
-    
-    if (action === 'release_to_seller' || 
-        (resolution?.recommendation === 'release_to_seller')) {
-      newStatus = 'released';
-    }
-    
+    if (action === 'release_to_seller') newStatus = 'released';
+    if (action === 'split') newStatus = 'released'; // partial release handled as released
     await onUpdate(escrow.id, { status: newStatus });
     onClose();
   };
