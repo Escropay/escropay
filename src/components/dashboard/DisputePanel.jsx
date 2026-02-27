@@ -302,28 +302,44 @@ Be fair and consider both parties' perspectives.`,
                   <p className="text-sm text-gray-600">{resolution.reasoning}</p>
                 </div>
 
-                <div className="flex gap-3 pt-2">
+                <p className="text-xs text-gray-400 italic">
+                  AI recommendations are advisory only. Escropay agents make final decisions.
+                </p>
+
+                <div className="grid grid-cols-2 gap-3 pt-2">
                   <Button
                     variant="outline"
                     onClick={() => handleAcceptResolution('refund_buyer')}
-                    className="flex-1"
+                    className="border-red-200 text-red-600 hover:bg-red-50"
                   >
+                    <XCircle className="w-4 h-4 mr-1" />
                     Refund Buyer
                   </Button>
                   <Button
                     onClick={() => handleAcceptResolution('release_to_seller')}
-                    className="flex-1 bg-emerald-500 hover:bg-emerald-600"
+                    className="bg-emerald-500 hover:bg-emerald-600 text-white"
                   >
-                    Release to Seller
+                    <CheckCircle2 className="w-4 h-4 mr-1" />
+                    Release Seller
                   </Button>
                 </div>
                 
+                {resolution.recommendation === 'split' && resolution.suggested_split && (
+                  <Button
+                    onClick={() => handleAcceptResolution('split')}
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                  >
+                    <Scale className="w-4 h-4 mr-2" />
+                    Apply Split ({resolution.suggested_split.buyer_percent}% / {resolution.suggested_split.seller_percent}%)
+                  </Button>
+                )}
+
                 <Button
                   variant="ghost"
-                  onClick={onClose}
-                  className="w-full text-gray-500"
+                  onClick={() => setStep('reason')}
+                  className="w-full text-gray-500 text-sm"
                 >
-                  Continue Dispute Manually
+                  ← Add more evidence / Re-analyse
                 </Button>
               </motion.div>
             )}
