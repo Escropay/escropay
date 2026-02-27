@@ -244,6 +244,11 @@ export default function Profile() {
               <span className="hidden sm:inline">Analytics</span>
               <span className="sm:hidden">Stats</span>
             </TabsTrigger>
+            <TabsTrigger value="security" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">
+              <Shield className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Security</span>
+              <span className="sm:hidden">2FA</span>
+            </TabsTrigger>
             <TabsTrigger value="notifications" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">
               <Bell className="w-4 h-4 mr-2" />
               Notifications
@@ -435,6 +440,17 @@ export default function Profile() {
               <AnalyticsCharts escrows={escrows} />
               <StatementGenerator escrows={escrows} />
             </div>
+          </TabsContent>
+
+          {/* Security Tab */}
+          <TabsContent value="security">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-6"
+            >
+              <TwoFactorAuth user={user} />
+            </motion.div>
           </TabsContent>
 
           {/* Notifications Tab */}
