@@ -89,6 +89,7 @@ const FEE_TIERS = [
 ];
 
 export default function PaymentModal({ isOpen, onClose, escrow, onPaymentComplete }) {
+  const feeCalc = calculateFee(escrow?.amount);
   const [selectedGateway, setSelectedGateway] = useState(null);
   const [step, setStep] = useState('select'); // select, process, complete
   const [isProcessing, setIsProcessing] = useState(false);
@@ -175,11 +176,52 @@ export default function PaymentModal({ isOpen, onClose, escrow, onPaymentComplet
               <X className="w-5 h-5 text-gray-500" />
             </button>
           </div>
-          <div className="mt-4 p-3 bg-purple-50 rounded-xl flex items-center justify-between">
-            <span className="text-sm text-gray-600">Amount to pay</span>
-            <span className="text-xl font-bold text-purple-600">
-              R {escrow?.amount?.toLocaleString()}
-            </span>
+          <div className="mt-4 space-y-2">
+            <div className="p-3 bg-purple-50 rounded-xl space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Escrow amount</span>
+                <span className="font-semibold text-gray-900">R {escrow?.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Service fee ({feeCalc.rate.toFixed(2)}%)</span>
+                <span className="font-semibold text-amber-600">R {feeCalc.fee?.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</span>
+              </div>
+              <div className="border-t border-purple-200 pt-2 flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-700">Total to pay</span>
+                <span className="text-xl font-bold text-purple-600">R {feeCalc.total?.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</span>
+              </div>
+            </div>
+            <details className="text-xs">
+              <summary className="text-gray-400 cursor-pointer hover:text-gray-600 select-none">View pricing tiers</summary>
+              <div className="mt-2 border border-gray-100 rounded-lg overflow-hidden">
+                <table className="w-full text-xs">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-3 py-2 text-left text-gray-500">From</th>
+                      <th className="px-3 py-2 text-left text-gray-500">To</th>
+                      <th className="px-3 py-2 text-right text-gray-500">Rate</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {FEE_TIERS.map((tier, i) => (
+                      <tr key={i} className={`border-t border-gray-100 ${
+                        (escrow?.amount <= 100000 && i === 0) ||
+                        (escrow?.amount > 100000 && escrow?.amount <= 500000 && i === 1) ||
+                        (escrow?.amount > 500000 && escrow?.amount <= 1000000 && i === 2) ||
+                        (escrow?.amount > 1000000 && escrow?.amount <= 5000000 && i === 3) ||
+                        (escrow?.amount > 5000000 && escrow?.amount <= 10000000 && i === 4) ||
+                        (escrow?.amount > 10000000 && i === 5)
+                          ? 'bg-purple-50 font-medium text-purple-700' : 'text-gray-600'
+                      }`}>
+                        <td className="px-3 py-1.5">{tier.from}</td>
+                        <td className="px-3 py-1.5">{tier.to}</td>
+                        <td className="px-3 py-1.5 text-right">{tier.rate}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </details>
           </div>
         </div>
 
