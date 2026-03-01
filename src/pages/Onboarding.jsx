@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
-const TERMS_PDF_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/9cdcac727_Terms_Conditions_PolicyEscropay.pdf";
+const TERMS_PDF_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/f1c20a61e_Terms_Conditions_PolicyEscropay.pdf";
 
 const STEPS = [
   { id: 'welcome',    title: 'Welcome',         icon: Shield },

@@ -19,11 +19,11 @@ const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/pub
 
 export default function Welcome() {
   const handleLogin = () => {
-    base44.auth.redirectToLogin(createPageUrl('Dashboard'));
+    base44.auth.redirectToLogin(window.location.origin + '/' + createPageUrl('Dashboard'));
   };
 
   const handleSignup = () => {
-    base44.auth.redirectToLogin(createPageUrl('Dashboard'));
+    base44.auth.redirectToLogin(window.location.origin + '/' + createPageUrl('Dashboard'));
   };
 
   return (
@@ -108,7 +108,7 @@ export default function Welcome() {
             <p className="text-xs text-gray-400 text-center mt-6">
               By continuing, you agree to our{' '}
               <a 
-                href="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/9cdcac727_Terms_Conditions_PolicyEscropay.pdf" 
+                href="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/f1c20a61e_Terms_Conditions_PolicyEscropay.pdf" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-purple-600 hover:underline"
@@ -116,7 +116,7 @@ export default function Welcome() {
                 Terms of Service
               </a>{' '}and{' '}
               <a 
-                href="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/9cdcac727_Terms_Conditions_PolicyEscropay.pdf" 
+                href="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/f1c20a61e_Terms_Conditions_PolicyEscropay.pdf" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-purple-600 hover:underline"
