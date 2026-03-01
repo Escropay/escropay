@@ -108,7 +108,7 @@ export default function Welcome() {
             <p className="text-xs text-gray-400 text-center mt-6">
               By continuing, you agree to our{' '}
               <a 
-                href="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/06b03272a_TermsConditionsAMLCTFKYCPrivacyPolicyEscropay.pdf" 
+                href="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/9cdcac727_Terms_Conditions_PolicyEscropay.pdf" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-purple-600 hover:underline"
@@ -116,7 +116,7 @@ export default function Welcome() {
                 Terms of Service
               </a>{' '}and{' '}
               <a 
-                href="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/06b03272a_TermsConditionsAMLCTFKYCPrivacyPolicyEscropay.pdf" 
+                href="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/9cdcac727_Terms_Conditions_PolicyEscropay.pdf" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-purple-600 hover:underline"

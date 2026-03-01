@@ -24,7 +24,7 @@ import {
 } from 'lucide-react';
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
-const TERMS_PDF_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/06b03272a_TermsConditionsAMLCTFKYCPrivacyPolicyEscropay.pdf";
+const TERMS_PDF_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/9cdcac727_Terms_Conditions_PolicyEscropay.pdf";
 
 const feeTiers = [
   { min: 0, max: 100000, rate: 1.00, label: 'R0 - R100,000' },
