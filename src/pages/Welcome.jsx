@@ -49,19 +49,16 @@ export default function Welcome() {
           className="w-full max-w-md"
         >
           <div className="bg-white/80 backdrop-blur-xl border border-gray-200 rounded-3xl p-8 shadow-xl">
-            {/* Logo Icon */}
-            <div className="flex justify-center mb-6">
-              <div className="p-4 bg-gradient-to-br from-purple-500/20 to-cyan-500/20 rounded-2xl border border-purple-500/20">
-                <Shield className="w-10 h-10 text-purple-600" />
-              </div>
+            {/* Logo */}
+            <div className="flex flex-col items-center mb-8">
+              <img src={LOGO_URL} alt="EscroPay" className="h-14 w-auto mb-4" />
+              <h1 className="text-2xl font-bold text-center text-gray-900 mb-1">
+                Welcome to EscroPay
+              </h1>
+              <p className="text-gray-500 text-center text-sm">
+                Secure escrow transactions made simple
+              </p>
             </div>
-
-            <h1 className="text-2xl font-bold text-center text-gray-900 mb-2">
-              Welcome to Escropay
-            </h1>
-            <p className="text-gray-500 text-center mb-8">
-              Secure escrow transactions made simple
-            </p>
 
             <div className="space-y-3">
               {/* Login Button */}
