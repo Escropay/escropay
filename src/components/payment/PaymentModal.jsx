@@ -287,6 +287,9 @@ export default function PaymentModal({ isOpen, onClose, escrow, onPaymentComplet
                           {gateway.featured && (
                             <Badge className="bg-emerald-500 text-white text-xs">Recommended</Badge>
                           )}
+                          {gateway.badge && (
+                            <Badge className="bg-violet-500 text-white text-xs">{gateway.badge}</Badge>
+                          )}
                         </div>
                         <span className="text-sm text-gray-500">{gateway.description}</span>
                       </div>
