@@ -166,6 +166,21 @@ export default function PaymentModal({ isOpen, onClose, escrow, onPaymentComplet
 
   if (!isOpen) return null;
 
+  if (showCreditModal) {
+    return (
+      <CreditApplicationModal
+        isOpen={showCreditModal}
+        onClose={() => { setShowCreditModal(false); onClose(); }}
+        escrow={escrow}
+        onCreditApproved={(amount) => {
+          setShowCreditModal(false);
+          if (onPaymentComplete) onPaymentComplete({ amount, gateway: 'credit' });
+          onClose();
+        }}
+      />
+    );
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
