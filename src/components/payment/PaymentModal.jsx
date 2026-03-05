@@ -104,8 +104,13 @@ export default function PaymentModal({ isOpen, onClose, escrow, onPaymentComplet
   const [step, setStep] = useState('select'); // select, process, complete
   const [isProcessing, setIsProcessing] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [showCreditModal, setShowCreditModal] = useState(false);
 
   const handleGatewaySelect = (gateway) => {
+    if (gateway.id === 'credit') {
+      setShowCreditModal(true);
+      return;
+    }
     setSelectedGateway(gateway);
     setStep('process');
   };
