@@ -14,9 +14,11 @@ import {
   Loader2,
   ExternalLink,
   Copy,
-  Shield
+  Shield,
+  TrendingUp
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import CreditApplicationModal from './CreditApplicationModal';
 
 const paymentGateways = [
   {
@@ -55,6 +57,14 @@ const paymentGateways = [
     description: 'Direct EFT Payment',
     icon: Building2,
     color: 'bg-gray-100 border-gray-200 hover:border-gray-400'
+  },
+  {
+    id: 'credit',
+    name: 'EscroPay Credit',
+    description: 'Apply for transaction-backed credit',
+    icon: TrendingUp,
+    color: 'bg-violet-100 border-violet-200 hover:border-violet-400',
+    badge: 'New'
   }
 ];
 
