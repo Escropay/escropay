@@ -193,7 +193,7 @@ export default function PaymentModal({ isOpen, onClose, escrow, onPaymentComplet
       <motion.div
         initial={{ scale: 0.95, y: 20 }}
         animate={{ scale: 1, y: 0 }}
-        className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden"
+        className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
       >
         {/* Header */}
         <div className="px-6 pt-6 pb-4 border-b border-gray-100">
@@ -255,7 +255,7 @@ export default function PaymentModal({ isOpen, onClose, escrow, onPaymentComplet
           </div>
         </div>
 
-        <div className="p-6">
+        <div className="p-6 overflow-y-auto">
           <AnimatePresence mode="wait">
             {/* Step 1: Select Gateway */}
             {step === 'select' && (

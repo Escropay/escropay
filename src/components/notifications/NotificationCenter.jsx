@@ -36,6 +36,9 @@ export default function NotificationCenter({ userEmail }) {
     // Subscribe to escrow changes
     const unsubscribe = base44.entities.Escrow.subscribe((event) => {
       const escrow = event.data;
+
+      // Guard: data can be null if payload_too_large
+      if (!escrow) return;
       
       // Only notify if user is involved
       if (escrow.buyer_email !== userEmail && escrow.seller_email !== userEmail) {
