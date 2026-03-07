@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export const CURRENCIES = [
   { code: 'ZAR', symbol: 'R', name: 'South African Rand', flag: '🇿🇦' },
