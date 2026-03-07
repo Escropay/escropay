@@ -51,11 +51,11 @@ import Admin from './pages/Admin';
 import ApiDocs from './pages/ApiDocs';
 import Dashboard from './pages/Dashboard';
 import Documentation from './pages/Documentation';
+import EscrowView from './pages/EscrowView';
 import Home from './pages/Home';
 import Onboarding from './pages/Onboarding';
 import Profile from './pages/Profile';
 import Welcome from './pages/Welcome';
-import EscrowView from './pages/EscrowView';
 import __Layout from './Layout.jsx';
 
 
@@ -64,11 +64,11 @@ export const PAGES = {
     "ApiDocs": ApiDocs,
     "Dashboard": Dashboard,
     "Documentation": Documentation,
+    "EscrowView": EscrowView,
     "Home": Home,
     "Onboarding": Onboarding,
     "Profile": Profile,
     "Welcome": Welcome,
-    "EscrowView": EscrowView,
 }
 
 export const pagesConfig = {

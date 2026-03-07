@@ -1,23 +1,15 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Button } from "@/components/ui/button";
-import { base44 } from '@/api/base44Client';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import { createPageUrl } from '@/utils';
-import { 
-  Shield, 
-  LogIn, 
-  UserPlus,
-  User,
-  ArrowRight,
-  Lock,
-  Zap,
-  Globe
-} from 'lucide-react';
-
-const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
 
 export default function Welcome() {
+  useEffect(() => {
+    window.location.replace('/' + createPageUrl('Home'));
+  }, []);
+
+  return null;
+
+  // eslint-disable-next-line no-unreachable
+  const _unused = () => {
   const handleLogin = () => {
     base44.auth.redirectToLogin(window.location.origin + '/' + createPageUrl('Dashboard'));
   };
