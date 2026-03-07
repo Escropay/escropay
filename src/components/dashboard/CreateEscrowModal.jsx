@@ -100,7 +100,7 @@ export default function CreateEscrowModal({ isOpen, onClose, onSubmit, isLoading
                 <div className="space-y-2">
                   <Label className="text-gray-700 flex items-center gap-2">
                     <DollarSign className="w-4 h-4 text-purple-600" />
-                    Amount (USD)
+                    Amount ({currency.code})
                   </Label>
                   <Input
                     type="number"
