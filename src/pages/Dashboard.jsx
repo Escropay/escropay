@@ -21,6 +21,7 @@ import { useCurrency } from '@/components/common/CurrencyContext';
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
 
 function DashboardInner() {
+  const { format } = useCurrency();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState('all');
   const [viewMode, setViewMode] = useState('cards'); // 'cards' or 'timeline'
