@@ -23,6 +23,14 @@ export const CURRENCIES = [
   { code: 'HKD', symbol: 'HK$', name: 'Hong Kong Dollar', flag: '🇭🇰' },
 ];
 
+// Approximate rates relative to ZAR (base currency)
+const ZAR_RATES = {
+  ZAR: 1, USD: 0.054, EUR: 0.050, GBP: 0.042, AUD: 0.084,
+  CAD: 0.074, CHF: 0.047, JPY: 8.1, CNY: 0.39, INR: 4.5,
+  SGD: 0.072, AED: 0.20, NGN: 86, KES: 7.1, GHS: 0.82,
+  EGP: 2.65, BRL: 0.31, MXN: 1.07, NZD: 0.091, HKD: 0.42,
+};
+
 const CurrencyContext = createContext(null);
 
 export function CurrencyProvider({ children }) {
@@ -35,13 +43,21 @@ export function CurrencyProvider({ children }) {
     localStorage.setItem('escropay_currency', cur.code);
   };
 
-  const format = (amount) => {
-    if (amount == null) return `${currency.symbol}0.00`;
-    return `${currency.symbol}${Number(amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  // Convert an amount from ZAR to the selected currency
+  const convert = (zarAmount) => {
+    if (zarAmount == null) return 0;
+    const rate = ZAR_RATES[currency.code] || 1;
+    return Number(zarAmount) * rate;
+  };
+
+  const format = (zarAmount) => {
+    const converted = convert(zarAmount);
+    if (converted == null) return `${currency.symbol}0.00`;
+    return `${currency.symbol}${converted.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
 
   return (
-    <CurrencyContext.Provider value={{ currency, setCurrency, format, currencies: CURRENCIES }}>
+    <CurrencyContext.Provider value={{ currency, setCurrency, format, convert, currencies: CURRENCIES }}>
       {children}
     </CurrencyContext.Provider>
   );
