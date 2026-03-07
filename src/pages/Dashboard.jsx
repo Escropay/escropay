@@ -133,13 +133,13 @@ function DashboardInner() {
             <StatsCard
               title="Total Escrows"
               value={stats.total}
-              subtitle={`R ${stats.totalValue.toLocaleString()} total value`}
+              subtitle={`${format(stats.totalValue)} total value`}
               icon={Shield}
               delay={0}
             />
             <StatsCard
               title="Funds in Escrow"
-              value={`R ${stats.fundedValue.toLocaleString()}`}
+              value={format(stats.fundedValue)}
               subtitle={`${stats.funded} active escrows`}
               icon={Wallet}
               trend={12}
