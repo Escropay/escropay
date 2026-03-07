@@ -1,17 +1,31 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { cn } from "@/lib/utils";
+import { useNavigate } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 
-export default function StatsCard({ title, value, subtitle, icon: Icon, trend, delay = 0 }) {
+export default function StatsCard({ title, value, subtitle, icon: Icon, trend, delay = 0, linkToAnalytics = false }) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (linkToAnalytics) {
+      navigate(createPageUrl('Profile') + '?tab=analytics');
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
-      className="relative group"
+      className={cn("relative group", linkToAnalytics && "cursor-pointer")}
+      onClick={handleClick}
     >
       <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-cyan-500/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      <div className="relative bg-white backdrop-blur-xl border border-gray-200 rounded-2xl p-6 hover:border-purple-200 hover:shadow-lg transition-all duration-300">
+      <div className={cn(
+        "relative bg-white backdrop-blur-xl border border-gray-200 rounded-2xl p-6 hover:border-purple-200 hover:shadow-lg transition-all duration-300",
+        linkToAnalytics && "hover:border-purple-400"
+      )}>
         <div className="flex items-start justify-between">
           <div>
             <p className="text-gray-500 text-sm font-medium tracking-wide uppercase">{title}</p>
