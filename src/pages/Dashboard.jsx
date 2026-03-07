@@ -16,7 +16,6 @@ import TimelineView from '@/components/dashboard/TimelineView';
 import NotificationCenter from '@/components/notifications/NotificationCenter';
 import Footer from '@/components/common/Footer';
 import CurrencySwitcher from '@/components/common/CurrencySwitcher';
-import { CurrencyProvider } from '@/components/common/CurrencyContext';
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
 
