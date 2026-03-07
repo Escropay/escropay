@@ -68,6 +68,7 @@ function HomeInner() {
                         <span className="hidden sm:inline">Documentation</span>
                       </Button>
                     </Link>
+                    <CurrencySwitcher />
                     <Link to={createPageUrl('Welcome')}>
                       <Button className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white">
                         <span className="hidden sm:inline">Launch App</span>

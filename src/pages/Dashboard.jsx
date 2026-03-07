@@ -111,12 +111,13 @@ function DashboardInner() {
               </Link>
               <div className="flex items-center gap-2 md:gap-3">
                                     <Link to={createPageUrl('Documentation')}>
-                                      <Button variant="ghost" size="sm" className="text-gray-600 hover:text-purple-600">
-                                        <BookOpen className="w-4 h-4 md:mr-1" />
-                                        <span className="hidden md:inline">Docs</span>
-                                      </Button>
-                                    </Link>
-                                    <NotificationCenter userEmail={currentUser?.email} />
+                                          <Button variant="ghost" size="sm" className="text-gray-600 hover:text-purple-600">
+                                            <BookOpen className="w-4 h-4 md:mr-1" />
+                                            <span className="hidden md:inline">Docs</span>
+                                          </Button>
+                                        </Link>
+                                        <CurrencySwitcher />
+                                        <NotificationCenter userEmail={currentUser?.email} />
                                     <Link to={createPageUrl('Profile')}>
                                       <Button variant="outline" size="icon" className="rounded-full">
                                         <User className="w-4 h-4" />
