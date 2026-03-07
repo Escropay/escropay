@@ -27,6 +27,8 @@ import Footer from '@/components/common/Footer';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { User, Clock, LayoutList, BookOpen } from 'lucide-react';
+import CurrencySwitcher from '@/components/common/CurrencySwitcher';
+import { CurrencyProvider, useCurrency } from '@/components/common/CurrencyContext';
 
 export default function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);

@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { X, Shield, DollarSign, User, Mail, Calendar } from 'lucide-react';
+import { useCurrency } from '@/components/common/CurrencyContext';
 
 export default function CreateEscrowModal({ isOpen, onClose, onSubmit, isLoading }) {
   const [formData, setFormData] = useState({
