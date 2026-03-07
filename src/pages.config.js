@@ -55,6 +55,7 @@ import Home from './pages/Home';
 import Onboarding from './pages/Onboarding';
 import Profile from './pages/Profile';
 import Welcome from './pages/Welcome';
+import EscrowView from './pages/EscrowView';
 import __Layout from './Layout.jsx';
 
 
@@ -67,6 +68,7 @@ export const PAGES = {
     "Onboarding": Onboarding,
     "Profile": Profile,
     "Welcome": Welcome,
+    "EscrowView": EscrowView,
 }
 
 export const pagesConfig = {
