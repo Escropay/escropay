@@ -311,3 +311,11 @@ function HomeInner() {
         </div>
         );
         }
+
+export default function Home() {
+  return (
+    <CurrencyProvider>
+      <HomeInner />
+    </CurrencyProvider>
+  );
+}

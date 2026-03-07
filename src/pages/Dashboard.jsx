@@ -264,3 +264,11 @@ function DashboardInner() {
     </div>
   );
 }
+
+export default function Dashboard() {
+  return (
+    <CurrencyProvider>
+      <DashboardInner />
+    </CurrencyProvider>
+  );
+}
