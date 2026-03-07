@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useCurrency, CURRENCIES } from '@/lib/CurrencyContext';
+import { useCurrency, CURRENCIES } from '@/components/common/CurrencyContext';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
