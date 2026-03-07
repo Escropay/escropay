@@ -38,6 +38,14 @@ const paymentGateways = [
     color: 'bg-blue-100 border-blue-200 hover:border-blue-400'
   },
   {
+    id: 'credit',
+    name: 'EscroPay Credit',
+    description: 'Apply for transaction-backed credit',
+    icon: TrendingUp,
+    color: 'bg-violet-100 border-violet-200 hover:border-violet-400',
+    badge: 'New'
+  },
+  {
     id: 'payfast',
     name: 'PayFast',
     description: 'EFT, Credit Card, Mobicred',
