@@ -232,7 +232,7 @@ export default function Profile() {
           </div>
         </motion.div>
 
-        <Tabs defaultValue="profile" className="space-y-6">
+        <Tabs defaultValue={defaultTab} className="space-y-6">
           <TabsList className="bg-white border border-gray-200">
             <TabsTrigger value="profile" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">
               <User className="w-4 h-4 mr-2" />
