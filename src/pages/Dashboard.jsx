@@ -4,19 +4,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Plus, 
-  Shield, 
-  DollarSign, 
-  TrendingUp,
-  Wallet,
-  CheckCircle2,
-  AlertTriangle,
-  RefreshCw
-} from 'lucide-react';
-
-const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
-
+import { Plus, Shield, TrendingUp, Wallet, CheckCircle2, RefreshCw } from 'lucide-react';
+import { User, Clock, LayoutList, BookOpen } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import StatsCard from '@/components/dashboard/StatsCard';
 import EscrowCard from '@/components/dashboard/EscrowCard';
 import CreateEscrowModal from '@/components/dashboard/CreateEscrowModal';
@@ -24,11 +15,10 @@ import ActivityTimeline from '@/components/dashboard/ActivityTimeline';
 import TimelineView from '@/components/dashboard/TimelineView';
 import NotificationCenter from '@/components/notifications/NotificationCenter';
 import Footer from '@/components/common/Footer';
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
-import { User, Clock, LayoutList, BookOpen } from 'lucide-react';
 import CurrencySwitcher from '@/components/common/CurrencySwitcher';
-import { CurrencyProvider, useCurrency } from '@/components/common/CurrencyContext';
+import { CurrencyProvider } from '@/components/common/CurrencyContext';
+
+const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
 
 function DashboardInner() {
   const [isModalOpen, setIsModalOpen] = useState(false);
