@@ -46,7 +46,7 @@ const features = [
   }
 ];
 
-export default function Home() {
+function HomeInner() {
   return (
     <div className="min-h-screen bg-white text-gray-900 overflow-hidden">
       {/* Background Effects */}

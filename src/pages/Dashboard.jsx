@@ -30,7 +30,7 @@ import { User, Clock, LayoutList, BookOpen } from 'lucide-react';
 import CurrencySwitcher from '@/components/common/CurrencySwitcher';
 import { CurrencyProvider, useCurrency } from '@/components/common/CurrencyContext';
 
-export default function Dashboard() {
+function DashboardInner() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState('all');
   const [viewMode, setViewMode] = useState('cards'); // 'cards' or 'timeline'
