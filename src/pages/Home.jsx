@@ -313,9 +313,5 @@ function HomeInner() {
         }
 
 export default function Home() {
-  return (
-    <CurrencyProvider>
-      <HomeInner />
-    </CurrencyProvider>
-  );
+  return <HomeInner />;
 }

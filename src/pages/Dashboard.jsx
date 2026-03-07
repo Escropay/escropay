@@ -256,9 +256,5 @@ function DashboardInner() {
 }
 
 export default function Dashboard() {
-  return (
-    <CurrencyProvider>
-      <DashboardInner />
-    </CurrencyProvider>
-  );
+  return <DashboardInner />;
 }
