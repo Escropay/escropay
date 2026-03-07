@@ -19,6 +19,7 @@ import MilestonePanel from './MilestonePanel';
 import DisputePanel from './DisputePanel';
 import InAppChat from '@/components/chat/InAppChat';
 import PaymentModal from '@/components/payment/PaymentModal';
+import { useCurrency } from '@/components/common/CurrencyContext';
 
 const statusConfig = {
   pending: {
