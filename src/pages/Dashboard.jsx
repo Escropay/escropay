@@ -136,6 +136,7 @@ function DashboardInner() {
               subtitle={`${format(stats.totalValue)} total value`}
               icon={Shield}
               delay={0}
+              linkToAnalytics
             />
             <StatsCard
               title="Funds in Escrow"
@@ -144,6 +145,7 @@ function DashboardInner() {
               icon={Wallet}
               trend={12}
               delay={0.1}
+              linkToAnalytics
             />
             <StatsCard
               title="Successfully Released"
@@ -151,6 +153,7 @@ function DashboardInner() {
               subtitle="Completed transactions"
               icon={CheckCircle2}
               delay={0.2}
+              linkToAnalytics
             />
             <StatsCard
               title="Success Rate"
@@ -158,6 +161,7 @@ function DashboardInner() {
               subtitle={`${stats.disputed} disputes`}
               icon={TrendingUp}
               delay={0.3}
+              linkToAnalytics
             />
           </div>
 
