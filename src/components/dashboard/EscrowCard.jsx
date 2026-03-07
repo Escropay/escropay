@@ -107,7 +107,7 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
         <div className="flex items-center justify-between pt-4 border-t border-gray-100">
           <div>
             <p className="text-2xl font-bold text-gray-900">
-              R {escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}
+              {formatCurrency(escrow.amount)}
             </p>
             {escrow.due_date && (
               <div className="flex items-center gap-1 text-gray-500 text-sm mt-1">
