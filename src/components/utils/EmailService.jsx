@@ -213,6 +213,51 @@ export const EmailService = {
     });
   },
 
+  // Escrow invitation to recipient (seller)
+  async sendEscrowInvitationEmail(escrow) {
+    const escrowLink = `${window.location.origin}${window.location.pathname.split('/').slice(0, -1).join('/')}/#/EscrowView?id=${escrow.id}`;
+    const sellerName = escrow.seller_name || 'there';
+    const buyerName = escrow.buyer_name || escrow.buyer_email;
+
+    const content = `
+      <h1>You've Been Invited to an Escrow Agreement</h1>
+      <p>Hi ${sellerName},</p>
+      <p><strong>${buyerName}</strong> has initiated a secure escrow transaction and invited you to participate.</p>
+      
+      <div class="info-box">
+        <p style="margin: 0 0 10px 0; font-weight: 600; color: #111827;">${escrow.title}</p>
+        <div class="amount">R ${escrow.amount?.toLocaleString()}</div>
+        ${escrow.description ? `<p style="margin: 10px 0 0 0; color: #6b7280;">${escrow.description}</p>` : ''}
+        ${escrow.due_date ? `<p style="margin: 5px 0 0 0; color: #6b7280;">Due: ${escrow.due_date}</p>` : ''}
+        <p style="margin: 10px 0 0 0; color: #059669; font-weight: 500;">🔒 Funds will be held securely until you deliver</p>
+      </div>
+      
+      <p>As the seller, you will need to:</p>
+      <ol style="color: #4b5563; line-height: 2;">
+        <li>Accept the escrow agreement</li>
+        <li>Submit your banking details for fund disbursement</li>
+        <li>Deliver the goods or services as agreed</li>
+        <li>Receive payment once the buyer confirms delivery</li>
+      </ol>
+
+      <p style="margin-top: 24px;">
+        <a href="${escrowLink}" class="button">View & Accept Escrow</a>
+      </p>
+
+      <p style="font-size: 13px; color: #9ca3af; margin-top: 16px;">
+        If you don't have an EscroPay account, you'll be prompted to create one for free.<br/>
+        Questions? Contact us at info@escropay.app
+      </p>
+    `;
+
+    return base44.integrations.Core.SendEmail({
+      to: escrow.seller_email,
+      subject: `You're invited to an escrow agreement: ${escrow.title}`,
+      body: getEmailTemplate(content, 'Escrow Invitation'),
+      from_name: 'Escropay'
+    });
+  },
+
   // KYC verification reminder
   async sendKycReminderEmail(userEmail, userName) {
     const content = `
