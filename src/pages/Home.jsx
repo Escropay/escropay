@@ -114,12 +114,12 @@ function HomeInner() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to={createPageUrl('Dashboard')}>
+              <Link to={createPageUrl('Welcome')}>
                 <Button
                   size="lg"
                   className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-medium text-lg px-8 shadow-lg shadow-purple-500/25 w-full sm:w-auto"
                 >
-                  Get Started
+                  Launch App
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
               </Link>
@@ -212,12 +212,12 @@ function HomeInner() {
               <p className="text-purple-200 mb-8 max-w-xl mx-auto">
                 Join thousands of businesses using EscroPay for secure transactions
               </p>
-              <Link to={createPageUrl('Dashboard')}>
+              <Link to={createPageUrl('Welcome')}>
                 <Button
                   size="lg"
                   className="bg-white text-purple-700 hover:bg-gray-100 font-medium shadow-lg"
                 >
-                  Launch Dashboard
+                  Launch App
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
               </Link>
