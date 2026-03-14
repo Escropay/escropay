@@ -28,14 +28,24 @@ function DashboardInner() {
   const [viewMode, setViewMode] = useState('cards'); // 'cards' or 'timeline'
   const queryClient = useQueryClient();
 
-  const { data: escrows = [], isLoading } = useQuery({
-    queryKey: ['escrows'],
-    queryFn: () => base44.entities.Escrow.list('-created_date')
-  });
-
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me().catch(() => null)
+    queryFn: () => base44.auth.me()
+  });
+
+  const { data: escrows = [], isLoading } = useQuery({
+    queryKey: ['escrows'],
+    queryFn: () => {
+      if (!currentUser?.email) return [];
+      // Filter escrows for current user only
+      return base44.entities.Escrow.filter({
+        $or: [
+          { buyer_email: currentUser.email },
+          { seller_email: currentUser.email }
+        ]
+      }, '-created_date');
+    },
+    enabled: !!currentUser?.email
   });
 
   const createMutation = useMutation({
