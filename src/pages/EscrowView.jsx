@@ -153,8 +153,8 @@ export default function EscrowView() {
   const status = statusConfig[escrow.status] || statusConfig.pending;
   const StatusIcon = status.icon;
   const activeStep = getActiveStep(escrow);
-  const isSeller = currentUser?.email === escrow.seller_email;
-  const isBuyer = currentUser?.email === escrow.buyer_email;
+  const isSeller = currentUser?.email === escrow.seller_email || escrow.seller_email === urlParams.get('seller_email');
+  const isBuyer = currentUser?.email === escrow.buyer_email || escrow.buyer_email === urlParams.get('buyer_email');
   const hasBanking = !!escrow.seller_banking_details?.account_number;
 
   return (
@@ -418,12 +418,12 @@ export default function EscrowView() {
           </motion.div>
         )}
 
-        {/* Unauthenticated prompt */}
-        {!currentUser && (
+        {/* Enhanced access for non-registered users */}
+        {!currentUser && !isSeller && (
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-purple-50 border border-purple-200 rounded-2xl p-6 text-center">
             <Shield className="w-10 h-10 text-purple-400 mx-auto mb-3" />
-            <h3 className="font-semibold text-gray-900 mb-1">Sign in to Manage This Escrow</h3>
-            <p className="text-sm text-gray-500 mb-4">Create or sign in to your EscroPay account to accept the agreement and manage this transaction.</p>
+            <h3 className="font-semibold text-gray-900 mb-1">Enhanced Features Available</h3>
+            <p className="text-sm text-gray-500 mb-4">Sign in to access your dashboard, track all transactions, and unlock additional features.</p>
             <Button
               className="bg-purple-600 hover:bg-purple-700 text-white"
               onClick={() => base44.auth.redirectToLogin(window.location.href)}

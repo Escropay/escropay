@@ -57,7 +57,7 @@ function HomeInner() {
       {/* Header */}
       <header className="relative z-10 border-b border-gray-200 backdrop-blur-xl bg-white/80">
                 <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-                  <Link to={createPageUrl('Dashboard')} className="flex items-center gap-2">
+                  <Link to={createPageUrl('Home')} className="flex items-center gap-2">
                     <img src={LOGO_URL} alt="Escropay" className="h-8 md:h-10 w-auto" />
                   </Link>
                   <div className="flex items-center gap-4">

@@ -232,20 +232,18 @@ export const EmailService = {
         <p style="margin: 10px 0 0 0; color: #059669; font-weight: 500;">🔒 Funds will be held securely until you deliver</p>
       </div>
       
-      <p>As the seller, you will need to:</p>
-      <ol style="color: #4b5563; line-height: 2;">
-        <li>Accept the escrow agreement</li>
-        <li>Submit your banking details for fund disbursement</li>
-        <li>Deliver the goods or services as agreed</li>
-        <li>Receive payment once the buyer confirms delivery</li>
-      </ol>
+      <p>As the seller, you can participate in this transaction whether or not you have an account:</p>
+      <ul style="color: #4b5563; line-height: 2;">
+        <li><strong>Without an account:</strong> View the transaction, accept the agreement, and submit banking details directly through the escrow link</li>
+        <li><strong>With an account:</strong> Manage all your transactions in one place, access additional features, and track your transaction history</li>
+      </ul>
 
       <p style="margin-top: 24px;">
-        <a href="${escrowLink}" class="button">View & Accept Escrow</a>
+        <a href="${escrowLink}" class="button">View & Manage Escrow</a>
       </p>
 
       <p style="font-size: 13px; color: #9ca3af; margin-top: 16px;">
-        If you don't have an EscroPay account, you'll be prompted to create one for free.<br/>
+        You can complete all necessary actions without creating an account. However, signing in offers enhanced tracking and management features.<br/>
         Questions? Contact us at info@escropay.app
       </p>
     `;
