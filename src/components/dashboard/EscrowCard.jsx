@@ -244,6 +244,13 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
           </div>
         </div>
 
+        {/* Seller Acceptance Panel */}
+        <SellerAcceptancePanel
+          escrow={escrow}
+          currentUser={currentUser}
+          onUpdate={(data) => onUpdate(escrow.id, data)}
+        />
+
         {/* Buyer Modification Panel */}
         <BuyerModificationPanel
           escrow={escrow}
