@@ -261,24 +261,39 @@ export default function Admin() {
                           {escrow.created_date ? format(new Date(escrow.created_date), 'MMM d, yyyy') : '-'}
                         </TableCell>
                         <TableCell>
-                          {escrow.status === 'released' ? (
-                            <Badge className="bg-emerald-100 text-emerald-700">Released</Badge>
-                          ) : (
-                            <Select
-                              value={escrow.status}
-                              onValueChange={(value) => handleEscrowStatusUpdate(escrow.id, value)}
-                            >
-                              <SelectTrigger className="w-28 h-8 text-xs">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="pending">Pending</SelectItem>
-                                <SelectItem value="funded">Funded</SelectItem>
-                                <SelectItem value="disputed">Disputed</SelectItem>
-                                <SelectItem value="refunded">Refunded</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          )}
+                          <div className="flex items-center gap-2">
+                            {escrow.status === 'released' ? (
+                              <Badge className="bg-emerald-100 text-emerald-700">Released</Badge>
+                            ) : (
+                              <>
+                                {escrow.status === 'funded' && (
+                                  <Button
+                                    size="sm"
+                                    onClick={() => handleEscrowStatusUpdate(escrow.id, 'released')}
+                                    disabled={updateEscrowMutation.isPending}
+                                    className="h-8 bg-emerald-600 hover:bg-emerald-700 text-white text-xs"
+                                  >
+                                    <Banknote className="w-3 h-3 mr-1" />
+                                    Release Funds
+                                  </Button>
+                                )}
+                                <Select
+                                  value={escrow.status}
+                                  onValueChange={(value) => handleEscrowStatusUpdate(escrow.id, value)}
+                                >
+                                  <SelectTrigger className="w-28 h-8 text-xs">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="pending">Pending</SelectItem>
+                                    <SelectItem value="funded">Funded</SelectItem>
+                                    <SelectItem value="disputed">Disputed</SelectItem>
+                                    <SelectItem value="refunded">Refunded</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </>
+                            )}
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))
