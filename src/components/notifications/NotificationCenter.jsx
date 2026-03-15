@@ -83,6 +83,30 @@ export default function NotificationCenter({ userEmail }) {
     return () => unsubscribe();
   }, [userEmail]);
 
+  // Subscribe to incoming chat messages
+  useEffect(() => {
+    if (!userEmail) return;
+
+    const unsubscribe = base44.entities.ChatMessage.subscribe((event) => {
+      if (event.type !== 'create') return;
+      const msg = event.data;
+      if (!msg || msg.sender_email === userEmail) return;
+
+      const newNotification = {
+        id: Date.now(),
+        message: `${msg.sender_name || msg.sender_email}: ${msg.content.length > 60 ? msg.content.slice(0, 60) + '…' : msg.content}`,
+        type: 'chat_message',
+        timestamp: new Date().toISOString(),
+        read: false
+      };
+
+      setNotifications(prev => [newNotification, ...prev].slice(0, 20));
+      setUnreadCount(prev => prev + 1);
+    });
+
+    return () => unsubscribe();
+  }, [userEmail]);
+
   const markAllRead = () => {
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
     setUnreadCount(0);
