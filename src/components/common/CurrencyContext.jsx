@@ -64,7 +64,7 @@ export function CurrencyProvider({ children }) {
   };
 
   return (
-    <CurrencyContext.Provider value={{ currency, setCurrency, format, convert, currencies: CURRENCIES }}>
+    <CurrencyContext.Provider value={{ currency, setCurrency, format, convert, convertToZAR, currencies: CURRENCIES }}>
       {children}
     </CurrencyContext.Provider>
   );
