@@ -21,7 +21,7 @@ export default function SellerAcceptancePanel({ escrow, onUpdate }) {
   const handleAccept = async () => {
     setIsSubmitting(true);
     try {
-      await onUpdate(escrow.id, {
+      await onUpdate({
         recipient_accepted: true,
         recipient_accepted_at: new Date().toISOString(),
         status: 'pending'
@@ -59,7 +59,7 @@ export default function SellerAcceptancePanel({ escrow, onUpdate }) {
   const handleReject = async () => {
     setIsSubmitting(true);
     try {
-      await onUpdate(escrow.id, {
+      await onUpdate({
         status: 'rejected_by_seller'
       });
 
@@ -95,7 +95,7 @@ export default function SellerAcceptancePanel({ escrow, onUpdate }) {
     
     setIsSubmitting(true);
     try {
-      await onUpdate(escrow.id, {
+      await onUpdate({
         status: 'modification_requested',
         modification_request: {
           reason: modificationReason,
