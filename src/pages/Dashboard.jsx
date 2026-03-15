@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, Shield, TrendingUp, Wallet, CheckCircle2, RefreshCw } from 'lucide-react';
 import { User, Clock, LayoutList, BookOpen } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import StatsCard from '@/components/dashboard/StatsCard';
 import EscrowCard from '@/components/dashboard/EscrowCard';
@@ -22,32 +22,16 @@ import { EmailService } from '@/components/utils/EmailService';
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
 
 function DashboardInner() {
-  const navigate = useNavigate();
   const { format } = useCurrency();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState('all');
   const [viewMode, setViewMode] = useState('cards'); // 'cards' or 'timeline'
   const queryClient = useQueryClient();
 
-  const { data: currentUser, isLoading: userLoading } = useQuery({
+  const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me()
   });
-
-  // Route users to role-specific dashboards
-  useEffect(() => {
-    if (currentUser?.role) {
-      if (currentUser.role === 'agent') {
-        navigate(createPageUrl('AgentDashboard'));
-      } else if (currentUser.role === 'arbitrator') {
-        navigate(createPageUrl('ArbitratorDashboard'));
-      } else if (currentUser.role === 'compliance') {
-        navigate(createPageUrl('ComplianceDashboard'));
-      } else if (currentUser.role === 'auditor') {
-        navigate(createPageUrl('AuditorDashboard'));
-      }
-    }
-  }, [currentUser, navigate]);
 
   const { data: escrows = [], isLoading } = useQuery({
     queryKey: ['escrows'],
@@ -114,14 +98,6 @@ function DashboardInner() {
   const filteredEscrows = activeFilter === 'all' 
     ? escrows 
     : escrows.filter(e => e.status === activeFilter);
-
-  if (userLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <RefreshCw className="w-8 h-8 text-purple-500 animate-spin" />
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">

@@ -58,19 +58,11 @@ const AuthenticatedApp = () => {
           }
         />
       ))}
-      <Route path="/AgentDashboard" element={<LayoutWrapper currentPageName="AgentDashboard"><AgentDashboard /></LayoutWrapper>} />
-      <Route path="/ArbitratorDashboard" element={<LayoutWrapper currentPageName="ArbitratorDashboard"><ArbitratorDashboard /></LayoutWrapper>} />
-      <Route path="/ComplianceDashboard" element={<LayoutWrapper currentPageName="ComplianceDashboard"><ComplianceDashboard /></LayoutWrapper>} />
-      <Route path="/AuditorDashboard" element={<LayoutWrapper currentPageName="AuditorDashboard"><AuditorDashboard /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
 };
 
-import AgentDashboard from './pages/AgentDashboard';
-import ArbitratorDashboard from './pages/ArbitratorDashboard';
-import ComplianceDashboard from './pages/ComplianceDashboard';
-import AuditorDashboard from './pages/AuditorDashboard';
 
 function App() {
 
