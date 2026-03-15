@@ -89,6 +89,22 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
     onAction(escrow.id, 'funded');
   };
 
+  const handleRequestPayout = async () => {
+    await onUpdate(escrow.id, { payout_requested: true, payout_requested_at: new Date().toISOString() });
+    // Notify admins
+    const admins = await base44.entities.User.filter({ role: 'admin' });
+    for (const admin of admins) {
+      await base44.entities.Notification.create({
+        user_email: admin.email,
+        type: 'admin_action_required',
+        escrow_id: escrow.id,
+        title: 'Payout Requested',
+        message: `${escrow.seller_name || escrow.seller_email} has requested a payout for "${escrow.title}"`,
+        action_url: `/Admin`
+      });
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
