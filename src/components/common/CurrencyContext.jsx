@@ -50,6 +50,13 @@ export function CurrencyProvider({ children }) {
     return Number(zarAmount) * rate;
   };
 
+  // Convert an amount from the selected currency back to ZAR
+  const convertToZAR = (amount) => {
+    if (amount == null) return 0;
+    const rate = ZAR_RATES[currency.code] || 1;
+    return Number(amount) / rate;
+  };
+
   const format = (zarAmount) => {
     const converted = convert(zarAmount);
     if (converted == null) return `${currency.symbol}0.00`;
