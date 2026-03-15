@@ -29,6 +29,7 @@ import { format } from 'date-fns';
 import { EmailService } from '@/components/utils/EmailService';
 import SellerAcceptancePanel from '@/components/escrow/SellerAcceptancePanel';
 import RefundRequestPanel from '@/components/escrow/RefundRequestPanel';
+import BuyerModificationPanel from '@/components/escrow/BuyerModificationPanel';
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
 
@@ -288,6 +289,9 @@ export default function EscrowView() {
             })}
           </div>
         </motion.div>
+
+        {/* Buyer Modification Panel */}
+        <BuyerModificationPanel escrow={escrow} currentUser={currentUser} onUpdate={updateMutation.mutateAsync} />
 
         {/* Seller Acceptance Panel */}
         <SellerAcceptancePanel escrow={escrow} onUpdate={updateMutation.mutateAsync} currentUser={currentUser} />
