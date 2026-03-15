@@ -114,6 +114,8 @@ export default function NotificationCenter({ userEmail }) {
         id: Date.now(),
         message: `${msg.sender_name || msg.sender_email}: ${msg.content.length > 60 ? msg.content.slice(0, 60) + '…' : msg.content}`,
         type: 'chat_message',
+        action_url: `/Dashboard`,
+        escrow_id: msg.escrow_id,
         timestamp: new Date().toISOString(),
         read: false
       };
