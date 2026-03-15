@@ -149,7 +149,7 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
               otherPartyEmail={otherPartyEmail}
               otherPartyName={otherPartyName}
             />
-            {escrow.status === 'pending' && (
+            {escrow.status === 'pending' && currentUser?.email === escrow.buyer_email && (
               <Button
                 size="sm"
                 onClick={() => setShowPaymentModal(true)}
