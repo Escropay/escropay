@@ -261,21 +261,26 @@ export default function Admin() {
                           {escrow.created_date ? format(new Date(escrow.created_date), 'MMM d, yyyy') : '-'}
                         </TableCell>
                         <TableCell>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
                             {escrow.status === 'released' ? (
                               <Badge className="bg-emerald-100 text-emerald-700">Released</Badge>
                             ) : (
                               <>
                                 {escrow.status === 'funded' && (
-                                  <Button
-                                    size="sm"
-                                    onClick={() => handleEscrowStatusUpdate(escrow.id, 'released')}
-                                    disabled={updateEscrowMutation.isPending}
-                                    className="h-8 bg-emerald-600 hover:bg-emerald-700 text-white text-xs"
-                                  >
-                                    <Banknote className="w-3 h-3 mr-1" />
-                                    Release Funds
-                                  </Button>
+                                  <div className="flex flex-col gap-1">
+                                    {escrow.payout_requested && (
+                                      <Badge className="bg-amber-100 text-amber-700 text-xs">Payout Requested</Badge>
+                                    )}
+                                    <Button
+                                      size="sm"
+                                      onClick={() => handleEscrowStatusUpdate(escrow.id, 'released')}
+                                      disabled={updateEscrowMutation.isPending}
+                                      className="h-8 bg-emerald-600 hover:bg-emerald-700 text-white text-xs"
+                                    >
+                                      <Banknote className="w-3 h-3 mr-1" />
+                                      Release Funds
+                                    </Button>
+                                  </div>
                                 )}
                                 <Select
                                   value={escrow.status}
