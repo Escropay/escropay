@@ -61,7 +61,33 @@ export default function InAppChat({ escrowId, escrowTitle, currentUser, otherPar
   }, [messages]);
 
   const sendMutation = useMutation({
-    mutationFn: (data) => base44.entities.ChatMessage.create(data),
+    mutationFn: async (data) => {
+      const message = await base44.entities.ChatMessage.create(data);
+      
+      // Notify the other party
+      await base44.entities.Notification.create({
+        user_email: otherPartyEmail,
+        type: 'chat_message',
+        escrow_id: escrowId,
+        title: 'New message',
+        message: `${currentUser.full_name || currentUser.email} sent you a message in ${escrowTitle}`,
+        action_url: `/EscrowView?id=${escrowId}`
+      });
+      
+      // Send email notification
+      await base44.integrations.Core.SendEmail({
+        to: otherPartyEmail,
+        subject: `New message in ${escrowTitle}`,
+        body: `
+          <h2>New Message Received</h2>
+          <p><strong>${currentUser.full_name || currentUser.email}</strong> sent you a message:</p>
+          <p style="padding: 10px; background: #f5f5f5; border-radius: 5px;">${data.content}</p>
+          <p><a href="${window.location.origin}/EscrowView?id=${escrowId}">View conversation</a></p>
+        `
+      });
+      
+      return message;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['chat', chatRoomId] });
     }

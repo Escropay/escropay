@@ -53,7 +53,7 @@ export default function MilestonePanel({ escrow, onUpdate, isLoading }) {
     setShowAddForm(false);
   };
 
-  const handleMilestoneAction = (milestoneId, newStatus) => {
+  const handleMilestoneAction = async (milestoneId, newStatus) => {
     const updatedMilestones = milestones.map(m => {
       if (m.id === milestoneId) {
         return {
@@ -66,7 +66,20 @@ export default function MilestonePanel({ escrow, onUpdate, isLoading }) {
       return m;
     });
     
-    onUpdate(escrow.id, { milestones: updatedMilestones });
+    await onUpdate(escrow.id, { milestones: updatedMilestones });
+    
+    // Notify buyer when seller marks milestone as complete
+    if (newStatus === 'completed') {
+      const milestone = updatedMilestones.find(m => m.id === milestoneId);
+      await base44.entities.Notification.create({
+        user_email: escrow.buyer_email,
+        type: 'milestone_completed',
+        escrow_id: escrow.id,
+        title: 'Milestone completed',
+        message: `Seller has marked "${milestone.title}" as complete`,
+        action_url: `/EscrowView?id=${escrow.id}`
+      });
+    }
   };
 
   const handleDeleteMilestone = (milestoneId) => {
