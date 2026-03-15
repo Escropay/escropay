@@ -14,7 +14,8 @@ import {
   Wallet, 
   AlertTriangle,
   Clock,
-  X
+  X,
+  MessageCircle
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
