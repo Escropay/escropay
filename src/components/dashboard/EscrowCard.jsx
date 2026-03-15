@@ -20,6 +20,7 @@ import DisputePanel from './DisputePanel';
 import InAppChat from '@/components/chat/InAppChat';
 import PaymentModal from '@/components/payment/PaymentModal';
 import BuyerModificationPanel from '@/components/escrow/BuyerModificationPanel';
+import SellerAcceptancePanel from '@/components/escrow/SellerAcceptancePanel';
 import { useCurrency } from '@/components/common/CurrencyContext';
 import { base44 } from '@/api/base44Client';
 
