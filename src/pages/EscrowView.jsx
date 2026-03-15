@@ -180,8 +180,8 @@ export default function EscrowView() {
   const status = statusConfig[escrow.status] || statusConfig.pending;
   const StatusIcon = status.icon;
   const activeStep = getActiveStep(escrow);
-  const isSeller = currentUser?.email === escrow.seller_email || escrow.seller_email === urlParams.get('seller_email');
-  const isBuyer = currentUser?.email === escrow.buyer_email || escrow.buyer_email === urlParams.get('buyer_email');
+  const isSeller = currentUser?.email === escrow.seller_email || (!currentUser && escrow.seller_email === urlParams.get('email'));
+  const isBuyer = currentUser?.email === escrow.buyer_email || (!currentUser && escrow.buyer_email === urlParams.get('email'));
   const hasBanking = !!escrow.seller_banking_details?.account_number;
 
   return (

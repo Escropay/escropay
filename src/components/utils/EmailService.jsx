@@ -215,31 +215,34 @@ export const EmailService = {
 
   // Escrow invitation to recipient (seller)
   async sendEscrowInvitationEmail(escrow) {
-    const escrowLink = `${window.location.origin}${window.location.pathname.split('/').slice(0, -1).join('/')}/#/EscrowView?id=${escrow.id}`;
+    const escrowLink = `${window.location.origin}/EscrowView?id=${escrow.id}`;
     const sellerName = escrow.seller_name || 'there';
     const buyerName = escrow.buyer_name || escrow.buyer_email;
 
     const content = `
-      <h1>You've Been Invited to an Escrow Agreement</h1>
+      <h1>Action Required: Review Escrow Agreement</h1>
       <p>Hi ${sellerName},</p>
       <p><strong>${buyerName}</strong> has initiated a secure escrow transaction and invited you to participate.</p>
       
       <div class="info-box">
-        <p style="margin: 0 0 10px 0; font-weight: 600; color: #111827;">${escrow.title}</p>
+        <p style="margin: 0 0 5px 0; font-weight: 600; color: #111827;">${escrow.title}</p>
+        ${escrow.transaction_id ? `<p style="margin: 0 0 10px 0; color: #6b7280; font-family: monospace; font-size: 12px;">Transaction ID: ${escrow.transaction_id}</p>` : ''}
         <div class="amount">R ${escrow.amount?.toLocaleString()}</div>
         ${escrow.description ? `<p style="margin: 10px 0 0 0; color: #6b7280;">${escrow.description}</p>` : ''}
         ${escrow.due_date ? `<p style="margin: 5px 0 0 0; color: #6b7280;">Due: ${escrow.due_date}</p>` : ''}
         <p style="margin: 10px 0 0 0; color: #059669; font-weight: 500;">🔒 Funds will be held securely until you deliver</p>
       </div>
       
-      <p>As the seller, you can participate in this transaction whether or not you have an account:</p>
-      <ul style="color: #4b5563; line-height: 2;">
-        <li><strong>Without an account:</strong> View the transaction, accept the agreement, and submit banking details directly through the escrow link</li>
-        <li><strong>With an account:</strong> Manage all your transactions in one place, access additional features, and track your transaction history</li>
-      </ul>
+      <p><strong>Next Steps:</strong></p>
+      <ol style="color: #4b5563; line-height: 2; padding-left: 20px;">
+        <li>Review the transaction details</li>
+        <li>Accept, reject, or request modifications to the agreement</li>
+        <li>If you accept, connect your payout method</li>
+        <li>Proceed with delivery once the buyer funds the escrow</li>
+      </ol>
 
       <p style="margin-top: 24px;">
-        <a href="${escrowLink}" class="button">View & Manage Escrow</a>
+        <a href="${escrowLink}" class="button">Accept or Reject Escrow</a>
       </p>
 
       <p style="font-size: 13px; color: #9ca3af; margin-top: 16px;">
