@@ -11,8 +11,7 @@ import {
   User,
   Calendar,
   Bot,
-  MessageCircle,
-  Badge as BadgeIcon
+  MessageCircle
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from "@/lib/utils";
