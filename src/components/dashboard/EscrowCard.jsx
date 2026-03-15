@@ -82,6 +82,8 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
 
   const otherPartyEmail = currentUser?.email === escrow.buyer_email ? escrow.seller_email : escrow.buyer_email;
   const otherPartyName = currentUser?.email === escrow.buyer_email ? escrow.seller_name : escrow.buyer_name;
+  const isSeller = currentUser?.email === escrow.seller_email;
+  const isBuyer = currentUser?.email === escrow.buyer_email;
 
   const handlePaymentComplete = () => {
     onAction(escrow.id, 'funded');
