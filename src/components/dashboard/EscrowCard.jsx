@@ -22,6 +22,24 @@ import PaymentModal from '@/components/payment/PaymentModal';
 import { useCurrency } from '@/components/common/CurrencyContext';
 
 const statusConfig = {
+  pending_seller_acceptance: {
+    label: 'Pending Acceptance',
+    color: 'bg-purple-100 text-purple-700 border-purple-200',
+    icon: Clock,
+    glow: 'shadow-purple-500/10'
+  },
+  modification_requested: {
+    label: 'Modification Requested',
+    color: 'bg-orange-100 text-orange-700 border-orange-200',
+    icon: Clock,
+    glow: 'shadow-orange-500/10'
+  },
+  rejected_by_seller: {
+    label: 'Rejected',
+    color: 'bg-red-100 text-red-700 border-red-200',
+    icon: AlertTriangle,
+    glow: 'shadow-red-500/10'
+  },
   pending: {
     label: 'Pending',
     color: 'bg-amber-100 text-amber-700 border-amber-200',
@@ -82,9 +100,14 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
       <div className="relative bg-white backdrop-blur-xl border border-gray-200 rounded-2xl p-6 hover:border-purple-200 hover:shadow-lg transition-all duration-300">
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900 group-hover:text-purple-600 transition-colors">
-              {escrow.title}
-            </h3>
+            <div className="flex items-center justify-between mb-1">
+              <h3 className="text-lg font-semibold text-gray-900 group-hover:text-purple-600 transition-colors">
+                {escrow.title}
+              </h3>
+              {escrow.transaction_id && (
+                <span className="text-xs text-gray-400 font-mono ml-2">{escrow.transaction_id}</span>
+              )}
+            </div>
             <p className="text-gray-500 text-sm mt-1 line-clamp-2">
               {escrow.description || 'No description provided'}
             </p>
@@ -181,7 +204,7 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
 
         {/* Milestone Panel */}
         {onUpdate && (
-          <MilestonePanel escrow={escrow} onUpdate={onUpdate} />
+          <MilestonePanel escrow={escrow} onUpdate={onUpdate} currentUser={currentUser} />
         )}
       </div>
 
