@@ -189,7 +189,24 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
                   <AlertTriangle className="w-4 h-4 mr-1" />
                   Dispute
                 </Button>
-                {currentUser?.email === escrow.buyer_email && (
+                {isSeller && (
+                  escrow.payout_requested ? (
+                    <Badge className="bg-amber-100 text-amber-700 border border-amber-200 px-3 py-1">
+                      <Clock className="w-3 h-3 mr-1" />
+                      Payout Requested
+                    </Badge>
+                  ) : (
+                    <Button
+                      size="sm"
+                      onClick={handleRequestPayout}
+                      className="bg-purple-600 hover:bg-purple-700 text-white"
+                    >
+                      <Wallet className="w-4 h-4 mr-1" />
+                      Request Payout
+                    </Button>
+                  )
+                )}
+                {isBuyer && (
                   <Button
                     size="sm"
                     onClick={() => onAction(escrow.id, 'released')}
