@@ -18,6 +18,7 @@ import {
   MessageCircle
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 const notificationIcons = {
   funded: { icon: Wallet, color: 'text-cyan-600', bg: 'bg-cyan-100' },
