@@ -68,6 +68,18 @@ export default function NotificationCenter({ userEmail }) {
         } else if (escrow.status === 'disputed') {
           message = `Dispute raised on "${escrow.title}"`;
           type = 'disputed';
+        } else if (escrow.status === 'refunded') {
+          message = `Escrow "${escrow.title}" has been refunded`;
+          type = 'refunded';
+        } else if (escrow.status === 'modification_requested') {
+          message = `Modification requested on "${escrow.title}"`;
+          type = 'modification_requested';
+        } else if (escrow.status === 'rejected_by_seller') {
+          message = `Escrow "${escrow.title}" was rejected by seller`;
+          type = 'rejected_by_seller';
+        } else if (escrow.status === 'pending') {
+          message = `Escrow "${escrow.title}" is awaiting funding`;
+          type = 'pending';
         }
       }
 
@@ -76,6 +88,7 @@ export default function NotificationCenter({ userEmail }) {
           id: Date.now(),
           message,
           type,
+          action_url: `/EscrowView?id=${escrow.id}`,
           timestamp: new Date().toISOString(),
           read: false
         };
