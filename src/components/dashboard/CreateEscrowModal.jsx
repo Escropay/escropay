@@ -103,16 +103,21 @@ export default function CreateEscrowModal({ isOpen, onClose, onSubmit, isLoading
                     <DollarSign className="w-4 h-4 text-purple-600" />
                     Amount ({currency.code})
                   </Label>
-                  <Input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    value={formData.amount}
-                    onChange={(e) => handleChange('amount', e.target.value)}
-                    placeholder="0.00"
-                    className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500/20"
-                    required
-                  />
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-medium">
+                      {currency.symbol}
+                    </span>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={formData.amount}
+                      onChange={(e) => handleChange('amount', e.target.value)}
+                      placeholder="0.00"
+                      className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500/20 pl-8"
+                      required
+                    />
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label className="text-gray-700 flex items-center gap-2">
