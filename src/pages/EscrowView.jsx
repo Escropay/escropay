@@ -290,7 +290,7 @@ export default function EscrowView() {
         </motion.div>
 
         {/* Seller Acceptance Panel */}
-        <SellerAcceptancePanel escrow={escrow} onUpdate={updateMutation.mutateAsync} />
+        <SellerAcceptancePanel escrow={escrow} onUpdate={updateMutation.mutateAsync} currentUser={currentUser} />
 
         {/* Seller Actions */}
         {isSeller && escrow.status !== 'pending_seller_acceptance' && (

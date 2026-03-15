@@ -12,11 +12,15 @@ import {
   Loader2
 } from 'lucide-react';
 
-export default function SellerAcceptancePanel({ escrow, onUpdate }) {
+export default function SellerAcceptancePanel({ escrow, onUpdate, currentUser }) {
   const [action, setAction] = useState(null);
   const [modificationReason, setModificationReason] = useState('');
   const [requestedChanges, setRequestedChanges] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const isSeller = currentUser?.email === escrow.seller_email || 
+    (!currentUser && escrow.seller_email === urlParams.get('email'));
 
   const handleAccept = async () => {
     setIsSubmitting(true);
@@ -133,7 +137,7 @@ export default function SellerAcceptancePanel({ escrow, onUpdate }) {
     setIsSubmitting(false);
   };
 
-  if (escrow.status !== 'pending_seller_acceptance') {
+  if (escrow.status !== 'pending_seller_acceptance' || !isSeller) {
     return null;
   }
 
