@@ -177,7 +177,15 @@ export default function NotificationCenter({ userEmail }) {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 20 }}
-                    className={`p-3 border-b border-gray-50 hover:bg-gray-50 transition-colors ${!notification.read ? 'bg-purple-50/50' : ''}`}
+                    onClick={() => {
+                      if (notification.action_url) {
+                        setNotifications(prev => prev.map(n => n.id === notification.id ? { ...n, read: true } : n));
+                        setUnreadCount(prev => Math.max(0, prev - (notification.read ? 0 : 1)));
+                        setIsOpen(false);
+                        navigate(notification.action_url);
+                      }
+                    }}
+                    className={`p-3 border-b border-gray-50 transition-colors ${!notification.read ? 'bg-purple-50/50' : ''} ${notification.action_url ? 'cursor-pointer hover:bg-purple-50' : 'hover:bg-gray-50'}`}
                   >
                     <div className="flex gap-3">
                       <div className={`p-2 rounded-lg ${config.bg} flex-shrink-0`}>
