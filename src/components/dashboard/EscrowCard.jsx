@@ -21,6 +21,7 @@ import InAppChat from '@/components/chat/InAppChat';
 import PaymentModal from '@/components/payment/PaymentModal';
 import BuyerModificationPanel from '@/components/escrow/BuyerModificationPanel';
 import { useCurrency } from '@/components/common/CurrencyContext';
+import { base44 } from '@/api/base44Client';
 
 const statusConfig = {
   pending_seller_acceptance: {
