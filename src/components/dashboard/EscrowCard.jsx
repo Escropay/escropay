@@ -170,14 +170,16 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
                   <AlertTriangle className="w-4 h-4 mr-1" />
                   Dispute
                 </Button>
-                <Button
-                  size="sm"
-                  onClick={() => onAction(escrow.id, 'released')}
-                  className="bg-emerald-500 hover:bg-emerald-600 text-white"
-                >
-                  <CheckCircle2 className="w-4 h-4 mr-1" />
-                  Release
-                </Button>
+                {currentUser?.email === escrow.buyer_email && (
+                  <Button
+                    size="sm"
+                    onClick={() => onAction(escrow.id, 'released')}
+                    className="bg-emerald-500 hover:bg-emerald-600 text-white"
+                  >
+                    <CheckCircle2 className="w-4 h-4 mr-1" />
+                    Release
+                  </Button>
+                )}
               </>
             )}
             {escrow.status === 'disputed' && (
@@ -191,13 +193,15 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
                   <Bot className="w-4 h-4 mr-1" />
                   AI Resolution
                 </Button>
-                <Button
-                  size="sm"
-                  onClick={() => onAction(escrow.id, 'refunded')}
-                  className="bg-gray-600 hover:bg-gray-700 text-white"
-                >
-                  Refund
-                </Button>
+                {currentUser?.email === escrow.buyer_email && (
+                  <Button
+                    size="sm"
+                    onClick={() => onAction(escrow.id, 'refunded')}
+                    className="bg-gray-600 hover:bg-gray-700 text-white"
+                  >
+                    Refund
+                  </Button>
+                )}
               </>
             )}
           </div>
