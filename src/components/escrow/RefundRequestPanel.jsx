@@ -25,7 +25,7 @@ export default function RefundRequestPanel({ escrow, currentUser, onUpdate }) {
     
     setIsSubmitting(true);
     try {
-      await onUpdate(escrow.id, {
+      await onUpdate({
         refund_request: {
           reason: reason,
           requested_by: currentUser.email,
@@ -83,7 +83,7 @@ export default function RefundRequestPanel({ escrow, currentUser, onUpdate }) {
         updates.released_at = new Date().toISOString();
       }
 
-      await onUpdate(escrow.id, updates);
+      await onUpdate(updates);
 
       // Notify buyer
       await base44.entities.Notification.create({
