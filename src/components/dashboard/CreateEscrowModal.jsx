@@ -8,7 +8,7 @@ import { X, Shield, DollarSign, User, Mail, Calendar } from 'lucide-react';
 import { useCurrency } from '@/components/common/CurrencyContext';
 
 export default function CreateEscrowModal({ isOpen, onClose, onSubmit, isLoading }) {
-  const { currency } = useCurrency();
+  const { currency, convertToZAR } = useCurrency();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -24,7 +24,8 @@ export default function CreateEscrowModal({ isOpen, onClose, onSubmit, isLoading
     e.preventDefault();
     onSubmit({
       ...formData,
-      amount: parseFloat(formData.amount)
+      amount: convertToZAR(parseFloat(formData.amount)),
+      currency: currency.code
     });
   };
 
