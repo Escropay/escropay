@@ -260,21 +260,24 @@ export default function Admin() {
                           {escrow.created_date ? format(new Date(escrow.created_date), 'MMM d, yyyy') : '-'}
                         </TableCell>
                         <TableCell>
-                          <Select
-                            value={escrow.status}
-                            onValueChange={(value) => handleEscrowStatusUpdate(escrow.id, value)}
-                          >
-                            <SelectTrigger className="w-28 h-8 text-xs">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="pending">Pending</SelectItem>
-                              <SelectItem value="funded">Funded</SelectItem>
-                              <SelectItem value="released">Released</SelectItem>
-                              <SelectItem value="disputed">Disputed</SelectItem>
-                              <SelectItem value="refunded">Refunded</SelectItem>
-                            </SelectContent>
-                          </Select>
+                          {escrow.status === 'released' ? (
+                            <Badge className="bg-emerald-100 text-emerald-700">Released</Badge>
+                          ) : (
+                            <Select
+                              value={escrow.status}
+                              onValueChange={(value) => handleEscrowStatusUpdate(escrow.id, value)}
+                            >
+                              <SelectTrigger className="w-28 h-8 text-xs">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="pending">Pending</SelectItem>
+                                <SelectItem value="funded">Funded</SelectItem>
+                                <SelectItem value="disputed">Disputed</SelectItem>
+                                <SelectItem value="refunded">Refunded</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          )}
                         </TableCell>
                       </TableRow>
                     ))
