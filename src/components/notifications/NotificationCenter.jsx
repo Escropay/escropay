@@ -23,6 +23,11 @@ const notificationIcons = {
   funded: { icon: Wallet, color: 'text-cyan-600', bg: 'bg-cyan-100' },
   released: { icon: CheckCircle2, color: 'text-emerald-600', bg: 'bg-emerald-100' },
   disputed: { icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-100' },
+  refunded: { icon: CheckCircle2, color: 'text-gray-600', bg: 'bg-gray-100' },
+  pending: { icon: Clock, color: 'text-amber-600', bg: 'bg-amber-100' },
+  pending_seller_acceptance: { icon: Clock, color: 'text-purple-600', bg: 'bg-purple-100' },
+  rejected_by_seller: { icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-100' },
+  modification_requested: { icon: Clock, color: 'text-orange-600', bg: 'bg-orange-100' },
   created: { icon: Clock, color: 'text-purple-600', bg: 'bg-purple-100' },
   chat_message: { icon: MessageCircle, color: 'text-blue-600', bg: 'bg-blue-100' }
 };
