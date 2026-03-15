@@ -27,6 +27,8 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { format } from 'date-fns';
 import { EmailService } from '@/components/utils/EmailService';
+import SellerAcceptancePanel from '@/components/escrow/SellerAcceptancePanel';
+import RefundRequestPanel from '@/components/escrow/RefundRequestPanel';
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
 
@@ -108,10 +110,35 @@ export default function EscrowView() {
     await updateMutation.mutateAsync({
       status: 'disputed',
       disputed_at: new Date().toISOString(),
-      dispute_reason: disputeReason
+      dispute_reason: disputeReason,
+      dispute_raised_by: currentUser?.email
     });
-    // Notify both parties
+    
+    // Notify both parties and admin
     if (escrow) {
+      const otherPartyEmail = currentUser?.email === escrow.buyer_email ? escrow.seller_email : escrow.buyer_email;
+      await base44.entities.Notification.create({
+        user_email: otherPartyEmail,
+        type: 'dispute_raised',
+        escrow_id: escrow.id,
+        title: 'Dispute raised',
+        message: `A dispute has been raised for ${escrow.title}`,
+        action_url: `/EscrowView?id=${escrow.id}`
+      });
+      
+      // Notify admins
+      const admins = await base44.entities.User.filter({ role: 'admin' });
+      for (const admin of admins) {
+        await base44.entities.Notification.create({
+          user_email: admin.email,
+          type: 'admin_action_required',
+          escrow_id: escrow.id,
+          title: 'Dispute requires resolution',
+          message: `${currentUser?.full_name || currentUser?.email} raised a dispute for ${escrow.title}`,
+          action_url: `/Admin`
+        });
+      }
+      
       EmailService.sendDisputeEmail(escrow, 'buyer').catch(() => {});
       EmailService.sendDisputeEmail(escrow, 'seller').catch(() => {});
     }
@@ -262,30 +289,12 @@ export default function EscrowView() {
           </div>
         </motion.div>
 
+        {/* Seller Acceptance Panel */}
+        <SellerAcceptancePanel escrow={escrow} onUpdate={updateMutation.mutateAsync} />
+
         {/* Seller Actions */}
-        {isSeller && (
+        {isSeller && escrow.status !== 'pending_seller_acceptance' && (
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="space-y-4">
-            
-            {/* Accept Escrow */}
-            {!escrow.recipient_accepted && (
-              <div className="bg-purple-50 border border-purple-200 rounded-2xl p-6">
-                <h3 className="font-semibold text-gray-900 flex items-center gap-2 mb-2">
-                  <FileText className="w-5 h-5 text-purple-600" />
-                  Accept Escrow Agreement
-                </h3>
-                <p className="text-sm text-gray-600 mb-4">
-                  By accepting, you agree to deliver the goods or services described and acknowledge that funds will only be released upon buyer confirmation.
-                </p>
-                <Button
-                  onClick={handleAccept}
-                  disabled={updateMutation.isPending}
-                  className="bg-purple-600 hover:bg-purple-700 text-white"
-                >
-                  {updateMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <CheckCircle2 className="w-4 h-4 mr-2" />}
-                  Accept Escrow Agreement
-                </Button>
-              </div>
-            )}
 
             {/* Banking Details */}
             <div className="bg-white border border-gray-200 rounded-2xl p-6">
@@ -404,6 +413,9 @@ export default function EscrowView() {
             )}
           </motion.div>
         )}
+
+        {/* Refund Request Panel */}
+        <RefundRequestPanel escrow={escrow} currentUser={currentUser} onUpdate={updateMutation.mutateAsync} />
 
         {/* Buyer info card */}
         {isBuyer && (

@@ -24,10 +24,13 @@ const statusConfig = {
   approved: { label: 'Approved', color: 'bg-emerald-100 text-emerald-700', icon: CheckCircle2 }
 };
 
-export default function MilestonePanel({ escrow, onUpdate, isLoading }) {
+export default function MilestonePanel({ escrow, onUpdate, isLoading, currentUser }) {
   const [expanded, setExpanded] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newMilestone, setNewMilestone] = useState({ title: '', amount: '', due_date: '' });
+  
+  const isSeller = currentUser?.email === escrow.seller_email;
+  const isBuyer = currentUser?.email === escrow.buyer_email;
   
   const milestones = escrow.milestones || [];
   const completedMilestones = milestones.filter(m => m.status === 'approved').length;
@@ -162,16 +165,16 @@ export default function MilestonePanel({ escrow, onUpdate, isLoading }) {
                           Start
                         </Button>
                       )}
-                      {milestone.status === 'in_progress' && (
+                      {milestone.status === 'in_progress' && isSeller && (
                         <Button
                           size="sm"
                           onClick={() => handleMilestoneAction(milestone.id, 'completed')}
                           className="text-xs h-7 bg-cyan-500 hover:bg-cyan-600"
                         >
-                          Complete
+                          Mark Complete
                         </Button>
                       )}
-                      {milestone.status === 'completed' && (
+                      {milestone.status === 'completed' && isBuyer && (
                         <Button
                           size="sm"
                           onClick={() => handleMilestoneAction(milestone.id, 'approved')}
