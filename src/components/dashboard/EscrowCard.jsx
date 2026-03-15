@@ -19,6 +19,7 @@ import MilestonePanel from './MilestonePanel';
 import DisputePanel from './DisputePanel';
 import InAppChat from '@/components/chat/InAppChat';
 import PaymentModal from '@/components/payment/PaymentModal';
+import BuyerModificationPanel from '@/components/escrow/BuyerModificationPanel';
 import { useCurrency } from '@/components/common/CurrencyContext';
 
 const statusConfig = {
@@ -201,6 +202,13 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
             )}
           </div>
         </div>
+
+        {/* Buyer Modification Panel */}
+        <BuyerModificationPanel
+          escrow={escrow}
+          currentUser={currentUser}
+          onUpdate={(data) => onUpdate(escrow.id, data)}
+        />
 
         {/* Milestone Panel */}
         {onUpdate && (
