@@ -18,6 +18,8 @@ import Footer from '@/components/common/Footer';
 import CurrencySwitcher from '@/components/common/CurrencySwitcher';
 import { useCurrency } from '@/components/common/CurrencyContext';
 import { EmailService } from '@/components/utils/EmailService';
+import ComplianceBanner from '@/components/compliance/ComplianceBanner';
+import { useComplianceGuard } from '@/hooks/useComplianceGuard';
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
 
@@ -32,6 +34,8 @@ function DashboardInner() {
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me()
   });
+
+  const { canTransact } = useComplianceGuard(currentUser);
 
   const { data: escrows = [], isLoading } = useQuery({
     queryKey: ['escrows'],
@@ -130,8 +134,10 @@ function DashboardInner() {
                                       </Button>
                                     </Link>
                                     <Button
-                                      onClick={() => setIsModalOpen(true)}
-                                      className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-medium shadow-lg shadow-purple-500/20"
+                                     onClick={() => canTransact && setIsModalOpen(true)}
+                                     disabled={!canTransact}
+                                     title={!canTransact ? 'Account pending compliance approval' : ''}
+                                     className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-medium shadow-lg shadow-purple-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                       <Plus className="w-4 h-4 md:mr-2" />
                                       <span className="hidden md:inline">New Escrow</span>
@@ -143,6 +149,9 @@ function DashboardInner() {
 
         {/* Main Content */}
         <main className="max-w-7xl mx-auto px-6 py-8">
+          {/* Compliance Banner */}
+          <ComplianceBanner accountStatus={currentUser?.account_status} />
+
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <StatsCard
