@@ -23,6 +23,7 @@ import BuyerModificationPanel from '@/components/escrow/BuyerModificationPanel';
 import SellerAcceptancePanel from '@/components/escrow/SellerAcceptancePanel';
 import { useCurrency } from '@/components/common/CurrencyContext';
 import { base44 } from '@/api/base44Client';
+import { useComplianceGuard } from '@/hooks/useComplianceGuard';
 
 const statusConfig = {
   pending_seller_acceptance: {
@@ -86,6 +87,7 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
   const otherPartyName = currentUser?.email === escrow.buyer_email ? escrow.seller_name : escrow.buyer_name;
   const isSeller = currentUser?.email === escrow.seller_email;
   const isBuyer = currentUser?.email === escrow.buyer_email;
+  const { canTransact } = useComplianceGuard(currentUser);
 
   const handlePaymentComplete = () => {
     onAction(escrow.id, 'funded');
@@ -172,8 +174,10 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
             {escrow.status === 'pending' && currentUser?.email === escrow.buyer_email && (
               <Button
                 size="sm"
-                onClick={() => setShowPaymentModal(true)}
-                className="bg-purple-600 hover:bg-purple-700 text-white"
+                onClick={() => canTransact && setShowPaymentModal(true)}
+                disabled={!canTransact}
+                title={!canTransact ? 'Account pending compliance approval' : ''}
+                className="bg-purple-600 hover:bg-purple-700 text-white disabled:opacity-50"
               >
                 <Wallet className="w-4 h-4 mr-1" />
                 Fund
@@ -190,7 +194,7 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
                   <AlertTriangle className="w-4 h-4 mr-1" />
                   Dispute
                 </Button>
-                {isSeller && (
+                {isSeller && canTransact && (
                   escrow.payout_requested ? (
                     <Badge className="bg-amber-100 text-amber-700 border border-amber-200 px-3 py-1">
                       <Clock className="w-3 h-3 mr-1" />
@@ -207,7 +211,7 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
                     </Button>
                   )
                 )}
-                {isBuyer && (
+                {isBuyer && canTransact && (
                   <Button
                     size="sm"
                     onClick={() => onAction(escrow.id, 'released')}
