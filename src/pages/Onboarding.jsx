@@ -58,10 +58,21 @@ export default function Onboarding() {
 
   const handleFinish = async () => {
     setLoading(true);
+    // Set account to PENDING_COMPLIANCE_APPROVAL — no transacting until approved
     await base44.auth.updateMe({
       ...form,
       kyc_status: form.kyc_documents.length > 0 ? 'pending' : 'not_started',
+      account_status: 'pending_compliance_approval',
+      onboarding_complete: true,
     });
+    // Trigger compliance engine to run initial risk scoring
+    const user = await base44.auth.me();
+    if (user?.id) {
+      base44.functions.invoke('runOnboardingCompliance', {
+        user_id: user.id,
+        user_email: user.email
+      }).catch(() => {}); // fire-and-forget
+    }
     window.location.href = createPageUrl('Dashboard');
   };
 
