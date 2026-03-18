@@ -34,11 +34,17 @@ import {
   ArrowLeft,
   RefreshCw,
   Eye,
-  Banknote
+  Banknote,
+  Ban,
+  ScrollText
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { format } from 'date-fns';
+import ComplianceQueueTab from '@/components/compliance/ComplianceQueueTab';
+import TransactionAlertsTab from '@/components/compliance/TransactionAlertsTab';
+import BlacklistTab from '@/components/compliance/BlacklistTab';
+import AuditLogTab from '@/components/compliance/AuditLogTab';
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
 
@@ -183,17 +189,81 @@ export default function Admin() {
           </motion.div>
         </div>
 
-        <Tabs defaultValue="escrows" className="space-y-6">
-          <TabsList className="bg-white border border-gray-200">
+        <Tabs defaultValue="compliance" className="space-y-6">
+          <TabsList className="bg-white border border-gray-200 flex-wrap h-auto gap-1 p-1">
+            <TabsTrigger value="compliance" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">
+              <Shield className="w-4 h-4 mr-1" />
+              <span className="hidden sm:inline">Compliance Queue</span>
+              <span className="sm:hidden">Compliance</span>
+            </TabsTrigger>
+            <TabsTrigger value="alerts" className="data-[state=active]:bg-red-100 data-[state=active]:text-red-700">
+              <AlertTriangle className="w-4 h-4 mr-1" />
+              <span className="hidden sm:inline">Transaction Alerts</span>
+              <span className="sm:hidden">Alerts</span>
+            </TabsTrigger>
+            <TabsTrigger value="blacklist" className="data-[state=active]:bg-red-100 data-[state=active]:text-red-700">
+              <Ban className="w-4 h-4 mr-1" />
+              Blacklist
+            </TabsTrigger>
+            <TabsTrigger value="audit" className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-700">
+              <ScrollText className="w-4 h-4 mr-1" />
+              <span className="hidden sm:inline">Audit Log</span>
+              <span className="sm:hidden">Audit</span>
+            </TabsTrigger>
             <TabsTrigger value="escrows" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">
-              <FileText className="w-4 h-4 mr-2" />
+              <FileText className="w-4 h-4 mr-1" />
               Escrows
             </TabsTrigger>
             <TabsTrigger value="users" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">
-              <Users className="w-4 h-4 mr-2" />
-              Users & KYC
+              <Users className="w-4 h-4 mr-1" />
+              <span className="hidden sm:inline">Users & KYC</span>
+              <span className="sm:hidden">Users</span>
             </TabsTrigger>
           </TabsList>
+
+          {/* Compliance Queue Tab */}
+          <TabsContent value="compliance">
+            <div className="bg-white border border-gray-200 rounded-xl p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-1 flex items-center gap-2">
+                <Shield className="w-5 h-5 text-purple-600" /> Compliance Review Queue
+              </h2>
+              <p className="text-sm text-gray-500 mb-5">Review and approve user accounts. No client may transact until compliance approval is granted.</p>
+              <ComplianceQueueTab />
+            </div>
+          </TabsContent>
+
+          {/* Transaction Alerts Tab */}
+          <TabsContent value="alerts">
+            <div className="bg-white border border-gray-200 rounded-xl p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-1 flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5 text-red-600" /> Transaction Monitoring Alerts
+              </h2>
+              <p className="text-sm text-gray-500 mb-5">Real-time alerts from the compliance rule engine (Rules 1–45). Review and action each alert.</p>
+              <TransactionAlertsTab />
+            </div>
+          </TabsContent>
+
+          {/* Blacklist Tab */}
+          <TabsContent value="blacklist">
+            <div className="bg-white border border-gray-200 rounded-xl p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-1 flex items-center gap-2">
+                <Ban className="w-5 h-5 text-red-600" /> Blacklist Management
+              </h2>
+              <p className="text-sm text-gray-500 mb-5">Manage identifiers that are permanently blocked from onboarding or transacting.</p>
+              <BlacklistTab />
+            </div>
+          </TabsContent>
+
+          {/* Audit Log Tab */}
+          <TabsContent value="audit">
+            <div className="bg-white border border-gray-200 rounded-xl p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-1 flex items-center gap-2">
+                <ScrollText className="w-5 h-5 text-gray-600" /> Audit Trail
+              </h2>
+              <p className="text-sm text-gray-500 mb-5">Immutable audit log of all compliance events. Retained 5 years per FICA requirements.</p>
+              <AuditLogTab />
+            </div>
+          </TabsContent>
 
           {/* Escrows Tab */}
           <TabsContent value="escrows">
