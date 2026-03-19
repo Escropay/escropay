@@ -134,9 +134,9 @@ function DashboardInner() {
                                       </Button>
                                     </Link>
                                     <Button
-                                     onClick={() => canTransact && setIsModalOpen(true)}
-                                     disabled={!canTransact}
-                                     title={!canTransact ? 'Account pending compliance approval' : ''}
+                                    onClick={() => canUseEscrow && setIsModalOpen(true)}
+                                    disabled={!canUseEscrow}
+                                    title={!canUseEscrow ? 'Your account is suspended or terminated' : ''}
                                      className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-medium shadow-lg shadow-purple-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                       <Plus className="w-4 h-4 md:mr-2" />
