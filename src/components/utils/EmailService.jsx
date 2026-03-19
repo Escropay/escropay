@@ -282,11 +282,10 @@ export const EmailService = {
       <a href="https://escropay.app" class="button">Complete Verification</a>
     `;
 
-    return base44.integrations.Core.SendEmail({
+    return sendEmail({
       to: userEmail,
       subject: 'Action Required: Complete Your KYC Verification',
       body: getEmailTemplate(content, 'KYC Verification'),
-      from_name: 'Escropay'
     });
   }
 };
