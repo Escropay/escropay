@@ -174,9 +174,9 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
             {escrow.status === 'pending' && currentUser?.email === escrow.buyer_email && (
               <Button
                 size="sm"
-                onClick={() => canTransact && setShowPaymentModal(true)}
-                disabled={!canTransact}
-                title={!canTransact ? 'Account pending compliance approval' : ''}
+                onClick={() => canMakePayments && setShowPaymentModal(true)}
+                disabled={!canMakePayments}
+                title={!canMakePayments ? 'Complete KYC verification to fund escrow' : ''}
                 className="bg-purple-600 hover:bg-purple-700 text-white disabled:opacity-50"
               >
                 <Wallet className="w-4 h-4 mr-1" />
@@ -194,7 +194,7 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
                   <AlertTriangle className="w-4 h-4 mr-1" />
                   Dispute
                 </Button>
-                {isSeller && canTransact && (
+                {isSeller && canMakePayments && (
                   escrow.payout_requested ? (
                     <Badge className="bg-amber-100 text-amber-700 border border-amber-200 px-3 py-1">
                       <Clock className="w-3 h-3 mr-1" />
@@ -211,7 +211,7 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
                     </Button>
                   )
                 )}
-                {isBuyer && canTransact && (
+                {isBuyer && canMakePayments && (
                   <Button
                     size="sm"
                     onClick={() => onAction(escrow.id, 'released')}

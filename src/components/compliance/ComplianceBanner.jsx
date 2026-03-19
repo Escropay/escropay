@@ -20,7 +20,7 @@ const statusConfig = {
     textColor: 'text-amber-700',
     title: 'Account Pending Compliance Approval',
     message:
-      'Your account is under review by our compliance team. You cannot create, fund, or release escrow transactions until your identity is verified and your account is approved.',
+      'Your account is under review. You can create and manage escrow transactions, but funding and payouts are locked until your KYC is verified and approved.',
     action: 'Complete KYC',
     actionUrl: 'Profile',
     actionTab: '?tab=kyc',
