@@ -70,11 +70,10 @@ export const EmailService = {
       <p style="font-size: 14px; color: #9ca3af;">Need help? Contact us at info@escropay.app</p>
     `;
 
-    return base44.integrations.Core.SendEmail({
+    return sendEmail({
       to: userEmail,
       subject: 'Welcome to Escropay - Secure Escrow Platform',
       body: getEmailTemplate(content, 'Welcome to Escropay'),
-      from_name: 'Escropay'
     });
   },
 
