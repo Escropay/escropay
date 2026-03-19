@@ -1,5 +1,11 @@
 import { base44 } from '@/api/base44Client';
 
+// Internal helper — routes all email through the Resend-backed backend function
+// so we can send to ANY address including unregistered users
+async function sendEmail({ to, subject, body, from_name = 'Escropay' }) {
+  return base44.functions.invoke('sendEmail', { to, subject, body, from_name });
+}
+
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
 
 // Email templates
