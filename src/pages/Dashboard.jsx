@@ -35,7 +35,7 @@ function DashboardInner() {
     queryFn: () => base44.auth.me()
   });
 
-  const { canTransact } = useComplianceGuard(currentUser);
+  const { canUseEscrow } = useComplianceGuard(currentUser);
 
   const { data: escrows = [], isLoading } = useQuery({
     queryKey: ['escrows'],
