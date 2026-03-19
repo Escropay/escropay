@@ -175,11 +175,10 @@ export const EmailService = {
       <a href="https://escropay.app" class="button">View Details</a>
     `;
 
-    return base44.integrations.Core.SendEmail({
+    return sendEmail({
       to: recipientEmail,
       subject: `Funds Released: ${escrow.title}`,
       body: getEmailTemplate(content, 'Funds Released'),
-      from_name: 'Escropay'
     });
   },
 
