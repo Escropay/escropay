@@ -108,11 +108,10 @@ export const EmailService = {
       <a href="https://escropay.app" class="button">View Escrow</a>
     `;
 
-    return base44.integrations.Core.SendEmail({
+    return sendEmail({
       to: recipientEmail,
       subject: `New Escrow: ${escrow.title} - R ${escrow.amount?.toLocaleString()}`,
       body: getEmailTemplate(content, 'New Escrow Created'),
-      from_name: 'Escropay'
     });
   },
 
