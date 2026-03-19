@@ -41,18 +41,11 @@ export default function SellerAcceptancePanel({ escrow, onUpdate, currentUser })
         action_url: `/EscrowView?id=${escrow.id}`
       });
 
-      // Send email
-      await base44.integrations.Core.SendEmail({
+      // Send email via Resend
+      await base44.functions.invoke('sendEmail', {
         to: escrow.buyer_email,
         subject: `Transaction Accepted - ${escrow.title}`,
-        body: `
-          <h2>Escrow Transaction Accepted</h2>
-          <p><strong>${escrow.seller_name || escrow.seller_email}</strong> has accepted your escrow transaction.</p>
-          <p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p>
-          <p><strong>Amount:</strong> R${escrow.amount.toLocaleString()}</p>
-          <p>You can now proceed to fund the escrow.</p>
-          <p><a href="${window.location.origin}/EscrowView?id=${escrow.id}">View transaction</a></p>
-        `
+        body: `<h2>Escrow Transaction Accepted</h2><p><strong>${escrow.seller_name || escrow.seller_email}</strong> has accepted your escrow transaction.</p><p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p><p><strong>Amount:</strong> R${escrow.amount.toLocaleString()}</p><p>You can now proceed to fund the escrow.</p><p><a href="${window.location.origin}/EscrowView?id=${escrow.id}">View transaction</a></p>`
       });
     } catch (err) {
       console.error('Accept failed:', err);
@@ -77,16 +70,11 @@ export default function SellerAcceptancePanel({ escrow, onUpdate, currentUser })
         action_url: `/EscrowView?id=${escrow.id}`
       });
 
-      // Send email
-      await base44.integrations.Core.SendEmail({
+      // Send email via Resend
+      await base44.functions.invoke('sendEmail', {
         to: escrow.buyer_email,
         subject: `Transaction Rejected - ${escrow.title}`,
-        body: `
-          <h2>Escrow Transaction Rejected</h2>
-          <p><strong>${escrow.seller_name || escrow.seller_email}</strong> has rejected your escrow transaction.</p>
-          <p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p>
-          <p>The transaction has been cancelled.</p>
-        `
+        body: `<h2>Escrow Transaction Rejected</h2><p><strong>${escrow.seller_name || escrow.seller_email}</strong> has rejected your escrow transaction.</p><p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p><p>The transaction has been cancelled.</p>`
       });
     } catch (err) {
       console.error('Reject failed:', err);
@@ -118,18 +106,11 @@ export default function SellerAcceptancePanel({ escrow, onUpdate, currentUser })
         action_url: `/EscrowView?id=${escrow.id}`
       });
 
-      // Send email
-      await base44.integrations.Core.SendEmail({
+      // Send email via Resend
+      await base44.functions.invoke('sendEmail', {
         to: escrow.buyer_email,
         subject: `Modification Requested - ${escrow.title}`,
-        body: `
-          <h2>Transaction Modification Requested</h2>
-          <p><strong>${escrow.seller_name || escrow.seller_email}</strong> has requested changes to the escrow transaction.</p>
-          <p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p>
-          <p><strong>Reason:</strong> ${modificationReason}</p>
-          <p><strong>Requested Changes:</strong> ${requestedChanges}</p>
-          <p><a href="${window.location.origin}/EscrowView?id=${escrow.id}">Review and modify transaction</a></p>
-        `
+        body: `<h2>Transaction Modification Requested</h2><p><strong>${escrow.seller_name || escrow.seller_email}</strong> has requested changes to the escrow transaction.</p><p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p><p><strong>Reason:</strong> ${modificationReason}</p><p><strong>Requested Changes:</strong> ${requestedChanges}</p><p><a href="${window.location.origin}/EscrowView?id=${escrow.id}">Review and modify transaction</a></p>`
       });
     } catch (err) {
       console.error('Request modification failed:', err);

@@ -34,6 +34,9 @@ import BuyerModificationPanel from '@/components/escrow/BuyerModificationPanel';
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
 
 const statusConfig = {
+  pending_seller_acceptance: { label: 'Pending Acceptance', color: 'bg-purple-100 text-purple-700', icon: Clock, description: 'Waiting for the seller to accept this escrow.' },
+  modification_requested: { label: 'Modification Requested', color: 'bg-orange-100 text-orange-700', icon: Clock, description: 'The seller has requested changes to the terms.' },
+  rejected_by_seller: { label: 'Rejected by Seller', color: 'bg-red-100 text-red-700', icon: AlertTriangle, description: 'The seller has rejected this transaction.' },
   pending: { label: 'Pending Funding', color: 'bg-amber-100 text-amber-700', icon: Clock, description: 'Waiting for the buyer to fund this escrow.' },
   funded: { label: 'Funded – In Progress', color: 'bg-cyan-100 text-cyan-700', icon: Wallet, description: 'Funds are secured. Proceed with delivery.' },
   released: { label: 'Completed', color: 'bg-emerald-100 text-emerald-700', icon: CheckCircle2, description: 'Funds have been released to the seller.' },

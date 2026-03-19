@@ -123,13 +123,15 @@ function HomeInner() {
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
               </Link>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-gray-300 text-gray-700 hover:bg-gray-50 text-lg px-8 w-full sm:w-auto"
-              >
-                View Documentation
-              </Button>
+              <Link to={createPageUrl('Documentation')}>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-gray-300 text-gray-700 hover:bg-gray-50 text-lg px-8 w-full sm:w-auto"
+                >
+                  View Documentation
+                </Button>
+              </Link>
             </div>
           </motion.div>
 
