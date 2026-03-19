@@ -11,7 +11,15 @@
 export function useComplianceGuard(user) {
   const status = user?.account_status;
 
-  const canTransact = status === 'active';
+  // Full payment actions (fund, release, payout) require verified/active account
+  const canMakePayments = status === 'active';
+
+  // Creating/receiving escrow, chatting, accepting, disputing — allowed for all non-blocked users
+  const BLOCKED_STATUSES = ['suspended', 'terminated', 'blacklisted'];
+  const canUseEscrow = !BLOCKED_STATUSES.includes(status);
+
+  // Legacy alias kept for any existing usages
+  const canTransact = canMakePayments;
 
   const statusLabel = {
     pending_compliance_approval: 'Pending Compliance Approval',
@@ -22,18 +30,18 @@ export function useComplianceGuard(user) {
     blacklisted: 'Blacklisted',
   }[status] || 'Pending Compliance Approval';
 
-  const blockReason = {
+  const paymentBlockReason = !canMakePayments ? {
     pending_compliance_approval:
-      'Your account is pending compliance approval. Please complete your KYC verification and await review.',
+      'Complete your KYC verification to fund or receive payouts.',
     restricted:
-      'Your account is restricted pending Enhanced Due Diligence (EDD). Our compliance team will contact you.',
+      'Payments are restricted pending Enhanced Due Diligence (EDD). Contact compliance@escropay.co.za.',
     suspended:
-      'Your account has been suspended. Please contact compliance@escropay.co.za for assistance.',
+      'Your account has been suspended. Contact compliance@escropay.co.za.',
     terminated:
-      'Your account has been terminated. Please contact compliance@escropay.co.za.',
+      'Your account has been terminated. Contact compliance@escropay.co.za.',
     blacklisted:
-      'Your account has been flagged. Please contact compliance@escropay.co.za.',
-  }[status] || null;
+      'Your account has been flagged. Contact compliance@escropay.co.za.',
+  }[status] || null : null;
 
-  return { canTransact, blockReason, statusLabel, accountStatus: status };
+  return { canTransact, canMakePayments, canUseEscrow, paymentBlockReason, statusLabel, accountStatus: status };
 }
