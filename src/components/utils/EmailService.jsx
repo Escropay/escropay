@@ -207,11 +207,10 @@ export const EmailService = {
       <p style="font-size: 14px; color: #9ca3af;">Need assistance? Contact us at disputes@escropay.app</p>
     `;
 
-    return base44.integrations.Core.SendEmail({
+    return sendEmail({
       to: recipientEmail,
       subject: `Dispute Alert: ${escrow.title}`,
       body: getEmailTemplate(content, 'Dispute Raised'),
-      from_name: 'Escropay'
     });
   },
 
