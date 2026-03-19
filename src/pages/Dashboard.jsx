@@ -57,10 +57,10 @@ function DashboardInner() {
     onSuccess: (createdEscrow) => {
       queryClient.invalidateQueries({ queryKey: ['escrows'] });
       setIsModalOpen(false);
-      // Send invitation email to seller
-      EmailService.sendEscrowInvitationEmail(createdEscrow).catch(() => {});
-      // Also notify buyer
-      EmailService.sendEscrowCreatedEmail(createdEscrow, 'buyer').catch(() => {});
+      // Send invitation email to seller (the other party who needs to accept/reject)
+      EmailService.sendEscrowInvitationEmail(createdEscrow).catch(console.error);
+      // Also notify buyer with confirmation
+      EmailService.sendEscrowCreatedEmail(createdEscrow, 'buyer').catch(console.error);
     }
   });
 
