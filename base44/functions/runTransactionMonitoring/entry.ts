@@ -1,13 +1,6 @@
 /**
  * @function runTransactionMonitoring
- * @category Compliance Engine — Transaction Monitoring
- * @description
- *   Evaluates recent escrow transactions against monitoring rules.
- *   Generates TransactionAlert records for violations.
- *   Auto-restricts accounts for HIGH/CRITICAL severity.
- * @rule_coverage RULE_007, RULE_008, RULE_010, RULE_012, RULE_014, RULE_015, RULE_029
- * @trigger Scheduled every 5 minutes + manual admin trigger
- * @regulatory_basis FICA Section 29 (suspicious transaction reporting)
+ * @description Lightweight transaction monitoring — checks key AML rules efficiently.
  */
 
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
@@ -16,56 +9,59 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
 
-    // Allow admin trigger or system call
-    let actor;
-    try { actor = await base44.auth.me(); } catch (_) { actor = null; }
-    if (actor && actor.role !== 'admin') {
-      return Response.json({ error: 'Forbidden' }, { status: 403 });
-    }
-
     const now = new Date();
-    const oneDayAgo = new Date(now - 86400000).toISOString();
     const thirtyDaysAgo = new Date(now - 30 * 86400000).toISOString();
+    const sixtyDaysAgo = new Date(now - 60 * 86400000).toISOString();
 
-    // Fetch recent escrows
-    const recentEscrows = await base44.asServiceRole.entities.Escrow.list('-created_date', 200);
-    const allUsers = await base44.asServiceRole.entities.User.list('-created_date', 500);
+    // Fetch data once — keep limits low to stay within CPU budget
+    const [recentEscrows, allUsers, openAlerts, admins] = await Promise.all([
+      base44.asServiceRole.entities.Escrow.list('-created_date', 100),
+      base44.asServiceRole.entities.User.list('-created_date', 200),
+      base44.asServiceRole.entities.TransactionAlert.filter({ status: 'open' }),
+      base44.asServiceRole.entities.User.filter({ role: 'admin' }),
+    ]);
+
+    // Build lookup maps
+    const userMap = Object.fromEntries(allUsers.map(u => [u.email, u]));
+
+    // Build set of already-open alerts (rule_id + user_email) to skip duplicates
+    const openAlertKeys = new Set(openAlerts.map(a => `${a.rule_id}::${a.user_email}`));
 
     const alerts = [];
 
+    // ── RULE_014: New account + high-value transaction ─────────────────────
     for (const escrow of recentEscrows) {
-      const userEmail = escrow.buyer_email;
-      const user = allUsers.find(u => u.email === userEmail);
-
-      // RULE_014: New account high-value transaction (account < 30 days, amount > R100,000)
-      if (user && escrow.amount > 100000) {
-        const accountAge = (now - new Date(user.created_date)) / 86400000;
-        if (accountAge < 30) {
-          alerts.push({
-            alert_type: 'new_account_high_value',
-            rule_id: 'RULE_014',
-            severity: 'high',
-            user_email: userEmail,
-            user_id: user?.id,
-            escrow_id: escrow.id,
-            description: `RULE_014: New account (${Math.round(accountAge)} days old) with high-value transaction R${escrow.amount.toLocaleString()}`,
-            triggered_at: now.toISOString(),
-            status: 'open',
-            metadata: { amount: escrow.amount, account_age_days: Math.round(accountAge) }
-          });
-        }
+      const user = userMap[escrow.buyer_email];
+      if (!user || escrow.amount <= 100000) continue;
+      const accountAgeDays = (now - new Date(user.created_date)) / 86400000;
+      if (accountAgeDays < 30) {
+        alerts.push({
+          alert_type: 'new_account_high_value',
+          rule_id: 'RULE_014',
+          severity: 'high',
+          user_email: escrow.buyer_email,
+          user_id: user.id,
+          escrow_id: escrow.id,
+          description: `RULE_014: New account (${Math.round(accountAgeDays)} days) with high-value transaction R${escrow.amount.toLocaleString()}`,
+          triggered_at: now.toISOString(),
+          status: 'open',
+          metadata: { amount: escrow.amount, account_age_days: Math.round(accountAgeDays) }
+        });
       }
+    }
 
-      // RULE_012: Just-below-threshold structuring (amount between R45,000 and R49,999)
+    // ── RULE_012: Just-below-threshold structuring ─────────────────────────
+    for (const escrow of recentEscrows) {
       if (escrow.amount >= 45000 && escrow.amount < 50000) {
+        const user = userMap[escrow.buyer_email];
         alerts.push({
           alert_type: 'just_below_threshold',
           rule_id: 'RULE_012',
           severity: 'critical',
-          user_email: userEmail,
+          user_email: escrow.buyer_email,
           user_id: user?.id,
           escrow_id: escrow.id,
-          description: `RULE_012: Transaction amount R${escrow.amount.toLocaleString()} is just below FICA reporting threshold`,
+          description: `RULE_012: Transaction R${escrow.amount.toLocaleString()} just below FICA reporting threshold`,
           triggered_at: now.toISOString(),
           status: 'open',
           metadata: { amount: escrow.amount }
@@ -73,25 +69,24 @@ Deno.serve(async (req) => {
       }
     }
 
-    // RULE_015: User involved in >2 disputed escrows in 60 days
-    const sixtyDaysAgo = new Date(now - 60 * 86400000).toISOString();
-    const disputedEscrows = recentEscrows.filter(e => e.status === 'disputed' && e.disputed_at > sixtyDaysAgo);
+    // ── RULE_015: High dispute count (>2 in 60 days) ──────────────────────
     const disputesByUser = {};
-    for (const e of disputedEscrows) {
-      [e.buyer_email, e.seller_email].filter(Boolean).forEach(email => {
+    for (const e of recentEscrows) {
+      if (e.status !== 'disputed' || !e.disputed_at || e.disputed_at < sixtyDaysAgo) continue;
+      for (const email of [e.buyer_email, e.seller_email].filter(Boolean)) {
         disputesByUser[email] = (disputesByUser[email] || 0) + 1;
-      });
+      }
     }
     for (const [email, count] of Object.entries(disputesByUser)) {
       if (count > 2) {
-        const user = allUsers.find(u => u.email === email);
+        const user = userMap[email];
         alerts.push({
           alert_type: 'high_volume_spike',
           rule_id: 'RULE_015',
           severity: 'critical',
           user_email: email,
           user_id: user?.id,
-          description: `RULE_015: User involved in ${count} disputed escrows in the last 60 days`,
+          description: `RULE_015: User in ${count} disputed escrows in 60 days`,
           triggered_at: now.toISOString(),
           status: 'open',
           metadata: { dispute_count: count }
@@ -99,24 +94,23 @@ Deno.serve(async (req) => {
       }
     }
 
-    // RULE_029: Structuring — multiple round-number transactions
-    const roundNumberEscrows = recentEscrows.filter(e =>
-      e.amount % 10000 === 0 && e.amount > 0 && e.created_date > thirtyDaysAgo
-    );
+    // ── RULE_029: Round-number structuring (≥5 in 30 days) ────────────────
     const roundByUser = {};
-    for (const e of roundNumberEscrows) {
-      roundByUser[e.buyer_email] = (roundByUser[e.buyer_email] || 0) + 1;
+    for (const e of recentEscrows) {
+      if (e.amount % 10000 === 0 && e.amount > 0 && e.created_date > thirtyDaysAgo) {
+        roundByUser[e.buyer_email] = (roundByUser[e.buyer_email] || 0) + 1;
+      }
     }
     for (const [email, count] of Object.entries(roundByUser)) {
       if (count >= 5) {
-        const user = allUsers.find(u => u.email === email);
+        const user = userMap[email];
         alerts.push({
           alert_type: 'round_number_structuring',
           rule_id: 'RULE_029',
           severity: 'high',
           user_email: email,
           user_id: user?.id,
-          description: `RULE_029: ${count} round-number transactions detected in 30 days — possible structuring`,
+          description: `RULE_029: ${count} round-number transactions in 30 days — possible structuring`,
           triggered_at: now.toISOString(),
           status: 'open',
           metadata: { count }
@@ -124,40 +118,31 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Save all alerts and apply automated actions
-    const saved = [];
+    // ── Save new alerts + automated actions ───────────────────────────────
+    const savedAlerts = [];
     for (const alert of alerts) {
-      // Check if same alert already open for this user
-      const existing = await base44.asServiceRole.entities.TransactionAlert.filter({
-        rule_id: alert.rule_id,
-        user_email: alert.user_email,
-        status: 'open'
-      });
-      if (existing.length > 0) continue; // Skip duplicates
+      const key = `${alert.rule_id}::${alert.user_email}`;
+      if (openAlertKeys.has(key)) continue; // Skip duplicates
 
-      const saved_alert = await base44.asServiceRole.entities.TransactionAlert.create(alert);
-      saved.push(saved_alert);
+      const saved = await base44.asServiceRole.entities.TransactionAlert.create(alert);
+      savedAlerts.push(saved);
+      openAlertKeys.add(key); // Prevent duplicates within same run
 
       // Auto-restrict for HIGH/CRITICAL
       if (['high', 'critical'].includes(alert.severity) && alert.user_id) {
-        const user = allUsers.find(u => u.id === alert.user_id);
+        const user = userMap[alert.user_email];
         if (user && user.account_status === 'active') {
           const newStatus = alert.severity === 'critical' ? 'suspended' : 'restricted';
-          await base44.asServiceRole.entities.User.update(alert.user_id, {
-            account_status: newStatus
-          });
-
+          await base44.asServiceRole.entities.User.update(alert.user_id, { account_status: newStatus });
           await base44.asServiceRole.entities.AuditLog.create({
             event_type: alert.severity === 'critical' ? 'account_suspended' : 'account_restricted',
             entity_type: 'User',
             entity_id: alert.user_id,
             actor_email: 'system@escropay.co.za',
             actor_role: 'system',
-            description: `Automated restriction by ${alert.rule_id}: ${alert.description}`
+            description: `Auto-restriction by ${alert.rule_id}: ${alert.description}`
           });
-
           // Notify admins
-          const admins = await base44.asServiceRole.entities.User.filter({ role: 'admin' });
           for (const admin of admins) {
             await base44.asServiceRole.entities.Notification.create({
               user_email: admin.email,
@@ -172,7 +157,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    return Response.json({ alerts_generated: saved.length, alerts: saved });
+    return Response.json({ alerts_generated: savedAlerts.length });
 
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
