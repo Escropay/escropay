@@ -255,11 +255,10 @@ export const EmailService = {
       </p>
     `;
 
-    return base44.integrations.Core.SendEmail({
+    return sendEmail({
       to: escrow.seller_email,
       subject: `You're invited to an escrow agreement: ${escrow.title}`,
       body: getEmailTemplate(content, 'Escrow Invitation'),
-      from_name: 'Escropay'
     });
   },
 
