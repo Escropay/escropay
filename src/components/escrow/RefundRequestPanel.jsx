@@ -46,17 +46,10 @@ export default function RefundRequestPanel({ escrow, currentUser, onUpdate }) {
           action_url: `/Admin`
         });
 
-        await base44.integrations.Core.SendEmail({
+        await base44.functions.invoke('sendEmail', {
           to: admin.email,
           subject: `Refund Request - ${escrow.title}`,
-          body: `
-            <h2>Refund Request Pending Approval</h2>
-            <p><strong>${currentUser.full_name || currentUser.email}</strong> has requested a refund.</p>
-            <p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p>
-            <p><strong>Amount:</strong> R${escrow.amount.toLocaleString()}</p>
-            <p><strong>Reason:</strong> ${reason}</p>
-            <p><a href="${window.location.origin}/Admin">Review in Admin Panel</a></p>
-          `
+          body: `<h2>Refund Request Pending Approval</h2><p><strong>${currentUser.full_name || currentUser.email}</strong> has requested a refund.</p><p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p><p><strong>Amount:</strong> R${escrow.amount.toLocaleString()}</p><p><strong>Reason:</strong> ${reason}</p><p><a href="${window.location.origin}/Admin">Review in Admin Panel</a></p>`
         });
       }
 
@@ -97,16 +90,10 @@ export default function RefundRequestPanel({ escrow, currentUser, onUpdate }) {
         action_url: `/EscrowView?id=${escrow.id}`
       });
 
-      await base44.integrations.Core.SendEmail({
+      await base44.functions.invoke('sendEmail', {
         to: escrow.refund_request.requested_by,
         subject: `Refund ${approved ? 'Approved' : 'Denied'} - ${escrow.title}`,
-        body: `
-          <h2>Refund Request ${approved ? 'Approved' : 'Denied'}</h2>
-          <p>Your refund request has been ${approved ? 'approved' : 'denied'} by admin.</p>
-          <p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p>
-          ${notes ? `<p><strong>Admin Notes:</strong> ${notes}</p>` : ''}
-          <p><a href="${window.location.origin}/EscrowView?id=${escrow.id}">View transaction</a></p>
-        `
+        body: `<h2>Refund Request ${approved ? 'Approved' : 'Denied'}</h2><p>Your refund request has been ${approved ? 'approved' : 'denied'} by admin.</p><p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p>${notes ? `<p><strong>Admin Notes:</strong> ${notes}</p>` : ''}<p><a href="${window.location.origin}/EscrowView?id=${escrow.id}">View transaction</a></p>`
       });
     } catch (err) {
       console.error('Admin decision failed:', err);
