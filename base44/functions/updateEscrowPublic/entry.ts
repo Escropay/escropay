@@ -6,32 +6,38 @@ const allowedStatuses = ['pending', 'rejected_by_seller', 'modification_requeste
 const allowedFields = ['status', 'recipient_accepted', 'recipient_accepted_at', 'modification_request'];
 
 Deno.serve(async (req) => {
+  const { escrow_id, update_data } = await req.json();
+
+  if (!escrow_id || !update_data) {
+    return Response.json({ error: 'Missing escrow_id or update_data' }, { status: 400 });
+  }
+
+  if (update_data.status && !allowedStatuses.includes(update_data.status)) {
+    return Response.json({ error: 'Status not allowed' }, { status: 403 });
+  }
+
+  // Verify escrow exists and is in correct state
+  let escrow;
   try {
-    const { escrow_id, update_data } = await req.json();
-
-    if (!escrow_id || !update_data) {
-      return Response.json({ error: 'Missing escrow_id or update_data' }, { status: 400 });
-    }
-
-    if (update_data.status && !allowedStatuses.includes(update_data.status)) {
-      return Response.json({ error: 'Status not allowed' }, { status: 403 });
-    }
-
-    // Verify escrow is in the right state before updating
-    const escrow = await base44.entities.Escrow.get(escrow_id);
-    if (!escrow) {
+    escrow = await base44.entities.Escrow.get(escrow_id);
+  } catch (error) {
+    if (error.message?.includes('not found') || error.status === 404) {
       return Response.json({ error: 'Escrow not found' }, { status: 404 });
     }
-    if (escrow.status !== 'pending_seller_acceptance') {
-      return Response.json({ error: 'Escrow is not pending seller acceptance' }, { status: 403 });
-    }
+    return Response.json({ error: error.message }, { status: 500 });
+  }
 
-    // Only allow safe fields
-    const safeUpdate = {};
-    for (const key of allowedFields) {
-      if (update_data[key] !== undefined) safeUpdate[key] = update_data[key];
-    }
+  if (escrow.status !== 'pending_seller_acceptance') {
+    return Response.json({ error: 'Escrow is not pending seller acceptance' }, { status: 403 });
+  }
 
+  // Only allow safe fields
+  const safeUpdate = {};
+  for (const key of allowedFields) {
+    if (update_data[key] !== undefined) safeUpdate[key] = update_data[key];
+  }
+
+  try {
     const updated = await base44.entities.Escrow.update(escrow_id, safeUpdate);
     return Response.json({ escrow: updated });
   } catch (error) {
