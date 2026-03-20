@@ -118,7 +118,7 @@ function DashboardInner() {
         <header className="border-b border-gray-200 backdrop-blur-xl bg-white/80 sticky top-0 z-20">
           <div className="max-w-7xl mx-auto px-6 py-4">
             <div className="flex items-center justify-between">
-              <Link to={createPageUrl('Dashboard')}>
+              <Link to="/">
                 <img src={LOGO_URL} alt="Escropay" className="h-8 md:h-10 w-auto" />
               </Link>
               <div className="flex items-center gap-2 md:gap-3">
@@ -216,6 +216,7 @@ function DashboardInner() {
                                     <Tabs value={activeFilter} onValueChange={setActiveFilter}>
                                       <TabsList className="bg-white border border-gray-200">
                                         <TabsTrigger value="all" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">All</TabsTrigger>
+                                        <TabsTrigger value="pending_seller_acceptance" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">Awaiting</TabsTrigger>
                                         <TabsTrigger value="pending" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">Pending</TabsTrigger>
                                         <TabsTrigger value="funded" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">Funded</TabsTrigger>
                                         <TabsTrigger value="released" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">Released</TabsTrigger>

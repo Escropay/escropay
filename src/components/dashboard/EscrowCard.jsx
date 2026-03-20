@@ -252,6 +252,7 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
         <SellerAcceptancePanel
           escrow={escrow}
           currentUser={currentUser}
+          isLoadingUser={!currentUser && currentUser !== null ? true : false}
           onUpdate={(data) => onUpdate(escrow.id, data)}
         />
 

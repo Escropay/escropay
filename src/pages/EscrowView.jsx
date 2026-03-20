@@ -312,8 +312,8 @@ export default function EscrowView() {
         {/* Seller Acceptance Panel */}
         <SellerAcceptancePanel escrow={escrow} onUpdate={updateMutation.mutateAsync} currentUser={currentUser} isLoadingUser={isLoadingUser} />
 
-        {/* Seller Actions */}
-        {isSeller && escrow.status !== 'pending_seller_acceptance' && (
+        {/* Seller/Buyer Actions */}
+        {(isSeller || isBuyer) && escrow.status !== 'pending_seller_acceptance' && (
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="space-y-4">
 
             {/* Banking Details */}
@@ -389,7 +389,8 @@ export default function EscrowView() {
               )}
             </div>
 
-            {/* Dispute Button for funded escrows */}
+            {/* Banking Details — seller only */}
+            {/* Dispute Button for funded escrows — both buyer and seller */}
             {escrow.status === 'funded' && (
               <div className="bg-white border border-gray-200 rounded-2xl p-6">
                 <h3 className="font-semibold text-gray-900 flex items-center gap-2 mb-2">
