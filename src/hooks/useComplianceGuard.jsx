@@ -12,8 +12,8 @@ export function useComplianceGuard(user) {
   const status = user?.account_status;
 
   // Full payment actions (fund, release, payout) require verified/active account
-  // Admins always have full access
-  const canMakePayments = status === 'active' || user?.role === 'admin';
+  // Admins always have full access; also allow if kyc_status is verified but account_status not yet set
+  const canMakePayments = status === 'active' || user?.role === 'admin' || (!status && user?.kyc_status === 'verified');
 
   // Creating/receiving escrow, chatting, accepting, disputing — allowed for all non-blocked users
   const BLOCKED_STATUSES = ['suspended', 'terminated', 'blacklisted'];
