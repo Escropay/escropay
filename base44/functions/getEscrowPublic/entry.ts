@@ -1,9 +1,6 @@
-/**
- * @function getEscrowPublic
- * @description Fetches an escrow by ID using service role — for unauthenticated sellers viewing from email links.
- * Only returns the escrow if it exists. Updates (accept/reject) still require auth via the normal entity API.
- */
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
+import { createClient } from 'npm:@base44/sdk@0.8.21';
+
+const base44 = createClient({ appId: Deno.env.get('BASE44_APP_ID'), useServiceRole: true });
 
 Deno.serve(async (req) => {
   try {
@@ -13,8 +10,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'escrow_id required' }, { status: 400 });
     }
 
-    const base44 = createClientFromRequest(req);
-    const escrow = await base44.asServiceRole.entities.Escrow.get(escrow_id);
+    const escrow = await base44.entities.Escrow.get(escrow_id);
 
     if (!escrow) {
       return Response.json({ error: 'Escrow not found' }, { status: 404 });
