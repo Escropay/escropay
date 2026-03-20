@@ -75,15 +75,23 @@ export default function EscrowView() {
   const [disputeReason, setDisputeReason] = useState('');
   const [isSavingBank, setIsSavingBank] = useState(false);
 
-  const { data: currentUser } = useQuery({
+  const { data: currentUser, isLoading: isLoadingUser } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me().catch(() => null)
   });
 
   const { data: escrow, isLoading } = useQuery({
     queryKey: ['escrow', escrowId],
-    queryFn: () => base44.entities.Escrow.get(escrowId),
-    enabled: !!escrowId
+    queryFn: async () => {
+      // Try authenticated fetch first; fall back to public service-role fetch for guests (e.g. sellers from email links)
+      try {
+        return await base44.entities.Escrow.get(escrowId);
+      } catch {
+        const res = await base44.functions.invoke('getEscrowPublic', { escrow_id: escrowId });
+        return res.data?.escrow || null;
+      }
+    },
+    enabled: !!escrowId && !isLoadingUser
   });
 
   const updateMutation = useMutation({
