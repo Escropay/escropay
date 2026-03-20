@@ -133,9 +133,8 @@ export default function SellerAcceptancePanel({ escrow, onUpdate, currentUser })
         <h3 className="text-lg font-semibold text-amber-900 mb-2">Action Required: Review Transaction</h3>
         <p className="text-sm text-amber-700 mb-4">You need to sign in to accept, reject, or request modifications to this transaction.</p>
         <button
-          onClick={() => window.location.href = `/api/auth/login?next=${encodeURIComponent(window.location.href)}`}
-          className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
           onClick={() => (window.location.href = `${window.location.origin}/Welcome?next=${encodeURIComponent(window.location.href)}`)}
+          className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
         >
           Sign In to Review Transaction
         </button>
