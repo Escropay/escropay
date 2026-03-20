@@ -1,6 +1,4 @@
-import { createClient } from 'npm:@base44/sdk@0.8.21';
-
-const base44 = createClient({ appId: Deno.env.get('BASE44_APP_ID'), useServiceRole: true });
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
 
 const allowedStatuses = ['pending', 'rejected_by_seller', 'modification_requested'];
 const allowedFields = ['status', 'recipient_accepted', 'recipient_accepted_at', 'modification_request'];
@@ -16,10 +14,12 @@ Deno.serve(async (req) => {
     return Response.json({ error: 'Status not allowed' }, { status: 403 });
   }
 
+  const base44 = createClientFromRequest(req);
+
   // Verify escrow exists and is in correct state
   let escrow;
   try {
-    escrow = await base44.entities.Escrow.get(escrow_id);
+    escrow = await base44.asServiceRole.entities.Escrow.get(escrow_id);
   } catch (error) {
     if (error.message?.includes('not found') || error.status === 404) {
       return Response.json({ error: 'Escrow not found' }, { status: 404 });
@@ -38,7 +38,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const updated = await base44.entities.Escrow.update(escrow_id, safeUpdate);
+    const updated = await base44.asServiceRole.entities.Escrow.update(escrow_id, safeUpdate);
     return Response.json({ escrow: updated });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
