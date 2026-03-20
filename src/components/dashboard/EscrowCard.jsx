@@ -76,7 +76,7 @@ const statusConfig = {
   }
 };
 
-export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, currentUser }) {
+export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, currentUser, isLoadingUser }) {
   const { format: formatCurrency } = useCurrency();
   const [showDisputePanel, setShowDisputePanel] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -252,7 +252,7 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
         <SellerAcceptancePanel
           escrow={escrow}
           currentUser={currentUser}
-          isLoadingUser={!currentUser && currentUser !== null ? true : false}
+          isLoadingUser={isLoadingUser}
           onUpdate={(data) => onUpdate(escrow.id, data)}
         />
 
