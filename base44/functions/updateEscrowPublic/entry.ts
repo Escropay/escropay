@@ -4,7 +4,14 @@ const allowedStatuses = ['pending', 'rejected_by_seller', 'modification_requeste
 const allowedFields = ['status', 'recipient_accepted', 'recipient_accepted_at', 'modification_request'];
 
 Deno.serve(async (req) => {
-  const { escrow_id, update_data } = await req.json();
+  let body;
+  try {
+    body = await req.json();
+  } catch {
+    return Response.json({ error: 'Invalid JSON' }, { status: 400 });
+  }
+
+  const { escrow_id, update_data } = body;
 
   if (!escrow_id || !update_data) {
     return Response.json({ error: 'Missing escrow_id or update_data' }, { status: 400 });
@@ -24,6 +31,7 @@ Deno.serve(async (req) => {
     if (error.message?.includes('not found') || error.status === 404) {
       return Response.json({ error: 'Escrow not found' }, { status: 404 });
     }
+    console.error('Fetch escrow error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });
   }
 
@@ -41,6 +49,7 @@ Deno.serve(async (req) => {
     const updated = await base44.asServiceRole.entities.Escrow.update(escrow_id, safeUpdate);
     return Response.json({ escrow: updated });
   } catch (error) {
+    console.error('Update escrow error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
