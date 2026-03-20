@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { 
   CheckCircle2, 
@@ -18,37 +17,43 @@ export default function SellerAcceptancePanel({ escrow, onUpdate, currentUser, i
   const [requestedChanges, setRequestedChanges] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const isSeller = currentUser?.email === escrow.seller_email || 
-    (!currentUser && escrow.seller_email === urlParams.get('email'));
-
-  // Don't hide the panel while we're still loading the user
+  // Don't render while user auth is still resolving
   if (isLoadingUser) return null;
+
+  // Only show on the right status
+  if (escrow.status !== 'pending_seller_acceptance') return null;
+
+  // If logged in, only show to the actual seller
+  if (currentUser && currentUser.email !== escrow.seller_email) return null;
+
+  // Helper: perform update — use public function for unauthenticated users
+  const doUpdate = async (updateData) => {
+    if (currentUser) {
+      await onUpdate(updateData);
+    } else {
+      const res = await base44.functions.invoke('updateEscrowPublic', {
+        escrow_id: escrow.id,
+        update_data: updateData
+      });
+      if (res.data?.error) throw new Error(res.data.error);
+      // Trigger a page reload to reflect the new status for unauthenticated users
+      window.location.reload();
+    }
+  };
 
   const handleAccept = async () => {
     setIsSubmitting(true);
     try {
-      await onUpdate({
+      await doUpdate({
         recipient_accepted: true,
         recipient_accepted_at: new Date().toISOString(),
         status: 'pending'
       });
 
-      // Notify buyer
-      await base44.entities.Notification.create({
-        user_email: escrow.buyer_email,
-        type: 'escrow_accepted',
-        escrow_id: escrow.id,
-        title: 'Escrow accepted',
-        message: `${escrow.seller_name || escrow.seller_email} has accepted the transaction`,
-        action_url: `/EscrowView?id=${escrow.id}`
-      });
-
-      // Send email via Resend
       await base44.functions.invoke('sendEmail', {
         to: escrow.buyer_email,
         subject: `Transaction Accepted - ${escrow.title}`,
-        body: `<h2>Escrow Transaction Accepted</h2><p><strong>${escrow.seller_name || escrow.seller_email}</strong> has accepted your escrow transaction.</p><p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p><p><strong>Amount:</strong> R${escrow.amount.toLocaleString()}</p><p>You can now proceed to fund the escrow.</p><p><a href="${window.location.origin}/EscrowView?id=${escrow.id}">View transaction</a></p>`
+        body: `<h2>Escrow Transaction Accepted</h2><p><strong>${escrow.seller_name || escrow.seller_email}</strong> has accepted your escrow transaction.</p><p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p><p><strong>Amount:</strong> R${escrow.amount?.toLocaleString()}</p><p>You can now proceed to fund the escrow.</p><p><a href="${window.location.origin}/EscrowView?id=${escrow.id}">View transaction</a></p>`
       });
     } catch (err) {
       console.error('Accept failed:', err);
@@ -59,21 +64,8 @@ export default function SellerAcceptancePanel({ escrow, onUpdate, currentUser, i
   const handleReject = async () => {
     setIsSubmitting(true);
     try {
-      await onUpdate({
-        status: 'rejected_by_seller'
-      });
+      await doUpdate({ status: 'rejected_by_seller' });
 
-      // Notify buyer
-      await base44.entities.Notification.create({
-        user_email: escrow.buyer_email,
-        type: 'escrow_rejected',
-        escrow_id: escrow.id,
-        title: 'Transaction rejected',
-        message: `${escrow.seller_name || escrow.seller_email} has rejected the transaction`,
-        action_url: `/EscrowView?id=${escrow.id}`
-      });
-
-      // Send email via Resend
       await base44.functions.invoke('sendEmail', {
         to: escrow.buyer_email,
         subject: `Transaction Rejected - ${escrow.title}`,
@@ -87,10 +79,9 @@ export default function SellerAcceptancePanel({ escrow, onUpdate, currentUser, i
 
   const handleRequestModification = async () => {
     if (!modificationReason.trim() || !requestedChanges.trim()) return;
-    
     setIsSubmitting(true);
     try {
-      await onUpdate({
+      await doUpdate({
         status: 'modification_requested',
         modification_request: {
           reason: modificationReason,
@@ -99,51 +90,16 @@ export default function SellerAcceptancePanel({ escrow, onUpdate, currentUser, i
         }
       });
 
-      // Notify buyer
-      await base44.entities.Notification.create({
-        user_email: escrow.buyer_email,
-        type: 'modification_requested',
-        escrow_id: escrow.id,
-        title: 'Modification requested',
-        message: `${escrow.seller_name || escrow.seller_email} has requested changes to the transaction`,
-        action_url: `/EscrowView?id=${escrow.id}`
-      });
-
-      // Send email via Resend
       await base44.functions.invoke('sendEmail', {
         to: escrow.buyer_email,
         subject: `Modification Requested - ${escrow.title}`,
-        body: `<h2>Transaction Modification Requested</h2><p><strong>${escrow.seller_name || escrow.seller_email}</strong> has requested changes to the escrow transaction.</p><p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p><p><strong>Reason:</strong> ${modificationReason}</p><p><strong>Requested Changes:</strong> ${requestedChanges}</p><p><a href="${window.location.origin}/EscrowView?id=${escrow.id}">Review and modify transaction</a></p>`
+        body: `<h2>Transaction Modification Requested</h2><p><strong>${escrow.seller_name || escrow.seller_email}</strong> has requested changes.</p><p><strong>Reason:</strong> ${modificationReason}</p><p><strong>Changes:</strong> ${requestedChanges}</p><p><a href="${window.location.origin}/EscrowView?id=${escrow.id}">Review and modify transaction</a></p>`
       });
     } catch (err) {
       console.error('Request modification failed:', err);
     }
     setIsSubmitting(false);
   };
-
-  if (escrow.status !== 'pending_seller_acceptance' || !isSeller) {
-    return null;
-  }
-
-  // If seller is viewing but not logged in, prompt them to sign in to take action
-  if (!currentUser) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-amber-50 border border-amber-200 rounded-xl p-6 mb-6"
-      >
-        <h3 className="text-lg font-semibold text-amber-900 mb-2">Action Required: Review Transaction</h3>
-        <p className="text-sm text-amber-700 mb-4">You need to sign in to accept, reject, or request modifications to this transaction.</p>
-        <button
-          onClick={() => base44.auth.redirectToLogin(window.location.href)}
-          className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
-        >
-          Sign In to Review Transaction
-        </button>
-      </motion.div>
-    );
-  }
 
   return (
     <motion.div
@@ -157,26 +113,15 @@ export default function SellerAcceptancePanel({ escrow, onUpdate, currentUser, i
 
       {!action && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <Button
-            onClick={() => setAction('accept')}
-            className="bg-emerald-500 hover:bg-emerald-600 text-white"
-          >
+          <Button onClick={() => setAction('accept')} className="bg-emerald-500 hover:bg-emerald-600 text-white">
             <CheckCircle2 className="w-4 h-4 mr-2" />
             Accept Transaction
           </Button>
-          <Button
-            onClick={() => setAction('modify')}
-            variant="outline"
-            className="border-amber-300 text-amber-700 hover:bg-amber-100"
-          >
+          <Button onClick={() => setAction('modify')} variant="outline" className="border-amber-300 text-amber-700 hover:bg-amber-100">
             <Edit3 className="w-4 h-4 mr-2" />
             Request Modification
           </Button>
-          <Button
-            onClick={() => setAction('reject')}
-            variant="outline"
-            className="border-red-300 text-red-600 hover:bg-red-50"
-          >
+          <Button onClick={() => setAction('reject')} variant="outline" className="border-red-300 text-red-600 hover:bg-red-50">
             <XCircle className="w-4 h-4 mr-2" />
             Reject Transaction
           </Button>
@@ -184,28 +129,12 @@ export default function SellerAcceptancePanel({ escrow, onUpdate, currentUser, i
       )}
 
       {action === 'accept' && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="space-y-4"
-        >
-          <p className="text-sm text-gray-600">
-            By accepting this transaction, you agree to the terms and will be able to connect your payout method.
-          </p>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+          <p className="text-sm text-gray-600">By accepting, you agree to the terms and will be able to connect your payout method.</p>
           <div className="flex gap-3">
-            <Button variant="outline" onClick={() => setAction(null)}>
-              Back
-            </Button>
-            <Button
-              onClick={handleAccept}
-              disabled={isSubmitting}
-              className="bg-emerald-500 hover:bg-emerald-600 flex-1"
-            >
-              {isSubmitting ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : (
-                <CheckCircle2 className="w-4 h-4 mr-2" />
-              )}
+            <Button variant="outline" onClick={() => setAction(null)}>Back</Button>
+            <Button onClick={handleAccept} disabled={isSubmitting} className="bg-emerald-500 hover:bg-emerald-600 flex-1">
+              {isSubmitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle2 className="w-4 h-4 mr-2" />}
               Confirm Acceptance
             </Button>
           </div>
@@ -213,28 +142,12 @@ export default function SellerAcceptancePanel({ escrow, onUpdate, currentUser, i
       )}
 
       {action === 'reject' && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="space-y-4"
-        >
-          <p className="text-sm text-red-600 font-medium">
-            This will permanently cancel the transaction. The buyer will be notified.
-          </p>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+          <p className="text-sm text-red-600 font-medium">This will permanently cancel the transaction. The buyer will be notified.</p>
           <div className="flex gap-3">
-            <Button variant="outline" onClick={() => setAction(null)}>
-              Back
-            </Button>
-            <Button
-              onClick={handleReject}
-              disabled={isSubmitting}
-              className="bg-red-500 hover:bg-red-600 flex-1"
-            >
-              {isSubmitting ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : (
-                <XCircle className="w-4 h-4 mr-2" />
-              )}
+            <Button variant="outline" onClick={() => setAction(null)}>Back</Button>
+            <Button onClick={handleReject} disabled={isSubmitting} className="bg-red-500 hover:bg-red-600 flex-1">
+              {isSubmitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <XCircle className="w-4 h-4 mr-2" />}
               Confirm Rejection
             </Button>
           </div>
@@ -242,43 +155,19 @@ export default function SellerAcceptancePanel({ escrow, onUpdate, currentUser, i
       )}
 
       {action === 'modify' && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="space-y-4"
-        >
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
           <div>
             <Label>Reason for modification</Label>
-            <Textarea
-              value={modificationReason}
-              onChange={(e) => setModificationReason(e.target.value)}
-              placeholder="Why do you need changes to this transaction?"
-              className="mt-1"
-            />
+            <Textarea value={modificationReason} onChange={(e) => setModificationReason(e.target.value)} placeholder="Why do you need changes?" className="mt-1" />
           </div>
           <div>
             <Label>Requested changes</Label>
-            <Textarea
-              value={requestedChanges}
-              onChange={(e) => setRequestedChanges(e.target.value)}
-              placeholder="What specific changes are you requesting?"
-              className="mt-1"
-            />
+            <Textarea value={requestedChanges} onChange={(e) => setRequestedChanges(e.target.value)} placeholder="What specific changes are you requesting?" className="mt-1" />
           </div>
           <div className="flex gap-3">
-            <Button variant="outline" onClick={() => setAction(null)}>
-              Back
-            </Button>
-            <Button
-              onClick={handleRequestModification}
-              disabled={!modificationReason.trim() || !requestedChanges.trim() || isSubmitting}
-              className="bg-amber-500 hover:bg-amber-600 flex-1"
-            >
-              {isSubmitting ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : (
-                <Edit3 className="w-4 h-4 mr-2" />
-              )}
+            <Button variant="outline" onClick={() => setAction(null)}>Back</Button>
+            <Button onClick={handleRequestModification} disabled={!modificationReason.trim() || !requestedChanges.trim() || isSubmitting} className="bg-amber-500 hover:bg-amber-600 flex-1">
+              {isSubmitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Edit3 className="w-4 h-4 mr-2" />}
               Send Modification Request
             </Button>
           </div>
