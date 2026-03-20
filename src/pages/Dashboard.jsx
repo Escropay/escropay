@@ -30,7 +30,7 @@ function DashboardInner() {
   const [viewMode, setViewMode] = useState('cards'); // 'cards' or 'timeline'
   const queryClient = useQueryClient();
 
-  const { data: currentUser } = useQuery({
+  const { data: currentUser, isLoading: isLoadingUser } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
     staleTime: 0,
@@ -254,12 +254,13 @@ function DashboardInner() {
                                     <div className="space-y-4">
                                       {filteredEscrows.map((escrow, index) => (
                                         <EscrowCard
-                                          key={escrow.id}
-                                          escrow={escrow}
-                                          index={index}
-                                          onAction={handleStatusChange}
-                                          onUpdate={handleEscrowUpdate}
-                                          currentUser={currentUser}
+                                         key={escrow.id}
+                                         escrow={escrow}
+                                         index={index}
+                                         onAction={handleStatusChange}
+                                         onUpdate={handleEscrowUpdate}
+                                         currentUser={currentUser}
+                                         isLoadingUser={isLoadingUser}
                                         />
                                       ))}
                                     </div>
