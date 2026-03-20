@@ -90,7 +90,10 @@ export default function Admin() {
   });
 
   const handleKycUpdate = (userId, status) => {
-    updateUserMutation.mutate({ id: userId, data: { kyc_status: status } });
+    const data = { kyc_status: status };
+    // When admin verifies KYC, also activate the account so user can transact
+    if (status === 'verified') data.account_status = 'active';
+    updateUserMutation.mutate({ id: userId, data });
   };
 
   const handleEscrowStatusUpdate = (escrowId, status) => {
