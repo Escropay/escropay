@@ -316,8 +316,8 @@ export default function EscrowView() {
         {(isSeller || isBuyer) && escrow.status !== 'pending_seller_acceptance' && (
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="space-y-4">
 
-            {/* Banking Details */}
-            <div className="bg-white border border-gray-200 rounded-2xl p-6">
+            {/* Banking Details — seller only */}
+            {isSeller && <div className="bg-white border border-gray-200 rounded-2xl p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-gray-900 flex items-center gap-2">
                   <Building2 className="w-5 h-5 text-purple-600" />
@@ -387,9 +387,8 @@ export default function EscrowView() {
                   </div>
                 </div>
               )}
-            </div>
+            </div>}
 
-            {/* Banking Details — seller only */}
             {/* Dispute Button for funded escrows — both buyer and seller */}
             {escrow.status === 'funded' && (
               <div className="bg-white border border-gray-200 rounded-2xl p-6">

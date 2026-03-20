@@ -287,7 +287,10 @@ export default function Admin() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="pending_seller_acceptance">Pending Acceptance</SelectItem>
+                    <SelectItem value="modification_requested">Modification Requested</SelectItem>
+                    <SelectItem value="rejected_by_seller">Rejected</SelectItem>
+                    <SelectItem value="pending">Pending Funding</SelectItem>
                     <SelectItem value="funded">Funded</SelectItem>
                     <SelectItem value="released">Released</SelectItem>
                     <SelectItem value="disputed">Disputed</SelectItem>

@@ -65,8 +65,14 @@ export default function Profile() {
   });
 
   const { data: escrows = [] } = useQuery({
-    queryKey: ['user-escrows'],
-    queryFn: () => Escrow.list('-created_date', 100)
+    queryKey: ['user-escrows', user?.email],
+    queryFn: () => {
+      if (!user?.email) return [];
+      return Escrow.filter({
+        $or: [{ buyer_email: user.email }, { seller_email: user.email }]
+      }, '-created_date', 100);
+    },
+    enabled: !!user?.email
   });
 
   const [formData, setFormData] = useState({
