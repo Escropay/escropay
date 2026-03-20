@@ -77,7 +77,9 @@ export default function EscrowView() {
 
   const { data: currentUser, isLoading: isLoadingUser } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me().catch(() => null)
+    queryFn: () => base44.auth.me().catch(() => null),
+    staleTime: 0,
+    refetchOnWindowFocus: true
   });
 
   const { data: escrow, isLoading } = useQuery({
