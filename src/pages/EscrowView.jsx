@@ -305,7 +305,7 @@ export default function EscrowView() {
         <BuyerModificationPanel escrow={escrow} currentUser={currentUser} onUpdate={updateMutation.mutateAsync} />
 
         {/* Seller Acceptance Panel */}
-        <SellerAcceptancePanel escrow={escrow} onUpdate={updateMutation.mutateAsync} currentUser={currentUser} />
+        <SellerAcceptancePanel escrow={escrow} onUpdate={updateMutation.mutateAsync} currentUser={currentUser} isLoadingUser={isLoadingUser} />
 
         {/* Seller Actions */}
         {isSeller && escrow.status !== 'pending_seller_acceptance' && (
