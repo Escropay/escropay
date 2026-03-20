@@ -65,10 +65,31 @@ const kycColors = {
 };
 
 export default function Admin() {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [escrowSearch, setEscrowSearch] = useState('');
   const [userSearch, setUserSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+
+  const { data: currentUser, isLoading: isLoadingUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+    staleTime: 0,
+  });
+
+  useEffect(() => {
+    if (!isLoadingUser && currentUser && currentUser.role !== 'admin') {
+      navigate('/Dashboard', { replace: true });
+    }
+  }, [currentUser, isLoadingUser, navigate]);
+
+  if (isLoadingUser || !currentUser || currentUser.role !== 'admin') {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   const { data: escrows = [], isLoading: loadingEscrows } = useQuery({
     queryKey: ['admin-escrows'],
