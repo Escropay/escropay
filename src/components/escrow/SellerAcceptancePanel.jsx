@@ -12,7 +12,7 @@ import {
   Loader2
 } from 'lucide-react';
 
-export default function SellerAcceptancePanel({ escrow, onUpdate, currentUser }) {
+export default function SellerAcceptancePanel({ escrow, onUpdate, currentUser, isLoadingUser }) {
   const [action, setAction] = useState(null);
   const [modificationReason, setModificationReason] = useState('');
   const [requestedChanges, setRequestedChanges] = useState('');
@@ -21,6 +21,9 @@ export default function SellerAcceptancePanel({ escrow, onUpdate, currentUser })
   const urlParams = new URLSearchParams(window.location.search);
   const isSeller = currentUser?.email === escrow.seller_email || 
     (!currentUser && escrow.seller_email === urlParams.get('email'));
+
+  // Don't hide the panel while we're still loading the user
+  if (isLoadingUser) return null;
 
   const handleAccept = async () => {
     setIsSubmitting(true);
