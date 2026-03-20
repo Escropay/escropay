@@ -1,6 +1,4 @@
-import { createClient } from 'npm:@base44/sdk@0.8.21';
-
-const base44 = createClient({ appId: Deno.env.get('BASE44_APP_ID'), useServiceRole: true });
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
 
 Deno.serve(async (req) => {
   const { escrow_id } = await req.json();
@@ -9,11 +7,13 @@ Deno.serve(async (req) => {
     return Response.json({ error: 'escrow_id required' }, { status: 400 });
   }
 
+  const base44 = createClientFromRequest(req);
+
   try {
-    const escrow = await base44.entities.Escrow.get(escrow_id);
+    const escrow = await base44.asServiceRole.entities.Escrow.get(escrow_id);
     return Response.json({ escrow });
   } catch (error) {
-    // SDK throws on 404 — treat as not found
+    // SDK throws on 404 — return null so the frontend shows "not found" gracefully
     if (error.message?.includes('not found') || error.status === 404) {
       return Response.json({ escrow: null }, { status: 200 });
     }
