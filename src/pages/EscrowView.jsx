@@ -87,11 +87,14 @@ export default function EscrowView() {
       try {
         return await base44.entities.Escrow.get(escrowId);
       } catch {
+        // Authenticated fetch failed (RLS or not logged in) — use public function
         const res = await base44.functions.invoke('getEscrowPublic', { escrow_id: escrowId });
-        return res.data?.escrow || null;
+        if (res.data?.error) throw new Error(res.data.error);
+        return res.data?.escrow ?? null;
       }
     },
-    enabled: !!escrowId && !isLoadingUser
+    enabled: !!escrowId,
+    retry: false
   });
 
   const updateMutation = useMutation({
