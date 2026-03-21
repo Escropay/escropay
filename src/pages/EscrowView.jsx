@@ -32,6 +32,11 @@ import RefundRequestPanel from '@/components/escrow/RefundRequestPanel';
 import BuyerModificationPanel from '@/components/escrow/BuyerModificationPanel';
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
+const APP_BASE_URL = typeof window !== 'undefined'
+  ? (window.location.hostname === 'localhost' || window.location.hostname.includes('preview-sandbox') || window.location.hostname.includes('base44')
+    ? 'https://escropay.app'
+    : window.location.origin)
+  : 'https://escropay.app';
 
 const statusConfig = {
   pending_seller_acceptance: { label: 'Pending Acceptance', color: 'bg-purple-100 text-purple-700', icon: Clock, description: 'Waiting for the seller to accept this escrow.' },
