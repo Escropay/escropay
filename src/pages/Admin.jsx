@@ -122,12 +122,45 @@ export default function Admin() {
     updateUserMutation.mutate({ id: userId, data });
   };
 
-  const handleEscrowStatusUpdate = (escrowId, status) => {
+  const handleEscrowStatusUpdate = async (escrowId, status) => {
     const updates = { status };
     if (status === 'funded') updates.funded_at = new Date().toISOString();
     if (status === 'released') updates.released_at = new Date().toISOString();
     if (status === 'disputed') updates.disputed_at = new Date().toISOString();
-    updateEscrowMutation.mutate({ id: escrowId, data: updates });
+    if (status === 'refunded') updates.refunded_at = new Date().toISOString();
+
+    updateEscrowMutation.mutate({ id: escrowId, data: updates }, {
+      onSuccess: async () => {
+        // Find the escrow to get party emails
+        const escrow = escrows.find(e => e.id === escrowId);
+        if (!escrow) return;
+
+        if (status === 'released' || status === 'refunded') {
+          const isRelease = status === 'released';
+          const notifyEmails = [escrow.buyer_email, escrow.seller_email].filter(Boolean);
+          for (const email of notifyEmails) {
+            const isBuyer = email === escrow.buyer_email;
+            await base44.entities.Notification.create({
+              user_email: email,
+              type: isRelease ? 'escrow_accepted' : 'refund_requested',
+              escrow_id: escrowId,
+              title: isRelease ? 'Funds Released' : 'Refund Processed',
+              message: isRelease
+                ? `Admin has released funds for "${escrow.title}".`
+                : `Admin has processed a refund for "${escrow.title}".`,
+              action_url: `/EscrowView?id=${escrowId}`
+            }).catch(() => {});
+            await base44.functions.invoke('sendEmail', {
+              to: email,
+              subject: isRelease ? `Funds Released — ${escrow.title}` : `Refund Processed — ${escrow.title}`,
+              body: isRelease
+                ? `<h2>Funds Released</h2><p>Admin has released funds for <strong>${escrow.title}</strong>.</p><p><strong>Amount:</strong> R${escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>${!isBuyer ? '<p>The funds will be transferred to your registered bank account within 1-3 business days.</p>' : ''}<p><a href="${window.location.origin}/EscrowView?id=${escrowId}">View transaction</a></p>`
+                : `<h2>Refund Processed</h2><p>Admin has processed a refund for <strong>${escrow.title}</strong>.</p><p><strong>Amount:</strong> R${escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p><p><a href="${window.location.origin}/EscrowView?id=${escrowId}">View transaction</a></p>`
+            }).catch(() => {});
+          }
+        }
+      }
+    });
   };
 
   const filteredEscrows = escrows.filter(e => {
