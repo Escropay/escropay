@@ -61,6 +61,7 @@ export default function RefundRequestPanel({ escrow, currentUser, onUpdate }) {
   };
 
   const handleAdminDecision = async (approved, notes = '') => {
+    if (!isAdmin) return; // Safety guard — only admins can approve/deny
     setIsSubmitting(true);
     try {
       const updates = {
