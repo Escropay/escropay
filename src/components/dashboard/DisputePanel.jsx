@@ -91,8 +91,23 @@ Be fair and consider both parties' perspectives.`,
       await onUpdate(escrow.id, {
         dispute_reason: disputeReason,
         dispute_evidence_urls: files.map(f => f.url),
-        ai_resolution: aiResolution
+        ai_resolution: aiResolution,
+        status: 'disputed',
+        disputed_at: escrow.disputed_at || new Date().toISOString()
       });
+
+      // Notify admins that AI analysis is ready for review
+      const admins = await base44.entities.User.filter({ role: 'admin' });
+      for (const admin of admins) {
+        await base44.entities.Notification.create({
+          user_email: admin.email,
+          type: 'admin_action_required',
+          escrow_id: escrow.id,
+          title: 'Dispute — AI Analysis Ready',
+          message: `AI has analysed the dispute for "${escrow.title}". Recommendation: ${result.recommendation?.replace(/_/g, ' ')} (${result.confidence}% confidence). Admin action required.`,
+          action_url: '/Admin'
+        });
+      }
 
       setStep('resolution');
     } catch (err) {
