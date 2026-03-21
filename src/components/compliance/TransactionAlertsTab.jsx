@@ -111,10 +111,11 @@ export default function TransactionAlertsTab() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, status, notes }) => base44.entities.TransactionAlert.update(id, {
+    mutationFn: ({ id, status, notes, reviewedBy }) => base44.entities.TransactionAlert.update(id, {
       status,
       resolution_notes: notes,
-      reviewed_at: new Date().toISOString()
+      reviewed_at: new Date().toISOString(),
+      reviewed_by: reviewedBy
     }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['transaction-alerts'] })
   });

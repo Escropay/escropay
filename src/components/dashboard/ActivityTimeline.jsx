@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from "@/lib/utils";
+import { useCurrency } from '@/components/common/CurrencyContext';
 
 const activityConfig = {
   created: { icon: Plus, color: 'text-purple-600', bg: 'bg-purple-100' },

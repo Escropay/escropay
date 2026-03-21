@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
 import { cn } from "@/lib/utils";
+import { useCurrency } from '@/components/common/CurrencyContext';
 
 const statusConfig = {
   pending: {

@@ -27,6 +27,8 @@ export default function CreateEscrowModal({ isOpen, onClose, onSubmit, isLoading
       amount: convertToZAR(parseFloat(formData.amount)),
       currency: currency.code
     });
+    // Reset form after submit
+    setFormData({ title: '', description: '', amount: '', buyer_email: '', buyer_name: '', seller_email: '', seller_name: '', due_date: '' });
   };
 
   const handleChange = (field, value) => {
