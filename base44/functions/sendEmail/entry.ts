@@ -2,12 +2,27 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
+// Allowed sender domains — prevents abuse of this endpoint to spoof arbitrary senders
+const ALLOWED_TO_DOMAINS = null; // null = allow all (internal use only, protected by auth)
+
 Deno.serve(async (req) => {
   try {
+    // Require authenticated caller — prevents unauthenticated email abuse
+    const base44 = createClientFromRequest(req);
+    const caller = await base44.auth.me().catch(() => null);
+    if (!caller) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { to, subject, body, from_name } = await req.json();
 
     if (!to || !subject || !body) {
       return Response.json({ error: 'Missing required fields: to, subject, body' }, { status: 400 });
+    }
+
+    // Basic email format validation
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) {
+      return Response.json({ error: 'Invalid recipient email' }, { status: 400 });
     }
 
     const fromName = from_name || 'Escropay';
