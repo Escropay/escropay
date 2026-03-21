@@ -169,7 +169,7 @@ export default function EscrowView() {
         <div className="text-center">
           <Shield className="w-12 h-12 text-gray-300 mx-auto mb-4" />
           <p className="text-gray-500">No escrow ID provided.</p>
-          <Link to={createPageUrl('Dashboard')}><Button className="mt-4">Go to Dashboard</Button></Link>
+          <Link to="/Dashboard"><Button className="mt-4">Go to Dashboard</Button></Link>
         </div>
       </div>
     );
@@ -189,7 +189,7 @@ export default function EscrowView() {
         <div className="text-center">
           <Shield className="w-12 h-12 text-gray-300 mx-auto mb-4" />
           <p className="text-gray-500">Escrow not found.</p>
-          <Link to={createPageUrl('Dashboard')}><Button className="mt-4">Go to Dashboard</Button></Link>
+          <Link to="/Dashboard"><Button className="mt-4">Go to Dashboard</Button></Link>
         </div>
       </div>
     );

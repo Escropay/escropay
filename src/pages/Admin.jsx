@@ -152,7 +152,7 @@ export default function Admin() {
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link to={createPageUrl('Dashboard')}>
+              <Link to="/Dashboard">
                 <Button variant="ghost" size="icon">
                   <ArrowLeft className="w-5 h-5" />
                 </Button>
@@ -174,7 +174,7 @@ export default function Admin() {
               </div>
               <div>
                 <p className="text-sm text-gray-500">Total Volume</p>
-                <p className="text-xl font-bold text-gray-900">R {stats.totalVolume.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</p>
+                <p className="text-xl font-bold text-gray-900">R {stats.totalVolume.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
               </div>
             </div>
           </motion.div>
@@ -350,7 +350,7 @@ export default function Admin() {
                         <TableCell className="font-medium">{escrow.title}</TableCell>
                         <TableCell className="text-sm text-gray-600">{escrow.buyer_email}</TableCell>
                         <TableCell className="text-sm text-gray-600">{escrow.seller_email}</TableCell>
-                        <TableCell className="font-medium">R {escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</TableCell>
+                        <TableCell className="font-medium">R {escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
                         <TableCell>
                           <Badge className={statusColors[escrow.status]}>{escrow.status}</Badge>
                         </TableCell>
