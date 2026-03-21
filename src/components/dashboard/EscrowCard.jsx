@@ -200,7 +200,7 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
                   <AlertTriangle className="w-4 h-4 mr-1" />
                   Dispute
                 </Button>
-                {isSeller && canMakePayments && (
+                {isSeller && (
                   escrow.payout_requested ? (
                     <Badge className="bg-amber-100 text-amber-700 border border-amber-200 px-3 py-1">
                       <Clock className="w-3 h-3 mr-1" />
@@ -210,10 +210,11 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
                     <Button
                       size="sm"
                       onClick={handleRequestPayout}
-                      className="bg-purple-600 hover:bg-purple-700 text-white"
+                      title={!hasBanking ? 'Add banking details first to receive payout' : ''}
+                      className={hasBanking ? "bg-purple-600 hover:bg-purple-700 text-white" : "bg-amber-500 hover:bg-amber-600 text-white"}
                     >
                       <Wallet className="w-4 h-4 mr-1" />
-                      Request Payout
+                      {hasBanking ? 'Request Payout' : 'Add Banking Details'}
                     </Button>
                   )
                 )}
