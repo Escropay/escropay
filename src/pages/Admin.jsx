@@ -104,6 +104,15 @@ export default function Admin() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-users'] })
   });
 
+  // Guard: show spinner while loading or if not admin
+  if (isLoadingUser || !currentUser || currentUser.role !== 'admin') {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   const handleKycUpdate = (userId, status) => {
     const data = { kyc_status: status };
     // When admin verifies KYC, also activate the account so user can transact
