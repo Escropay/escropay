@@ -12,10 +12,12 @@ import {
   Trash2,
   ChevronDown,
   ChevronUp,
-  DollarSign
+  AlertCircle
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from "@/lib/utils";
+import { base44 } from '@/api/base44Client';
+import { useCurrency } from '@/components/common/CurrencyContext';
 
 const statusConfig = {
   pending: { label: 'Pending', color: 'bg-gray-100 text-gray-700', icon: Circle },
