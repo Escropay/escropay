@@ -146,7 +146,7 @@ export default function EscrowView() {
         type: 'dispute_raised',
         escrow_id: escrow.id,
         title: 'Dispute raised',
-        message: `A dispute has been raised for ${escrow.title}`,
+        message: `A dispute has been raised for "${escrow.title}". Funds are now frozen pending admin review.`,
         action_url: `/EscrowView?id=${escrow.id}`
       });
       
