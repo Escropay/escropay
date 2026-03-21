@@ -49,7 +49,7 @@ export default function DisputePanel({ escrow, onUpdate, onClose }) {
 
 ESCROW DETAILS:
 - Title: ${escrow.title}
-- Amount: R${escrow.amount}
+- Amount: R${escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 - Buyer: ${escrow.buyer_name || escrow.buyer_email}
 - Seller: ${escrow.seller_name || escrow.seller_email}
 - Description: ${escrow.description || 'No description'}

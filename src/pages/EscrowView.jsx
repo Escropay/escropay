@@ -108,7 +108,8 @@ export default function EscrowView() {
   const handleAccept = () => {
     updateMutation.mutate({
       recipient_accepted: true,
-      recipient_accepted_at: new Date().toISOString()
+      recipient_accepted_at: new Date().toISOString(),
+      status: 'pending'
     });
   };
 
