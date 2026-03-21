@@ -21,6 +21,7 @@ const activityConfig = {
 };
 
 export default function ActivityTimeline({ escrows }) {
+  const { format: formatCurrency } = useCurrency();
   // Generate activity from escrows
   const activities = escrows
     .flatMap(escrow => {
@@ -64,7 +65,7 @@ export default function ActivityTimeline({ escrows }) {
   const getActivityMessage = (activity) => {
     const messages = {
       created: `Escrow "${activity.escrow}" created`,
-      funded: `R ${activity.amount?.toLocaleString()} funded to escrow`,
+      funded: `${formatCurrency(activity.amount)} funded to escrow`,
       released: `Funds released for "${activity.escrow}"`,
       disputed: `Dispute raised on "${activity.escrow}"`,
       refunded: `Refund processed for "${activity.escrow}"`

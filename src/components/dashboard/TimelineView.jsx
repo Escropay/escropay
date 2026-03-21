@@ -50,6 +50,7 @@ const statusConfig = {
 };
 
 export default function TimelineView({ escrows }) {
+  const { format: formatCurrency } = useCurrency();
   // Generate timeline events from all escrows
   const timelineEvents = escrows
     .flatMap(escrow => {
@@ -206,7 +207,7 @@ export default function TimelineView({ escrows }) {
                       <div className="flex flex-wrap items-center gap-4 text-sm">
                         <div className="flex items-center gap-1 text-gray-600">
                           <DollarSign className="w-4 h-4 text-gray-400" />
-                          R {event.amount?.toLocaleString()}
+                          {formatCurrency(event.amount)}
                         </div>
                         <div className="flex items-center gap-1 text-gray-600">
                           <User className="w-4 h-4 text-gray-400" />
