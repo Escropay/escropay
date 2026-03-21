@@ -47,7 +47,7 @@ export default function BuyerModificationPanel({ escrow, currentUser, onUpdate }
       await base44.functions.invoke('sendEmail', {
         to: escrow.seller_email,
         subject: `Transaction Updated - ${escrow.title}`,
-        body: `<h2>Transaction Has Been Updated</h2><p><strong>${escrow.buyer_name || escrow.buyer_email}</strong> has updated the transaction details in response to your modification request.</p><p><strong>Updated Title:</strong> ${formData.title}</p><p><strong>Updated Amount:</strong> ${currency.symbol}${parseFloat(formData.amount).toLocaleString()}</p>${formData.description ? `<p><strong>Description:</strong> ${formData.description}</p>` : ''}<p>Please review and accept or request further changes.</p><p><a href="${window.location.origin}/EscrowView?id=${escrow.id}">Review transaction</a></p>`
+        body: `<h2>Transaction Has Been Updated</h2><p><strong>${escrow.buyer_name || escrow.buyer_email}</strong> has updated the transaction details in response to your modification request.</p><p><strong>Updated Title:</strong> ${formData.title}</p><p><strong>Updated Amount:</strong> R${parseFloat(formData.amount).toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>${formData.description ? `<p><strong>Description:</strong> ${formData.description}</p>` : ''}<p>Please review and accept or request further changes.</p><p><a href="${window.location.origin}/EscrowView?id=${escrow.id}">Review transaction</a></p>`
       });
 
       setIsEditing(false);
