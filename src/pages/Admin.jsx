@@ -351,58 +351,150 @@ export default function Admin() {
                     </TableRow>
                   ) : (
                     filteredEscrows.map((escrow) => (
-                      <TableRow key={escrow.id}>
-                        <TableCell className="font-medium">{escrow.title}</TableCell>
-                        <TableCell className="text-sm text-gray-600">{escrow.buyer_email}</TableCell>
-                        <TableCell className="text-sm text-gray-600">{escrow.seller_email}</TableCell>
-                        <TableCell className="font-medium">R {escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
-                        <TableCell>
-                          <Badge className={statusColors[escrow.status]}>{escrow.status}</Badge>
-                        </TableCell>
-                        <TableCell className="text-sm text-gray-500">
-                          {escrow.created_date ? format(new Date(escrow.created_date), 'MMM d, yyyy') : '-'}
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-2 flex-wrap">
-                            {escrow.status === 'released' ? (
-                              <Badge className="bg-emerald-100 text-emerald-700">Released</Badge>
-                            ) : (
-                              <>
-                                {escrow.status === 'funded' && (
-                                  <div className="flex flex-col gap-1">
-                                    {escrow.payout_requested && (
-                                      <Badge className="bg-amber-100 text-amber-700 text-xs">Payout Requested</Badge>
-                                    )}
-                                    <Button
-                                      size="sm"
-                                      onClick={() => handleEscrowStatusUpdate(escrow.id, 'released')}
-                                      disabled={updateEscrowMutation.isPending}
-                                      className="h-8 bg-emerald-600 hover:bg-emerald-700 text-white text-xs"
+                      <React.Fragment key={escrow.id}>
+                        <TableRow>
+                          <TableCell className="font-medium">{escrow.title}</TableCell>
+                          <TableCell className="text-sm text-gray-600">{escrow.buyer_email}</TableCell>
+                          <TableCell className="text-sm text-gray-600">{escrow.seller_email}</TableCell>
+                          <TableCell className="font-medium">R {escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
+                          <TableCell>
+                            <div className="flex flex-col gap-1">
+                              <Badge className={statusColors[escrow.status]}>{escrow.status}</Badge>
+                              {escrow.refund_request?.requested_by && !escrow.refund_request?.admin_approved && escrow.status !== 'refunded' && (
+                                <Badge className="bg-orange-100 text-orange-700 text-xs">Refund Pending</Badge>
+                              )}
+                              {escrow.status === 'disputed' && escrow.ai_resolution && (
+                                <Badge className="bg-purple-100 text-purple-700 text-xs flex items-center gap-1">
+                                  <Bot className="w-3 h-3" /> AI Ready
+                                </Badge>
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-sm text-gray-500">
+                            {escrow.created_date ? format(new Date(escrow.created_date), 'MMM d, yyyy') : '-'}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              {escrow.status === 'released' || escrow.status === 'refunded' ? (
+                                <Badge className={escrow.status === 'released' ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-700'}>
+                                  {escrow.status === 'released' ? 'Released' : 'Refunded'}
+                                </Badge>
+                              ) : (
+                                <>
+                                  {escrow.status === 'funded' && (
+                                    <div className="flex flex-col gap-1">
+                                      {escrow.payout_requested && (
+                                        <Badge className="bg-amber-100 text-amber-700 text-xs">Payout Requested</Badge>
+                                      )}
+                                      {/* Refund request pending admin approval */}
+                                      {escrow.refund_request?.requested_by && !escrow.refund_request?.admin_approved && (
+                                        <div className="flex gap-1">
+                                          <Button
+                                            size="sm"
+                                            onClick={() => handleEscrowStatusUpdate(escrow.id, 'refunded')}
+                                            disabled={updateEscrowMutation.isPending}
+                                            className="h-7 bg-red-500 hover:bg-red-600 text-white text-xs"
+                                          >
+                                            <XCircle className="w-3 h-3 mr-1" />
+                                            Approve Refund
+                                          </Button>
+                                          <Button
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={() => updateEscrowMutation.mutate({ id: escrow.id, data: { refund_request: { ...escrow.refund_request, admin_approved: false, admin_denied: true } } })}
+                                            disabled={updateEscrowMutation.isPending}
+                                            className="h-7 text-gray-600 text-xs"
+                                          >
+                                            Deny
+                                          </Button>
+                                        </div>
+                                      )}
+                                      <Button
+                                        size="sm"
+                                        onClick={() => handleEscrowStatusUpdate(escrow.id, 'released')}
+                                        disabled={updateEscrowMutation.isPending}
+                                        className="h-8 bg-emerald-600 hover:bg-emerald-700 text-white text-xs"
+                                      >
+                                        <Banknote className="w-3 h-3 mr-1" />
+                                        Release Funds
+                                      </Button>
+                                    </div>
+                                  )}
+                                  {/* Disputed: show AI recommendation + admin action buttons */}
+                                  {escrow.status === 'disputed' && (
+                                    <div className="flex flex-col gap-1 min-w-[160px]">
+                                      {escrow.ai_resolution && (
+                                        <div className="text-xs text-purple-700 bg-purple-50 rounded p-1.5 mb-1 flex items-start gap-1">
+                                          <Bot className="w-3 h-3 mt-0.5 shrink-0" />
+                                          <span>AI: <strong>{escrow.ai_resolution.recommendation?.replace(/_/g, ' ')}</strong> ({escrow.ai_resolution.confidence}%)</span>
+                                        </div>
+                                      )}
+                                      <div className="flex gap-1">
+                                        <Button
+                                          size="sm"
+                                          onClick={() => handleEscrowStatusUpdate(escrow.id, 'refunded')}
+                                          disabled={updateEscrowMutation.isPending}
+                                          className="h-7 bg-red-500 hover:bg-red-600 text-white text-xs flex-1"
+                                        >
+                                          <XCircle className="w-3 h-3 mr-1" />
+                                          Refund
+                                        </Button>
+                                        <Button
+                                          size="sm"
+                                          onClick={() => handleEscrowStatusUpdate(escrow.id, 'released')}
+                                          disabled={updateEscrowMutation.isPending}
+                                          className="h-7 bg-emerald-600 hover:bg-emerald-700 text-white text-xs flex-1"
+                                        >
+                                          <CheckCircle2 className="w-3 h-3 mr-1" />
+                                          Release
+                                        </Button>
+                                      </div>
+                                    </div>
+                                  )}
+                                  {escrow.status !== 'funded' && escrow.status !== 'disputed' && (
+                                    <Select
+                                      value={escrow.status}
+                                      onValueChange={(value) => handleEscrowStatusUpdate(escrow.id, value)}
                                     >
-                                      <Banknote className="w-3 h-3 mr-1" />
-                                      Release Funds
-                                    </Button>
-                                  </div>
-                                )}
-                                <Select
-                                  value={escrow.status}
-                                  onValueChange={(value) => handleEscrowStatusUpdate(escrow.id, value)}
-                                >
-                                  <SelectTrigger className="w-28 h-8 text-xs">
-                                    <SelectValue />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="pending">Pending</SelectItem>
-                                    <SelectItem value="funded">Funded</SelectItem>
-                                    <SelectItem value="disputed">Disputed</SelectItem>
-                                    <SelectItem value="refunded">Refunded</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </>
-                            )}
-                          </div>
-                        </TableCell>
-                      </TableRow>
+                                      <SelectTrigger className="w-28 h-8 text-xs">
+                                        <SelectValue />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="pending">Pending</SelectItem>
+                                        <SelectItem value="funded">Funded</SelectItem>
+                                        <SelectItem value="disputed">Disputed</SelectItem>
+                                        <SelectItem value="refunded">Refunded</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  )}
+                                </>
+                              )}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                        {/* Inline AI reasoning row for disputed escrows */}
+                        {escrow.status === 'disputed' && escrow.ai_resolution?.reasoning && (
+                          <TableRow className="bg-purple-50/40">
+                            <TableCell colSpan={7} className="py-2 px-4">
+                              <div className="flex items-start gap-2 text-xs text-purple-800">
+                                <Scale className="w-3.5 h-3.5 mt-0.5 shrink-0 text-purple-600" />
+                                <span><strong>AI Reasoning:</strong> {escrow.ai_resolution.reasoning}</span>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        )}
+                        {/* Inline refund request reason row */}
+                        {escrow.refund_request?.reason && escrow.status !== 'refunded' && (
+                          <TableRow className="bg-orange-50/40">
+                            <TableCell colSpan={7} className="py-2 px-4">
+                              <div className="flex items-start gap-2 text-xs text-orange-800">
+                                <AlertTriangle className="w-3.5 h-3.5 mt-0.5 shrink-0 text-orange-600" />
+                                <span><strong>Refund Reason:</strong> {escrow.refund_request.reason}</span>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </React.Fragment>
                     ))
                   )}
                 </TableBody>
