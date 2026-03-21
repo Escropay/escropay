@@ -95,24 +95,38 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
 
   const hasBanking = !!escrow.seller_banking_details?.account_number;
 
-  const handleRequestPayout = async () => {
-    if (!hasBanking) {
-      window.location.href = `/EscrowView?id=${escrow.id}`;
-      return;
-    }
-    await onUpdate(escrow.id, { payout_requested: true, payout_requested_at: new Date().toISOString() });
-    // Notify admins
+  const notifyAdmins = async (title, message) => {
     const admins = await base44.entities.User.filter({ role: 'admin' });
     for (const admin of admins) {
       await base44.entities.Notification.create({
         user_email: admin.email,
         type: 'admin_action_required',
         escrow_id: escrow.id,
-        title: 'Payout Requested',
-        message: `${escrow.seller_name || escrow.seller_email} has requested a payout for "${escrow.title}"`,
+        title,
+        message,
         action_url: `/Admin`
       });
     }
+  };
+
+  const handleRequestPayout = async () => {
+    if (!hasBanking) {
+      window.location.href = `/EscrowView?id=${escrow.id}`;
+      return;
+    }
+    await onUpdate(escrow.id, { payout_requested: true, payout_requested_at: new Date().toISOString() });
+    await notifyAdmins(
+      'Payout Requested',
+      `${escrow.seller_name || escrow.seller_email} has requested a payout for "${escrow.title}"`
+    );
+  };
+
+  const handleBuyerRequestRelease = async () => {
+    await onUpdate(escrow.id, { payout_requested: true, payout_requested_at: new Date().toISOString() });
+    await notifyAdmins(
+      'Release Requested by Buyer',
+      `${escrow.buyer_name || escrow.buyer_email} has requested fund release for "${escrow.title}"`
+    );
   };
 
   return (
