@@ -207,11 +207,11 @@ export default function EscrowView() {
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link to={createPageUrl('Home')}>
+          <Link to="/">
             <img src={LOGO_URL} alt="EscroPay" className="h-8" />
           </Link>
           {currentUser ? (
-            <Link to={createPageUrl('Dashboard')}>
+            <Link to="/Dashboard">
               <Button variant="outline" size="sm">Dashboard</Button>
             </Link>
           ) : (
@@ -446,7 +446,7 @@ export default function EscrowView() {
               Buyer View
             </h3>
             <p className="text-sm text-gray-600">
-              You can manage and take action on this escrow from your <Link to={createPageUrl('Dashboard')} className="text-purple-600 underline">Dashboard</Link>.
+              You can manage and take action on this escrow from your <Link to="/Dashboard" className="text-purple-600 underline">Dashboard</Link>.
             </p>
           </motion.div>
         )}
