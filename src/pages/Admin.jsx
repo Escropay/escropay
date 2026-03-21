@@ -49,6 +49,11 @@ import BlacklistTab from '@/components/compliance/BlacklistTab';
 import AuditLogTab from '@/components/compliance/AuditLogTab';
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
+const APP_BASE_URL = typeof window !== 'undefined'
+  ? (window.location.hostname === 'localhost' || window.location.hostname.includes('preview-sandbox') || window.location.hostname.includes('base44')
+    ? 'https://escropay.app'
+    : window.location.origin)
+  : 'https://escropay.app';
 
 const statusColors = {
   pending: 'bg-amber-100 text-amber-700',
