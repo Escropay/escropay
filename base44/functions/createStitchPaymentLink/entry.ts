@@ -32,14 +32,18 @@ Deno.serve(async (req) => {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${STITCH_API_KEY}`,
+        'x-api-key': STITCH_API_KEY,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload),
     });
 
-    const data = await response.json();
+    const text = await response.text();
+    let data;
+    try { data = JSON.parse(text); } catch { data = { raw: text }; }
 
     if (!response.ok) {
+      console.error('Stitch API error:', response.status, text);
       return Response.json({ error: data }, { status: response.status });
     }
 
