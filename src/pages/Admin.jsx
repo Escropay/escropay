@@ -159,8 +159,8 @@ export default function Admin() {
               to: email,
               subject: isRelease ? `Funds Released — ${escrow.title}` : `Refund Processed — ${escrow.title}`,
               body: isRelease
-                ? `<h2>Funds Released</h2><p>Admin has released funds for <strong>${escrow.title}</strong>.</p><p><strong>Amount:</strong> R${escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>${!isBuyer ? '<p>The funds will be transferred to your registered bank account within 1-3 business days.</p>' : ''}<p><a href="${window.location.origin}/EscrowView?id=${escrowId}">View transaction</a></p>`
-                : `<h2>Refund Processed</h2><p>Admin has processed a refund for <strong>${escrow.title}</strong>.</p><p><strong>Amount:</strong> R${escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p><p><a href="${window.location.origin}/EscrowView?id=${escrowId}">View transaction</a></p>`
+                ? `<h2>Funds Released</h2><p>Admin has released funds for <strong>${escrow.title}</strong>.</p><p><strong>Amount:</strong> R${escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>${!isBuyer ? '<p>The funds will be transferred to your registered bank account within 1-3 business days.</p>' : ''}<p><a href="${APP_BASE_URL}/EscrowView?id=${escrowId}">View transaction</a></p>`
+                : `<h2>Refund Processed</h2><p>Admin has processed a refund for <strong>${escrow.title}</strong>.</p><p><strong>Amount:</strong> R${escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p><p><a href="${APP_BASE_URL}/EscrowView?id=${escrowId}">View transaction</a></p>`
             }).catch(() => {});
           }
         }
