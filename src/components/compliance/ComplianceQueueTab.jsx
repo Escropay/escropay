@@ -267,10 +267,11 @@ export default function ComplianceQueueTab() {
       {/* Run compliance on all pending */}
       <div className="pt-2 border-t border-gray-100 flex justify-end gap-2">
         <Button variant="outline" size="sm"
-          onClick={() => {
-            allUsers.filter(u => !u.risk_rating).forEach(u =>
-              runComplianceMutation.mutate({ user_id: u.id, user_email: u.email })
-            );
+          onClick={async () => {
+            const unscored = allUsers.filter(u => !u.risk_rating);
+            for (const u of unscored) {
+              await runComplianceMutation.mutateAsync({ user_id: u.id, user_email: u.email });
+            }
           }}
           disabled={runComplianceMutation.isPending}>
           {runComplianceMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <Shield className="w-3 h-3 mr-1" />}
