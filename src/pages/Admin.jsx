@@ -175,7 +175,7 @@ export default function Admin() {
               </div>
               <div>
                 <p className="text-sm text-gray-500">Total Volume</p>
-                <p className="text-xl font-bold text-gray-900">R {stats.totalVolume.toLocaleString()}</p>
+                <p className="text-xl font-bold text-gray-900">R {stats.totalVolume.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</p>
               </div>
             </div>
           </motion.div>
@@ -351,7 +351,7 @@ export default function Admin() {
                         <TableCell className="font-medium">{escrow.title}</TableCell>
                         <TableCell className="text-sm text-gray-600">{escrow.buyer_email}</TableCell>
                         <TableCell className="text-sm text-gray-600">{escrow.seller_email}</TableCell>
-                        <TableCell className="font-medium">R {escrow.amount?.toLocaleString()}</TableCell>
+                        <TableCell className="font-medium">R {escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</TableCell>
                         <TableCell>
                           <Badge className={statusColors[escrow.status]}>{escrow.status}</Badge>
                         </TableCell>

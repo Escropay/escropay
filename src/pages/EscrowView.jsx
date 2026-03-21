@@ -60,6 +60,7 @@ function getActiveStep(escrow) {
 }
 
 export default function EscrowView() {
+  const { format: formatCurrency } = useCurrency();
   const urlParams = new URLSearchParams(window.location.search);
   const escrowId = urlParams.get('id');
   const queryClient = useQueryClient();
@@ -243,7 +244,7 @@ export default function EscrowView() {
           <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
             <div>
               <p className="text-gray-400">Amount</p>
-              <p className="text-xl font-bold text-purple-600">R {escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</p>
+              <p className="text-xl font-bold text-purple-600">{formatCurrency(escrow.amount)}</p>
             </div>
             <div>
               <p className="text-gray-400">Buyer</p>
