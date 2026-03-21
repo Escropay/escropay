@@ -96,8 +96,18 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
 
-    // This function can be called from admin context for a specific user
+    // Must be called by an authenticated user (the user themselves during onboarding, or an admin)
+    const caller = await base44.auth.me().catch(() => null);
+    if (!caller) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { user_id, user_email } = await req.json();
+
+    // Only allow users to run compliance for themselves, or admins for anyone
+    if (caller.role !== 'admin' && caller.id !== user_id) {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
 
     if (!user_id || !user_email) {
       return Response.json({ error: 'user_id and user_email required' }, { status: 400 });
