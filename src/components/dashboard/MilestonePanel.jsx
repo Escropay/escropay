@@ -237,13 +237,18 @@ export default function MilestonePanel({ escrow, onUpdate, isLoading, currentUse
                     className="bg-white"
                   />
                   <div className="flex gap-2">
-                    <Input
-                      type="number"
-                      placeholder="Amount"
-                      value={newMilestone.amount}
-                      onChange={(e) => setNewMilestone({ ...newMilestone, amount: e.target.value })}
-                      className="bg-white flex-1"
-                    />
+                    <div className="relative flex-1">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 pointer-events-none">
+                        {escrow.currency || 'ZAR'}
+                      </span>
+                      <Input
+                        type="number"
+                        placeholder="0.00"
+                        value={newMilestone.amount}
+                        onChange={(e) => setNewMilestone({ ...newMilestone, amount: e.target.value })}
+                        className="bg-white pl-12"
+                      />
+                    </div>
                     <Input
                       type="date"
                       value={newMilestone.due_date}
