@@ -283,9 +283,25 @@ export default function MilestonePanel({ escrow, onUpdate, isLoading, currentUse
               )}
 
               {milestones.length > 0 && (
-                <div className="flex items-center justify-between pt-2 border-t border-gray-200 text-sm">
-                  <span className="text-gray-500">Total milestone value</span>
-                  <span className="font-medium text-gray-900">R {totalMilestoneAmount.toLocaleString()}</span>
+                <div className="space-y-2 pt-2 border-t border-gray-200">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-500">Total milestone value</span>
+                    <span className={cn("font-medium", totalMilestoneAmount > escrow.amount ? "text-red-600" : "text-gray-900")}>
+                      {formatCurrency(totalMilestoneAmount)}
+                    </span>
+                  </div>
+                  {totalMilestoneAmount > escrow.amount && (
+                    <p className="text-xs text-red-600 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      Total exceeds escrow amount of {formatCurrency(escrow.amount)}
+                    </p>
+                  )}
+                  {isSeller && !hasBanking && (
+                    <p className="text-xs text-amber-600 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      Add banking details in the escrow view to receive milestone payouts
+                    </p>
+                  )}
                 </div>
               )}
             </div>
