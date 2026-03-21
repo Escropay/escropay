@@ -55,7 +55,7 @@ export default function RefundRequestPanel({ escrow, currentUser, onUpdate }) {
         await base44.functions.invoke('sendEmail', {
           to: admin.email,
           subject: `Refund Request - ${escrow.title}`,
-          body: `<h2>Refund Request Pending Approval</h2><p><strong>${currentUser.full_name || currentUser.email}</strong> has requested a refund.</p><p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p><p><strong>Amount:</strong> R${escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p><p><strong>Reason:</strong> ${reason}</p><p><a href="${window.location.origin}/Admin">Review in Admin Panel</a></p>`
+          body: `<h2>Refund Request Pending Approval</h2><p><strong>${currentUser.full_name || currentUser.email}</strong> has requested a refund.</p><p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p><p><strong>Amount:</strong> R${escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p><p><strong>Reason:</strong> ${reason}</p><p><a href="${APP_BASE_URL}/Admin">Review in Admin Panel</a></p>`
         });
       }
 
