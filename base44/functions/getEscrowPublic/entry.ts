@@ -27,7 +27,14 @@ Deno.serve(async (req) => {
       }
       throw e;
     }
-    return Response.json({ escrow });
+
+    // Strip sensitive fields before returning to unauthenticated callers
+    const safeEscrow = { ...escrow };
+    delete safeEscrow.seller_banking_details;
+    delete safeEscrow.admin_resolution;
+    delete safeEscrow.metadata;
+
+    return Response.json({ escrow: safeEscrow });
   } catch (error) {
     if (error.message?.includes('not found') || error.status === 404) {
       return Response.json({ escrow: null }, { status: 200 });
