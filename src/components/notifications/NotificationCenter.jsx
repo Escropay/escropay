@@ -108,16 +108,16 @@ export default function NotificationCenter({ userEmail }) {
     if (!userEmail) return;
 
     const unsubscribe = base44.entities.ChatMessage.subscribe((event) => {
-      if (event.type !== 'create') return;
-      const msg = event.data;
-      if (!msg || msg.sender_email === userEmail) return;
+    if (event.type !== 'create') return;
+    const msg = event.data;
+    if (!msg || msg.sender_email === userEmail) return;
 
-      const newNotification = {
-        id: Date.now(),
-        message: `${msg.sender_name || msg.sender_email}: ${msg.content.length > 60 ? msg.content.slice(0, 60) + '…' : msg.content}`,
-        type: 'chat_message',
-        action_url: `/Dashboard`,
-        escrow_id: msg.escrow_id,
+    const newNotification = {
+      id: Date.now(),
+      message: `${msg.sender_name || msg.sender_email}: ${msg.content.length > 60 ? msg.content.slice(0, 60) + '…' : msg.content}`,
+      type: 'chat_message',
+      action_url: msg.escrow_id ? `/EscrowView?id=${msg.escrow_id}` : `/Dashboard`,
+      escrow_id: msg.escrow_id,
         timestamp: new Date().toISOString(),
         read: false
       };

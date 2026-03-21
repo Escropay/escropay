@@ -231,26 +231,17 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
               </>
             )}
             {escrow.status === 'disputed' && (
-              <>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => setShowDisputePanel(true)}
-                  className="border-purple-300 text-purple-600 hover:bg-purple-50"
-                >
-                  <Bot className="w-4 h-4 mr-1" />
-                  AI Resolution
-                </Button>
-                {currentUser?.email === escrow.buyer_email && (
-                  <Button
-                    size="sm"
-                    onClick={() => onAction(escrow.id, 'refunded')}
-                    className="bg-gray-600 hover:bg-gray-700 text-white"
-                  >
-                    Refund
-                  </Button>
-                )}
-              </>
+            <>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setShowDisputePanel(true)}
+              className="border-purple-300 text-purple-600 hover:bg-purple-50"
+            >
+              <Bot className="w-4 h-4 mr-1" />
+              AI Resolution
+            </Button>
+            </>
             )}
           </div>
         </div>

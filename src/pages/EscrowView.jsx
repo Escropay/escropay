@@ -26,6 +26,7 @@ import {
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { format } from 'date-fns';
+import { useCurrency } from '@/components/common/CurrencyContext';
 import { EmailService } from '@/components/utils/EmailService';
 import SellerAcceptancePanel from '@/components/escrow/SellerAcceptancePanel';
 import RefundRequestPanel from '@/components/escrow/RefundRequestPanel';
