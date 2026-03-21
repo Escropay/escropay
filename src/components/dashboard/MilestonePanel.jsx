@@ -27,12 +27,14 @@ const statusConfig = {
 };
 
 export default function MilestonePanel({ escrow, onUpdate, isLoading, currentUser }) {
+  const { format: formatCurrency } = useCurrency();
   const [expanded, setExpanded] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newMilestone, setNewMilestone] = useState({ title: '', amount: '', due_date: '' });
   
   const isSeller = currentUser?.email === escrow.seller_email;
   const isBuyer = currentUser?.email === escrow.buyer_email;
+  const hasBanking = !!escrow.seller_banking_details?.account_number;
   
   const milestones = escrow.milestones || [];
   const completedMilestones = milestones.filter(m => m.status === 'approved').length;
