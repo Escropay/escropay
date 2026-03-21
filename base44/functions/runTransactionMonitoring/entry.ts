@@ -9,6 +9,12 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
 
+    // Admin-only or scheduled automation — verify caller is admin
+    const caller = await base44.auth.me().catch(() => null);
+    if (caller && caller.role !== 'admin') {
+      return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
+    }
+
     const now = new Date();
     const thirtyDaysAgo = new Date(now - 30 * 86400000).toISOString();
     const sixtyDaysAgo = new Date(now - 60 * 86400000).toISOString();
