@@ -37,7 +37,9 @@ import {
   Eye,
   Banknote,
   Ban,
-  ScrollText
+  ScrollText,
+  Bot,
+  Scale
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
