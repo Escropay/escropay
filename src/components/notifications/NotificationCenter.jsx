@@ -110,6 +110,7 @@ export default function NotificationCenter({ userEmail }) {
     const unsubscribe = base44.entities.ChatMessage.subscribe((event) => {
     if (event.type !== 'create') return;
     const msg = event.data;
+    // Ignore messages sent by self; the RLS on ChatMessage entity already scopes reads to involved parties
     if (!msg || msg.sender_email === userEmail) return;
 
     const newNotification = {
