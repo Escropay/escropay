@@ -75,7 +75,7 @@ export default function SellerAcceptancePanel({ escrow, onUpdate, currentUser, i
       await base44.functions.invoke('sendEmail', {
         to: escrow.buyer_email,
         subject: `Transaction Rejected - ${escrow.title}`,
-        body: `<h2>Escrow Transaction Rejected</h2><p><strong>${escrow.seller_name || escrow.seller_email}</strong> has rejected your escrow transaction.</p><p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p><p>The transaction has been cancelled.</p>`
+        body: `<h2>Escrow Transaction Rejected</h2><p><strong>${escrow.seller_name || escrow.seller_email}</strong> has rejected your escrow transaction.</p><p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p><p>The transaction has been cancelled.</p><p><a href="${APP_BASE_URL}/Dashboard">Go to Dashboard</a></p>`
       });
     } catch (err) {
       console.error('Reject failed:', err);
