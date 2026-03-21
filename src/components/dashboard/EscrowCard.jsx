@@ -218,16 +218,22 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
                     </Button>
                   )
                 )}
-                {isBuyer && canMakePayments && (
-                  <Button
-                    size="sm"
-                    onClick={() => onAction(escrow.id, 'released')}
-                    className="bg-emerald-500 hover:bg-emerald-600 text-white"
-                  >
-                    <CheckCircle2 className="w-4 h-4 mr-1" />
-                    Release
-                  </Button>
-                )}
+                {isBuyer && canMakePayments && (() => {
+                  const milestones = escrow.milestones || [];
+                  const allApproved = milestones.length === 0 || milestones.every(m => m.status === 'approved');
+                  return (
+                    <Button
+                      size="sm"
+                      onClick={() => onAction(escrow.id, 'released')}
+                      disabled={!allApproved}
+                      title={!allApproved ? 'All milestones must be approved before releasing funds' : ''}
+                      className="bg-emerald-500 hover:bg-emerald-600 text-white disabled:opacity-50"
+                    >
+                      <CheckCircle2 className="w-4 h-4 mr-1" />
+                      Release
+                    </Button>
+                  );
+                })()}
               </>
             )}
             {escrow.status === 'disputed' && (
