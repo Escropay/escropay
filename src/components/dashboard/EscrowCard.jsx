@@ -93,7 +93,13 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
     onAction(escrow.id, 'funded');
   };
 
+  const hasBanking = !!escrow.seller_banking_details?.account_number;
+
   const handleRequestPayout = async () => {
+    if (!hasBanking) {
+      window.location.href = `/EscrowView?id=${escrow.id}`;
+      return;
+    }
     await onUpdate(escrow.id, { payout_requested: true, payout_requested_at: new Date().toISOString() });
     // Notify admins
     const admins = await base44.entities.User.filter({ role: 'admin' });
