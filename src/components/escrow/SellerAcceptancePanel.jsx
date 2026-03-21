@@ -59,7 +59,7 @@ export default function SellerAcceptancePanel({ escrow, onUpdate, currentUser, i
       await base44.functions.invoke('sendEmail', {
         to: escrow.buyer_email,
         subject: `Transaction Accepted - ${escrow.title}`,
-        body: `<h2>Escrow Transaction Accepted</h2><p><strong>${escrow.seller_name || escrow.seller_email}</strong> has accepted your escrow transaction.</p><p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p><p><strong>Amount:</strong> R${escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p><p>You can now proceed to fund the escrow.</p><p><a href="${window.location.origin}/EscrowView?id=${escrow.id}">View transaction</a></p>`
+        body: `<h2>Escrow Transaction Accepted</h2><p><strong>${escrow.seller_name || escrow.seller_email}</strong> has accepted your escrow transaction.</p><p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p><p><strong>Amount:</strong> R${escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p><p>You can now proceed to fund the escrow.</p><p><a href="${APP_BASE_URL}/EscrowView?id=${escrow.id}">View transaction</a></p>`
       });
     } catch (err) {
       console.error('Accept failed:', err);
