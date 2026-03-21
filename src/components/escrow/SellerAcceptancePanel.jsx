@@ -99,7 +99,7 @@ export default function SellerAcceptancePanel({ escrow, onUpdate, currentUser, i
       await base44.functions.invoke('sendEmail', {
         to: escrow.buyer_email,
         subject: `Modification Requested - ${escrow.title}`,
-        body: `<h2>Transaction Modification Requested</h2><p><strong>${escrow.seller_name || escrow.seller_email}</strong> has requested changes.</p><p><strong>Reason:</strong> ${modificationReason}</p><p><strong>Changes:</strong> ${requestedChanges}</p><p><a href="${window.location.origin}/EscrowView?id=${escrow.id}">Review and modify transaction</a></p>`
+        body: `<h2>Transaction Modification Requested</h2><p><strong>${escrow.seller_name || escrow.seller_email}</strong> has requested changes.</p><p><strong>Reason:</strong> ${modificationReason}</p><p><strong>Changes:</strong> ${requestedChanges}</p><p><a href="${APP_BASE_URL}/EscrowView?id=${escrow.id}">Review and modify transaction</a></p>`
       });
     } catch (err) {
       console.error('Request modification failed:', err);
