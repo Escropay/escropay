@@ -73,6 +73,9 @@ function DashboardInner() {
   });
 
   const handleStatusChange = (id, newStatus) => {
+    // Prevent buyers from directly triggering a refund — must go through admin approval
+    if (newStatus === 'refunded' && currentUser?.role !== 'admin') return;
+
     const updates = { status: newStatus };
     const now = new Date().toISOString();
     
