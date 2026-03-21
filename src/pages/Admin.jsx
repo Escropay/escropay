@@ -82,22 +82,16 @@ export default function Admin() {
     }
   }, [currentUser, isLoadingUser, navigate]);
 
-  if (isLoadingUser || !currentUser || currentUser.role !== 'admin') {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" />
-      </div>
-    );
-  }
-
   const { data: escrows = [], isLoading: loadingEscrows } = useQuery({
     queryKey: ['admin-escrows'],
-    queryFn: () => base44.entities.Escrow.list('-created_date', 100)
+    queryFn: () => base44.entities.Escrow.list('-created_date', 100),
+    enabled: !!currentUser && currentUser.role === 'admin'
   });
 
   const { data: users = [], isLoading: loadingUsers } = useQuery({
     queryKey: ['admin-users'],
-    queryFn: () => base44.entities.User.list('-created_date', 100)
+    queryFn: () => base44.entities.User.list('-created_date', 100),
+    enabled: !!currentUser && currentUser.role === 'admin'
   });
 
   const updateEscrowMutation = useMutation({
