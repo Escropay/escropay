@@ -100,7 +100,7 @@ export default function RefundRequestPanel({ escrow, currentUser, onUpdate }) {
       await base44.functions.invoke('sendEmail', {
         to: escrow.refund_request.requested_by,
         subject: `Refund ${approved ? 'Approved' : 'Denied'} - ${escrow.title}`,
-        body: `<h2>Refund Request ${approved ? 'Approved' : 'Denied'}</h2><p>Your refund request has been ${approved ? 'approved' : 'denied'} by admin.</p><p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p>${notes ? `<p><strong>Admin Notes:</strong> ${notes}</p>` : ''}<p><a href="${window.location.origin}/EscrowView?id=${escrow.id}">View transaction</a></p>`
+        body: `<h2>Refund Request ${approved ? 'Approved' : 'Denied'}</h2><p>Your refund request has been ${approved ? 'approved' : 'denied'} by admin.</p><p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p>${notes ? `<p><strong>Admin Notes:</strong> ${notes}</p>` : ''}<p><a href="${APP_BASE_URL}/EscrowView?id=${escrow.id}">View transaction</a></p>`
       });
     } catch (err) {
       console.error('Admin decision failed:', err);
