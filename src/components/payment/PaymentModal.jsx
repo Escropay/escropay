@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import { useCurrency } from '@/components/common/CurrencyContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -99,6 +100,7 @@ const FEE_TIERS = [
 ];
 
 export default function PaymentModal({ isOpen, onClose, escrow, onPaymentComplete }) {
+  const { format: formatCurrency } = useCurrency();
   const feeCalc = calculateFee(escrow?.amount);
   const [selectedGateway, setSelectedGateway] = useState(null);
   const [step, setStep] = useState('select'); // select, process, complete
@@ -212,15 +214,15 @@ export default function PaymentModal({ isOpen, onClose, escrow, onPaymentComplet
             <div className="p-3 bg-purple-50 rounded-xl space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-600">Escrow amount</span>
-                <span className="font-semibold text-gray-900">R {escrow?.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</span>
+                <span className="font-semibold text-gray-900">{formatCurrency(escrow?.amount)}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-600">Service fee ({feeCalc.rate.toFixed(2)}%)</span>
-                <span className="font-semibold text-amber-600">R {feeCalc.fee?.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</span>
+                <span className="font-semibold text-amber-600">{formatCurrency(feeCalc.fee)}</span>
               </div>
               <div className="border-t border-purple-200 pt-2 flex items-center justify-between">
                 <span className="text-sm font-medium text-gray-700">Total to pay</span>
-                <span className="text-xl font-bold text-purple-600">R {feeCalc.total?.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</span>
+                <span className="text-xl font-bold text-purple-600">{formatCurrency(feeCalc.total)}</span>
               </div>
             </div>
             <details className="text-xs">
@@ -411,7 +413,7 @@ export default function PaymentModal({ isOpen, onClose, escrow, onPaymentComplet
                   ) : null}
                   {selectedGateway.id === 'bank_transfer' || selectedGateway.id === 'zaru'
                     ? 'I\'ve Made the Payment'
-                    : `Pay R ${feeCalc.total?.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}`}
+                    : `Pay ${formatCurrency(feeCalc.total)}`}
                 </Button>
               </motion.div>
             )}
