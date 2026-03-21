@@ -83,9 +83,35 @@ export default function MilestonePanel({ escrow, onUpdate, isLoading, currentUse
         type: 'milestone_completed',
         escrow_id: escrow.id,
         title: 'Milestone completed',
-        message: `Seller has marked "${milestone.title}" as complete`,
+        message: `Seller has marked "${milestone.title}" as complete. Please review and approve.`,
         action_url: `/EscrowView?id=${escrow.id}`
       });
+    }
+
+    // When buyer approves a milestone, trigger a payout request to admin
+    if (newStatus === 'approved') {
+      const milestone = updatedMilestones.find(m => m.id === milestoneId);
+      // Notify seller
+      await base44.entities.Notification.create({
+        user_email: escrow.seller_email,
+        type: 'milestone_completed',
+        escrow_id: escrow.id,
+        title: 'Milestone approved',
+        message: `Buyer approved "${milestone.title}" (${formatCurrency(milestone.amount)}). Payout will be processed.`,
+        action_url: `/EscrowView?id=${escrow.id}`
+      });
+      // Notify admins for payout processing
+      const admins = await base44.entities.User.filter({ role: 'admin' });
+      for (const admin of admins) {
+        await base44.entities.Notification.create({
+          user_email: admin.email,
+          type: 'admin_action_required',
+          escrow_id: escrow.id,
+          title: 'Milestone Payout Required',
+          message: `Milestone "${milestone.title}" approved for ${escrow.title}. Process payout of ${formatCurrency(milestone.amount)} to ${escrow.seller_name || escrow.seller_email}.`,
+          action_url: `/Admin`
+        });
+      }
     }
   };
 
