@@ -103,13 +103,8 @@ Be fair and consider both parties' perspectives.`,
     setIsAnalyzing(false);
   };
 
-  const handleAcceptResolution = async (action) => {
-    let newStatus = 'refunded';
-    if (action === 'release_to_seller') newStatus = 'released';
-    if (action === 'split') newStatus = 'released'; // partial release handled as released
-    await onUpdate(escrow.id, { status: newStatus });
-    onClose();
-  };
+  // AI recommendation is advisory only — no direct status changes allowed here.
+  // Admin must review ai_resolution in the Admin panel and take action.
 
   const resolution = escrow.ai_resolution;
 
