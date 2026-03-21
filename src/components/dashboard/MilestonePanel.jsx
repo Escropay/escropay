@@ -171,7 +171,7 @@ export default function MilestonePanel({ escrow, onUpdate, isLoading, currentUse
                       <div>
                         <p className="text-sm font-medium text-gray-900">{milestone.title}</p>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-xs text-gray-500">R {milestone.amount?.toLocaleString()}</span>
+                          <span className="text-xs text-gray-500">{formatCurrency(milestone.amount)}</span>
                           {milestone.due_date && (
                             <span className="text-xs text-gray-400">
                               Due {format(new Date(milestone.due_date), 'MMM d')}
