@@ -4,6 +4,13 @@ const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
 Deno.serve(async (req) => {
   try {
+    // Require authenticated user — prevents open relay abuse
+    const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+    if (!user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { to, subject, body, from_name } = await req.json();
 
     if (!to || !subject || !body) {
