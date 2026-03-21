@@ -147,8 +147,10 @@ export default function PaymentModal({ isOpen, onClose, escrow, onPaymentComplet
       }
 
       setStep('complete');
-      
-      if (onPaymentComplete) {
+
+      // Only auto-fund escrow for instant payment methods; bank_transfer and zaru require manual admin confirmation
+      const isInstant = selectedGateway.id === 'stripe' || selectedGateway.id === 'payfast' || selectedGateway.id === 'paypal';
+      if (onPaymentComplete && isInstant) {
         onPaymentComplete(payment);
       }
     } catch (err) {

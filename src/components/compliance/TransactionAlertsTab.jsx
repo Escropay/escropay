@@ -105,6 +105,12 @@ export default function TransactionAlertsTab() {
   const [severityFilter, setSeverityFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('open');
 
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+    staleTime: 300000
+  });
+
   const { data: alerts = [], isLoading } = useQuery({
     queryKey: ['transaction-alerts'],
     queryFn: () => base44.entities.TransactionAlert.list('-triggered_at', 200)
@@ -201,7 +207,7 @@ export default function TransactionAlertsTab() {
             <AlertRow
               key={alert.id}
               alert={alert}
-              onUpdate={(id, status, notes) => updateMutation.mutate({ id, status, notes })}
+              onUpdate={(id, status, notes) => updateMutation.mutate({ id, status, notes, reviewedBy: currentUser?.email })}
               isUpdating={updateMutation.isPending}
             />
           ))}
