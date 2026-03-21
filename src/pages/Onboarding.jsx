@@ -72,7 +72,7 @@ export default function Onboarding() {
         user_email: user.email
       }).catch(() => {}); // fire-and-forget
     }
-    window.location.href = createPageUrl('Dashboard');
+    window.location.href = '/Dashboard';
   };
 
   const canProceed = () => {

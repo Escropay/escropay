@@ -56,18 +56,18 @@ function HomeInner() {
       {/* Header */}
       <header className="relative z-10 border-b border-gray-200 backdrop-blur-xl bg-white/80">
                 <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-                  <Link to={createPageUrl('Home')} className="flex items-center gap-2">
+                  <Link to="/" className="flex items-center gap-2">
                     <img src={LOGO_URL} alt="Escropay" className="h-8 md:h-10 w-auto" />
                   </Link>
                   <div className="flex items-center gap-4">
-                    <Link to={createPageUrl('Documentation')}>
+                    <Link to="/Documentation">
                       <Button variant="ghost" className="text-gray-600 hover:text-purple-600">
                         <BookOpen className="w-4 h-4 mr-2" />
                         <span className="hidden sm:inline">Documentation</span>
                       </Button>
                     </Link>
                     <CurrencySwitcher />
-                    <Link to={createPageUrl('Welcome')}>
+                    <Link to="/Welcome">
                       <Button className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white">
                         <span className="hidden sm:inline">Launch App</span>
                         <span className="sm:hidden">Login</span>
@@ -113,7 +113,7 @@ function HomeInner() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to={createPageUrl('Welcome')}>
+              <Link to="/Welcome">
                 <Button
                   size="lg"
                   className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-medium text-lg px-8 shadow-lg shadow-purple-500/25 w-full sm:w-auto"
@@ -122,7 +122,7 @@ function HomeInner() {
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
               </Link>
-              <Link to={createPageUrl('Documentation')}>
+              <Link to="/Documentation">
                 <Button
                   size="lg"
                   variant="outline"
@@ -213,7 +213,7 @@ function HomeInner() {
               <p className="text-purple-200 mb-8 max-w-xl mx-auto">
                 Join thousands of businesses using EscroPay for secure transactions
               </p>
-              <Link to={createPageUrl('Welcome')}>
+              <Link to="/Welcome">
                 <Button
                   size="lg"
                   className="bg-white text-purple-700 hover:bg-gray-100 font-medium shadow-lg"

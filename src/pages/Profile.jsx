@@ -177,12 +177,12 @@ export default function Profile() {
         <div className="max-w-4xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link to={createPageUrl('Dashboard')}>
+              <Link to="/Dashboard">
                 <Button variant="ghost" size="icon">
                   <ArrowLeft className="w-5 h-5" />
                 </Button>
               </Link>
-              <Link to={createPageUrl('Home')}>
+              <Link to="/">
                 <img src={LOGO_URL} alt="EscroPay" className="h-8" />
               </Link>
             </div>
