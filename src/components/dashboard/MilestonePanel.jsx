@@ -43,11 +43,13 @@ export default function MilestonePanel({ escrow, onUpdate, isLoading, currentUse
 
   const handleAddMilestone = () => {
     if (!newMilestone.title || !newMilestone.amount) return;
+    const newAmount = parseFloat(newMilestone.amount);
+    if (totalMilestoneAmount + newAmount > escrow.amount) return; // prevent overage
     
     const milestone = {
       id: Date.now().toString(),
       title: newMilestone.title,
-      amount: parseFloat(newMilestone.amount),
+      amount: newAmount,
       due_date: newMilestone.due_date,
       status: 'pending'
     };
@@ -268,7 +270,7 @@ export default function MilestonePanel({ escrow, onUpdate, isLoading, currentUse
                     <Button
                       size="sm"
                       onClick={handleAddMilestone}
-                      disabled={!newMilestone.title || !newMilestone.amount}
+                      disabled={!newMilestone.title || !newMilestone.amount || (totalMilestoneAmount + parseFloat(newMilestone.amount || 0)) > escrow.amount}
                       className="flex-1 bg-purple-600 hover:bg-purple-700"
                     >
                       Add
