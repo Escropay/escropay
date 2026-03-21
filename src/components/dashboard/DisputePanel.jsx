@@ -292,45 +292,25 @@ Be fair and consider both parties' perspectives.`,
                   <p className="text-sm text-gray-600">{resolution.reasoning}</p>
                 </div>
 
-                <p className="text-xs text-gray-400 italic">
-                  AI recommendations are advisory only. Escropay agents make final decisions.
-                </p>
+                <div className="flex items-center gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                  <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
+                  <p className="text-xs text-amber-800 font-medium">
+                    This recommendation has been submitted for admin review. An admin will make the final decision on the dispute outcome.
+                  </p>
+                </div>
 
-                <div className="grid grid-cols-2 gap-3 pt-2">
+                <div className="flex gap-3 pt-2">
                   <Button
-                    variant="outline"
-                    onClick={() => handleAcceptResolution('refund_buyer')}
-                    className="border-red-200 text-red-600 hover:bg-red-50"
+                    variant="ghost"
+                    onClick={() => setStep('reason')}
+                    className="flex-1 text-gray-500 text-sm"
                   >
-                    <XCircle className="w-4 h-4 mr-1" />
-                    Refund Buyer
+                    ← Add more evidence / Re-analyse
                   </Button>
-                  <Button
-                    onClick={() => handleAcceptResolution('release_to_seller')}
-                    className="bg-emerald-500 hover:bg-emerald-600 text-white"
-                  >
-                    <CheckCircle2 className="w-4 h-4 mr-1" />
-                    Release Seller
+                  <Button onClick={onClose} className="flex-1 bg-purple-600 hover:bg-purple-700">
+                    Done
                   </Button>
                 </div>
-                
-                {resolution.recommendation === 'split' && resolution.suggested_split && (
-                  <Button
-                    onClick={() => handleAcceptResolution('split')}
-                    className="w-full bg-purple-600 hover:bg-purple-700 text-white"
-                  >
-                    <Scale className="w-4 h-4 mr-2" />
-                    Apply Split ({resolution.suggested_split.buyer_percent}% / {resolution.suggested_split.seller_percent}%)
-                  </Button>
-                )}
-
-                <Button
-                  variant="ghost"
-                  onClick={() => setStep('reason')}
-                  className="w-full text-gray-500 text-sm"
-                >
-                  ← Add more evidence / Re-analyse
-                </Button>
               </motion.div>
             )}
           </AnimatePresence>
