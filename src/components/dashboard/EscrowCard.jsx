@@ -221,10 +221,31 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
                 {isBuyer && canMakePayments && (() => {
                   const milestones = escrow.milestones || [];
                   const allApproved = milestones.length === 0 || milestones.every(m => m.status === 'approved');
+                  if (escrow.payout_requested) {
+                    return (
+                      <Badge className="bg-amber-100 text-amber-700 border border-amber-200 px-3 py-1">
+                        <Clock className="w-3 h-3 mr-1" />
+                        Release Pending Admin
+                      </Badge>
+                    );
+                  }
                   return (
                     <Button
                       size="sm"
-                      onClick={() => onAction(escrow.id, 'released')}
+                      onClick={async () => {
+                        await onUpdate(escrow.id, { payout_requested: true, payout_requested_at: new Date().toISOString() });
+                        const admins = await base44.entities.User.filter({ role: 'admin' });
+                        for (const admin of admins) {
+                          await base44.entities.Notification.create({
+                            user_email: admin.email,
+                            type: 'admin_action_required',
+                            escrow_id: escrow.id,
+                            title: 'Release Requested by Buyer',
+                            message: `${escrow.buyer_name || escrow.buyer_email} has requested fund release for "${escrow.title}"`,
+                            action_url: `/Admin`
+                          });
+                        }
+                      }}
                       disabled={!allApproved}
                       title={!allApproved ? 'All milestones must be approved before releasing funds' : ''}
                       className="bg-emerald-500 hover:bg-emerald-600 text-white disabled:opacity-50"
