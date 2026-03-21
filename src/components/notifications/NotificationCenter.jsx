@@ -198,7 +198,7 @@ export default function NotificationCenter({ userEmail }) {
                         </p>
                       </div>
                       <button
-                        onClick={() => removeNotification(notification.id)}
+                        onClick={(e) => { e.stopPropagation(); removeNotification(notification.id); }}
                         className="text-gray-400 hover:text-gray-600 p-1"
                       >
                         <X className="w-3 h-3" />

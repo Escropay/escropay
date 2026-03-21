@@ -40,7 +40,6 @@ import {
   ScrollText
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
 import { format } from 'date-fns';
 import ComplianceQueueTab from '@/components/compliance/ComplianceQueueTab';
 import TransactionAlertsTab from '@/components/compliance/TransactionAlertsTab';
