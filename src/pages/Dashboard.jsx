@@ -121,7 +121,7 @@ function DashboardInner() {
                 <img src={LOGO_URL} alt="Escropay" className="h-8 md:h-10 w-auto" />
               </Link>
               <div className="flex items-center gap-2 md:gap-3">
-                                    <Link to={createPageUrl('Documentation')}>
+                                    <Link to="/Documentation">
                                           <Button variant="ghost" size="sm" className="text-gray-600 hover:text-purple-600">
                                             <BookOpen className="w-4 h-4 md:mr-1" />
                                             <span className="hidden md:inline">Docs</span>
@@ -129,7 +129,7 @@ function DashboardInner() {
                                         </Link>
                                         <CurrencySwitcher />
                                         <NotificationCenter userEmail={currentUser?.email} />
-                                    <Link to={createPageUrl('Profile')}>
+                                    <Link to="/Profile">
                                       <Button variant="outline" size="icon" className="rounded-full">
                                         <User className="w-4 h-4" />
                                       </Button>
