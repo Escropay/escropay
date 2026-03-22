@@ -1,4 +1,4 @@
-import { createClient } from 'npm:@base44/sdk@0.8.21';
+import { createClient } from '@base44/sdk';
 import { appParams } from '@/lib/app-params';
 
 const { appId, token, functionsVersion, appBaseUrl } = appParams;
