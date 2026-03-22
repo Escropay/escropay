@@ -135,7 +135,6 @@ export default function Admin() {
     if (status === 'funded') updates.funded_at = new Date().toISOString();
     if (status === 'released') updates.released_at = new Date().toISOString();
     if (status === 'disputed') updates.disputed_at = new Date().toISOString();
-    if (status === 'refunded') updates.refunded_at = new Date().toISOString();
 
     updateEscrowMutation.mutate({ id: escrowId, data: updates }, {
       onSuccess: async () => {
