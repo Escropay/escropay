@@ -85,7 +85,7 @@ export default function Admin() {
 
   useEffect(() => {
     if (!isLoadingUser && currentUser && currentUser.role !== 'admin') {
-      navigate('/Dashboard', { replace: true }); // createPageUrl removed — direct path used
+      navigate('/Dashboard', { replace: true });
     }
   }, [currentUser, isLoadingUser, navigate]);
 

@@ -13,7 +13,6 @@ import {
   CheckCircle2, XCircle, AlertTriangle, Clock, Search,
   Eye, Shield, User, Loader2, ChevronDown, ChevronUp
 } from 'lucide-react';
-import { format } from 'date-fns';
 
 const riskColors = {
   LOW: 'bg-emerald-100 text-emerald-700',
