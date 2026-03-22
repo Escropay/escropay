@@ -34,7 +34,7 @@ export default function InAppChat({ escrowId, escrowTitle, currentUser, otherPar
 
   useEffect(() => {
     if (chatMessages.length > 0) {
-      setMessages([...chatMessages].reverse());
+      setMessages([...chatMessages].sort((a, b) => new Date(a.created_date) - new Date(b.created_date)));
     }
   }, [chatMessages]);
 
