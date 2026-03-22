@@ -780,7 +780,7 @@ export default function ApiDocs() {
                   Get API Access <ChevronRight className="w-4 h-4 ml-1" />
                 </Button>
               </a>
-              <Link to={createPageUrl('Documentation')}>
+              <Link to="/Documentation">
                 <Button variant="outline" className="border-white/40 text-white hover:bg-white/10">
                   Full Docs
                 </Button>

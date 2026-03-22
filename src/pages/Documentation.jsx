@@ -169,17 +169,17 @@ export default function Documentation() {
       <header className="border-b border-gray-200 bg-white sticky top-0 z-20">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <Link to={createPageUrl('Home')}>
+            <Link to="/">
               <img src={LOGO_URL} alt="Escropay" className="h-8 md:h-10 w-auto" />
             </Link>
             <div className="flex items-center gap-4">
-              <Link to={createPageUrl('ApiDocs')}>
+              <Link to="/ApiDocs">
                 <Button variant="outline" className="border-purple-200 text-purple-600">
                   <Code className="w-4 h-4 mr-2" />
                   API Docs
                 </Button>
               </Link>
-              <Link to={createPageUrl('Dashboard')}>
+              <Link to="/Dashboard">
                 <Button className="bg-purple-600 hover:bg-purple-700">
                   Go to Dashboard
                 </Button>
@@ -288,7 +288,7 @@ export default function Documentation() {
                   <p className="text-purple-200 text-sm mb-4">
                     Use our API to integrate Escropay into your marketplace or e-commerce platform.
                   </p>
-                  <Link to={createPageUrl('ApiDocs')}>
+                  <Link to="/ApiDocs">
                     <Button className="bg-white text-purple-700 hover:bg-gray-100">
                       View API Documentation
                       <ChevronRight className="w-4 h-4 ml-1" />
