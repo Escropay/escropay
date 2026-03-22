@@ -64,15 +64,17 @@ export default function InAppChat({ escrowId, escrowTitle, currentUser, otherPar
     mutationFn: async (data) => {
       const message = await base44.entities.ChatMessage.create(data);
       
-      // Notify the other party
-      await base44.entities.Notification.create({
-        user_email: otherPartyEmail,
-        type: 'chat_message',
-        escrow_id: escrowId,
-        title: 'New message',
-        message: `${currentUser.full_name || currentUser.email} sent you a message in ${escrowTitle}`,
-        action_url: `/EscrowView?id=${escrowId}`
-      });
+      // Notify the other party (only if we have their email)
+      if (otherPartyEmail) {
+        await base44.entities.Notification.create({
+          user_email: otherPartyEmail,
+          type: 'chat_message',
+          escrow_id: escrowId,
+          title: 'New message',
+          message: `${currentUser.full_name || currentUser.email} sent you a message in ${escrowTitle}`,
+          action_url: `/EscrowView?id=${escrowId}`
+        }).catch(() => {});
+      }
       
       // Send email notification only if we have a valid recipient
       if (otherPartyEmail) {
