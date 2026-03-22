@@ -46,37 +46,33 @@ const HIGH_RISK_SOF = ['cash', 'crypto', 'unknown', 'third_party'];
 // ─── Risk Scoring Engine ───────────────────────────────────────────────────
 
 function calculateRiskScore(user) {
-  if (!user || typeof user !== 'object') {
-    return { score: 50, rating: 'MEDIUM', breakdown: {} };
-  }
-
   let totalScore = 0;
   const breakdown = {};
 
   // 1. Country Risk (weight: 25)
-  const countryScore = COUNTRY_RISK_SCORES[user?.country] ?? 3;
+  const countryScore = COUNTRY_RISK_SCORES[user.country] ?? 3;
   const weightedCountry = (countryScore / 10) * 25;
-  breakdown.country = { raw: countryScore, weighted: weightedCountry, value: user?.country || 'Unknown' };
+  breakdown.country = { raw: countryScore, weighted: weightedCountry, value: user.country };
   totalScore += weightedCountry;
 
   // 2. PEP Status (weight: 20)
-  const isPep = user?.pep_declaration?.is_pep;
-  const pepType = user?.pep_declaration?.pep_type;
+  const isPep = user.pep_declaration?.is_pep;
+  const pepType = user.pep_declaration?.pep_type;
   const pepScore = isPep ? (pepType === 'FPEP' ? 10 : 8) : 0;
   const weightedPep = (pepScore / 10) * 20;
   breakdown.pep = { raw: pepScore, weighted: weightedPep, pep_type: pepType || 'none' };
   totalScore += weightedPep;
 
   // 3. Industry Risk (weight: 15)
-  const industryScore = INDUSTRY_RISK_SCORES[user?.industry] ?? 2;
+  const industryScore = INDUSTRY_RISK_SCORES[user.industry] ?? 2;
   const weightedIndustry = (industryScore / 10) * 15;
-  breakdown.industry = { raw: industryScore, weighted: weightedIndustry, value: user?.industry || 'Unknown' };
+  breakdown.industry = { raw: industryScore, weighted: weightedIndustry, value: user.industry };
   totalScore += weightedIndustry;
 
   // 4. Source of Funds (weight: 10)
-  const sofScore = HIGH_RISK_SOF.includes(user?.source_of_funds) ? 7 : 2;
+  const sofScore = HIGH_RISK_SOF.includes(user.source_of_funds) ? 7 : 2;
   const weightedSof = (sofScore / 10) * 10;
-  breakdown.source_of_funds = { raw: sofScore, weighted: weightedSof, value: user?.source_of_funds || 'Unknown' };
+  breakdown.source_of_funds = { raw: sofScore, weighted: weightedSof, value: user.source_of_funds };
   totalScore += weightedSof;
 
   // Determine Rating
@@ -89,7 +85,6 @@ function calculateRiskScore(user) {
 }
 
 function getCountryRisk(country) {
-  if (!country || typeof country !== 'string') return 'low';
   if (SANCTIONED_COUNTRIES.includes(country)) return 'sanctioned';
   if (ENHANCED_MONITORING_COUNTRIES.includes(country)) return 'high';
   return 'low';
@@ -107,39 +102,38 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await req.json();
-    const { user_id, user_email } = body || {};
+    const { user_id, user_email } = await req.json();
 
     // Only allow users to run compliance for themselves, or admins for anyone
-    if (caller?.role !== 'admin' && caller?.id !== user_id) {
+    if (caller.role !== 'admin' && caller.id !== user_id) {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    if (!user_id || typeof user_id !== 'string' || !user_email || typeof user_email !== 'string') {
-      return Response.json({ error: 'user_id (string) and user_email (string) required' }, { status: 400 });
+    if (!user_id || !user_email) {
+      return Response.json({ error: 'user_id and user_email required' }, { status: 400 });
     }
 
     // Fetch user data
     const users = await base44.asServiceRole.entities.User.filter({ id: user_id });
-    if (!users?.[0]) {
+    if (!users.length) {
       return Response.json({ error: 'User not found' }, { status: 404 });
     }
     const user = users[0];
 
     // ── 1. Blacklist Check ────────────────────────────────────────────────
     const identifiersToCheck = [
-      { type: 'email', value: user?.email },
-      { type: 'phone', value: user?.phone },
-    ].filter(i => i?.value && typeof i.value === 'string');
+      { type: 'email', value: user.email },
+      { type: 'phone', value: user.phone },
+    ].filter(i => i.value);
 
     let blacklistMatch = null;
-    for (const id of identifiersToCheck || []) {
+    for (const id of identifiersToCheck) {
       const matches = await base44.asServiceRole.entities.Blacklist.filter({
-        identifier_type: id?.type,
-        identifier_value: id?.value,
+        identifier_type: id.type,
+        identifier_value: id.value,
         active: true
       });
-      if (matches?.[0]) {
+      if (matches.length > 0) {
         blacklistMatch = matches[0];
         break;
       }
@@ -149,24 +143,23 @@ Deno.serve(async (req) => {
       // Block — mark account as blacklisted
       await base44.asServiceRole.entities.User.update(user_id, {
         account_status: 'blacklisted'
-      }).catch(() => {});
+      });
       await base44.asServiceRole.entities.AuditLog.create({
         event_type: 'blacklist_match_found',
         entity_type: 'User',
         entity_id: user_id,
         actor_email: 'system@escropay.co.za',
         actor_role: 'system',
-        description: `Blacklist match on ${blacklistMatch?.identifier_type || 'unknown'}: ${blacklistMatch?.reason || 'No reason provided'}`
-      }).catch(() => {});
-      return Response.json({ status: 'blacklisted', reason: blacklistMatch?.reason || 'Blacklist match found' });
+        description: `Blacklist match on ${blacklistMatch.identifier_type}: ${blacklistMatch.reason}`
+      });
+      return Response.json({ status: 'blacklisted', reason: blacklistMatch.reason });
     }
 
     // ── 2. Country Risk Assessment ────────────────────────────────────────
-    const countryRisk = getCountryRisk(user?.country);
+    const countryRisk = getCountryRisk(user.country);
 
     // ── 3. Risk Score Calculation ─────────────────────────────────────────
-    const riskResult = calculateRiskScore(user);
-    const { score, rating, breakdown } = riskResult || { score: 50, rating: 'MEDIUM', breakdown: {} };
+    const { score, rating, breakdown } = calculateRiskScore(user);
 
     // ── 4. Determine Account Status ───────────────────────────────────────
     let newAccountStatus;
@@ -206,10 +199,10 @@ Deno.serve(async (req) => {
       last_review_date: new Date().toISOString(),
     };
 
-    if (existing?.[0]) {
-      await base44.asServiceRole.entities.ComplianceRecord.update(existing[0].id, complianceData).catch(() => {});
+    if (existing.length > 0) {
+      await base44.asServiceRole.entities.ComplianceRecord.update(existing[0].id, complianceData);
     } else {
-      await base44.asServiceRole.entities.ComplianceRecord.create(complianceData).catch(() => {});
+      await base44.asServiceRole.entities.ComplianceRecord.create(complianceData);
     }
 
     // ── 7. AuditLog Entry ─────────────────────────────────────────────────
@@ -227,17 +220,17 @@ Deno.serve(async (req) => {
     if (['restricted', 'terminated', 'blacklisted'].includes(newAccountStatus) || eddRequired) {
       try {
         const admins = await base44.asServiceRole.entities.User.filter({ role: 'admin' }, '-created_date', 100);
-        await Promise.all((admins || []).map(admin =>
-          admin?.email ? base44.asServiceRole.entities.Notification.create({
+        await Promise.all(admins.map(admin =>
+          base44.asServiceRole.entities.Notification.create({
             user_email: admin.email,
             type: 'admin_action_required',
-            title: `🚨 Compliance Review Required — ${rating || 'MEDIUM'} Risk`,
+            title: `🚨 Compliance Review Required — ${rating} Risk`,
             message: `User ${user_email} requires compliance review. Risk score: ${score}, Status: ${newAccountStatus}`,
             action_url: '/Admin'
-          }).catch(() => {}) : Promise.resolve()
+          }).catch(() => {})
         ));
       } catch (err) {
-        console.error('Admin notification failed:', err?.message);
+        console.error('Admin notification failed:', err.message);
       }
     }
 
@@ -251,7 +244,6 @@ Deno.serve(async (req) => {
     });
 
   } catch (error) {
-    console.error('runOnboardingCompliance error:', error?.message);
-    return Response.json({ error: error?.message || 'Internal server error' }, { status: 500 });
+    return Response.json({ error: error.message }, { status: 500 });
   }
 });
