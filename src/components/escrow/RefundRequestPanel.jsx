@@ -57,7 +57,6 @@ export default function RefundRequestPanel({ escrow, currentUser, onUpdate }) {
       };
       if (approved) {
         updates.status = 'refunded';
-        updates.refunded_at = new Date().toISOString();
       }
       await onUpdate(updates);
 
