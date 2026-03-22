@@ -17,7 +17,7 @@ export function useComplianceGuard(user) {
 
   // Creating/receiving escrow, chatting, accepting, disputing — allowed for all non-blocked users
   const BLOCKED_STATUSES = ['suspended', 'terminated', 'blacklisted'];
-  const canUseEscrow = !BLOCKED_STATUSES.includes(status);
+  const canUseEscrow = status !== null && !BLOCKED_STATUSES.includes(status);
 
   // Legacy alias kept for any existing usages
   const canTransact = canMakePayments;
