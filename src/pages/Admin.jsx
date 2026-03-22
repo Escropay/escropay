@@ -56,6 +56,9 @@ const APP_BASE_URL = typeof window !== 'undefined'
   : 'https://escropay.app';
 
 const statusColors = {
+  pending_seller_acceptance: 'bg-purple-100 text-purple-700',
+  modification_requested: 'bg-orange-100 text-orange-700',
+  rejected_by_seller: 'bg-red-100 text-red-700',
   pending: 'bg-amber-100 text-amber-700',
   funded: 'bg-cyan-100 text-cyan-700',
   released: 'bg-emerald-100 text-emerald-700',

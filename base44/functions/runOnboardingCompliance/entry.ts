@@ -170,10 +170,8 @@ Deno.serve(async (req) => {
       newAccountStatus = 'restricted';
       eddRequired = true;
     } else {
-      // LOW / MEDIUM — activate after KYC docs submitted
-      newAccountStatus = user.kyc_status === 'pending' || user.kyc_status === 'verified'
-        ? 'pending_compliance_approval'
-        : 'pending_compliance_approval';
+      // LOW / MEDIUM — stays in pending approval until admin reviews KYC
+      newAccountStatus = 'pending_compliance_approval';
     }
 
     // ── 5. Update User ────────────────────────────────────────────────────

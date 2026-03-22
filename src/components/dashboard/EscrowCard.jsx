@@ -272,14 +272,14 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
           escrow={escrow}
           currentUser={currentUser}
           isLoadingUser={isLoadingUser}
-          onUpdate={(data) => base44.entities.Escrow.update(escrow.id, data)}
+          onUpdate={(data) => onUpdate(escrow.id, data)}
         />
 
         {/* Buyer Modification Panel */}
         <BuyerModificationPanel
           escrow={escrow}
           currentUser={currentUser}
-          onUpdate={(data) => base44.entities.Escrow.update(escrow.id, data)}
+          onUpdate={(data) => onUpdate(escrow.id, data)}
         />
 
         {/* Milestone Panel */}
