@@ -164,18 +164,17 @@ export default function EscrowView() {
       }).catch(() => {});
     }
 
-      // Notify admins via backend function (avoids user listing permission issues)
-      await base44.functions.invoke('notifyAdmins', {
-        title: 'Dispute requires resolution',
-        message: `${currentUser?.full_name || currentUser?.email} raised a dispute for ${escrow.title}`,
-        escrow_id: escrow.id,
-        type: 'admin_action_required',
-        action_url: '/Admin'
-      }).catch(() => {});
+    // Notify admins via backend function (avoids user listing permission issues)
+    await base44.functions.invoke('notifyAdmins', {
+      title: 'Dispute requires resolution',
+      message: `${currentUser?.full_name || currentUser?.email} raised a dispute for ${escrow.title}`,
+      escrow_id: escrow.id,
+      type: 'admin_action_required',
+      action_url: '/Admin'
+    }).catch(() => {});
 
-      EmailService.sendDisputeEmail(escrow, 'buyer').catch(() => {});
-      EmailService.sendDisputeEmail(escrow, 'seller').catch(() => {});
-    }
+    EmailService.sendDisputeEmail(escrow, 'buyer').catch(() => {});
+    EmailService.sendDisputeEmail(escrow, 'seller').catch(() => {});
     setShowDisputeForm(false);
   };
 
