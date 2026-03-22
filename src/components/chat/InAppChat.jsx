@@ -108,7 +108,7 @@ export default function InAppChat({ escrowId, escrowTitle, currentUser, otherPar
     setMessage('');
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
@@ -189,7 +189,7 @@ export default function InAppChat({ escrowId, escrowTitle, currentUser, otherPar
               <Input
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyPress}
                 placeholder="Type a message..."
                 className="flex-1"
               />

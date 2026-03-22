@@ -157,7 +157,7 @@ Deno.serve(async (req) => {
               message: alert.description,
               escrow_id: alert.escrow_id,
               action_url: '/Admin'
-            });
+            }).catch(() => {});
           }
         }
       }

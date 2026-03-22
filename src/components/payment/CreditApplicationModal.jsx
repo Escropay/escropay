@@ -120,7 +120,7 @@ export default function CreditApplicationModal({ isOpen, onClose, escrow, onCred
 
   const risk = getRiskLevel(crs);
   const fee = selectedAmount && selectedTerm ? selectedAmount * TERM_FEES[selectedTerm] : 0;
-  const totalRepayment = selectedAmount + fee;
+  const totalRepayment = (selectedAmount || 0) + fee;
 
   const presetAmounts = [
     Math.min(5000, creditLimit),
@@ -132,13 +132,13 @@ export default function CreditApplicationModal({ isOpen, onClose, escrow, onCred
   const handleApply = async () => {
     setIsSubmitting(true);
     await new Promise(r => setTimeout(r, 1500));
-    // Create a payment record for the credit
+    // Create a payment record for the credit (status 'pending' — admin will confirm)
     await base44.entities.Payment.create({
       escrow_id: escrow.id,
       amount: selectedAmount,
       currency: 'ZAR',
       gateway: 'credit',
-      status: 'completed',
+      status: 'pending',
       payer_email: user?.email,
       payer_name: user?.full_name,
       gateway_reference: `CREDIT-${Date.now()}`,

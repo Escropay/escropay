@@ -59,10 +59,10 @@ export default function AnalyticsCharts({ escrows }) {
   // Top categories by volume
   const categoryVolume = escrows.reduce((acc, e) => {
     const amount = e.amount || 0;
-    if (amount >= 20000) acc['$20k+'] = (acc['$20k+'] || 0) + 1;
-    else if (amount >= 10000) acc['$10k-20k'] = (acc['$10k-20k'] || 0) + 1;
-    else if (amount >= 5000) acc['$5k-10k'] = (acc['$5k-10k'] || 0) + 1;
-    else acc['<$5k'] = (acc['<$5k'] || 0) + 1;
+    if (amount >= 20000) acc['R20k+'] = (acc['R20k+'] || 0) + 1;
+    else if (amount >= 10000) acc['R10k-20k'] = (acc['R10k-20k'] || 0) + 1;
+    else if (amount >= 5000) acc['R5k-10k'] = (acc['R5k-10k'] || 0) + 1;
+    else acc['<R5k'] = (acc['<R5k'] || 0) + 1;
     return acc;
   }, {});
 
