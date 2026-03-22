@@ -157,12 +157,13 @@ export default function Admin() {
                 : `Admin has processed a refund for "${escrow.title}".`,
               action_url: `/EscrowView?id=${escrowId}`
             }).catch(() => {});
+            const amount = escrow?.amount ? escrow.amount.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00';
             await base44.functions.invoke('sendEmail', {
               to: email,
-              subject: isRelease ? `Funds Released — ${escrow.title}` : `Refund Processed — ${escrow.title}`,
+              subject: isRelease ? `Funds Released — ${escrow?.title}` : `Refund Processed — ${escrow?.title}`,
               body: isRelease
-                ? `<h2>Funds Released</h2><p>Admin has released funds for <strong>${escrow.title}</strong>.</p><p><strong>Amount:</strong> R${escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>${!isBuyer ? '<p>The funds will be transferred to your registered bank account within 1-3 business days.</p>' : ''}<p><a href="${APP_BASE_URL}/EscrowView?id=${escrowId}">View transaction</a></p>`
-                : `<h2>Refund Processed</h2><p>Admin has processed a refund for <strong>${escrow.title}</strong>.</p><p><strong>Amount:</strong> R${escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p><p><a href="${APP_BASE_URL}/EscrowView?id=${escrowId}">View transaction</a></p>`
+                ? `<h2>Funds Released</h2><p>Admin has released funds for <strong>${escrow?.title}</strong>.</p><p><strong>Amount:</strong> R${amount}</p>${!isBuyer ? '<p>The funds will be transferred to your registered bank account within 1-3 business days.</p>' : ''}<p><a href="${APP_BASE_URL}/EscrowView?id=${escrowId}">View transaction</a></p>`
+                : `<h2>Refund Processed</h2><p>Admin has processed a refund for <strong>${escrow?.title}</strong>.</p><p><strong>Amount:</strong> R${amount}</p><p><a href="${APP_BASE_URL}/EscrowView?id=${escrowId}">View transaction</a></p>`
             }).catch(() => {});
           }
         }
@@ -219,7 +220,7 @@ export default function Admin() {
               </div>
               <div>
                 <p className="text-sm text-gray-500">Total Volume</p>
-                <p className="text-xl font-bold text-gray-900">R {stats.totalVolume.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                <p className="text-xl font-bold text-gray-900">R {stats?.totalVolume ? stats.totalVolume.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}</p>
               </div>
             </div>
           </motion.div>
@@ -396,7 +397,7 @@ export default function Admin() {
                           <TableCell className="font-medium">{escrow.title}</TableCell>
                           <TableCell className="text-sm text-gray-600">{escrow.buyer_email}</TableCell>
                           <TableCell className="text-sm text-gray-600">{escrow.seller_email}</TableCell>
-                          <TableCell className="font-medium">R {escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
+                          <TableCell className="font-medium">R {escrow?.amount ? escrow.amount.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}</TableCell>
                           <TableCell>
                             <div className="flex flex-col gap-1">
                               <Badge className={statusColors[escrow.status]}>{escrow.status}</Badge>

@@ -105,6 +105,7 @@ export default function Profile() {
   }, [user]);
 
   const handleSave = async () => {
+    if (!user?.email) return;
     setIsSaving(true);
     try {
       await base44.auth.updateMe(formData);
@@ -116,26 +117,29 @@ export default function Profile() {
   };
 
   const handleAvatarUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    
+    const file = e.target.files?.[0];
+    if (!file || !user?.email) return;
+
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      await base44.auth.updateMe({ avatar_url: file_url });
-      queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+      if (file_url) {
+        await base44.auth.updateMe({ avatar_url: file_url });
+        queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+      }
     } catch (err) {
       console.error('Avatar upload failed:', err);
     }
   };
 
   const handleDocumentUpload = async (docType, e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    
+    const file = e.target.files?.[0];
+    if (!file || !user?.email) return;
+
     setUploadingDoc(docType);
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      
+      if (!file_url) return;
+
       const existingDocs = user?.kyc_documents || [];
       const newDoc = {
         type: docType,
@@ -143,9 +147,9 @@ export default function Profile() {
         uploaded_at: new Date().toISOString(),
         status: 'pending'
       };
-      
-      const updatedDocs = [...existingDocs.filter(d => d.type !== docType), newDoc];
-      
+
+      const updatedDocs = [...existingDocs.filter(d => d?.type !== docType), newDoc];
+
       await base44.auth.updateMe({ 
         kyc_documents: updatedDocs,
         kyc_status: 'pending'

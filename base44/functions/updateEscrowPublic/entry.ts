@@ -26,14 +26,15 @@ Deno.serve(async (req) => {
   // Verify escrow exists and is in correct state
   let escrow;
   try {
-    escrow = await base44.asServiceRole.entities.Escrow.get(escrow_id);
-  } catch (error) {
-    if (error.message?.includes('not found') || error.status === 404) {
-      return Response.json({ error: 'Escrow not found' }, { status: 404 });
-    }
-    console.error('Fetch escrow error:', error.message);
-    return Response.json({ error: error.message }, { status: 500 });
-  }
+     escrow = await base44.asServiceRole.entities.Escrow.get(escrow_id);
+   } catch (error) {
+     const msg = error?.message || '';
+     if (msg.includes('not found') || error?.status === 404) {
+       return Response.json({ error: 'Escrow not found' }, { status: 404 });
+     }
+     console.error('Fetch escrow error:', msg);
+     return Response.json({ error: msg || 'Internal error' }, { status: 500 });
+   }
 
   if (escrow.status !== 'pending_seller_acceptance') {
     return Response.json({ error: 'Escrow is not pending seller acceptance' }, { status: 403 });

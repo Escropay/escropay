@@ -48,10 +48,10 @@ Deno.serve(async (req) => {
 
     if (!res.ok) {
       console.error('Resend error:', data);
-      return Response.json({ error: data.message || 'Failed to send email' }, { status: res.status });
+      return Response.json({ error: data?.message || 'Failed to send email' }, { status: res.status });
     }
 
-    return Response.json({ success: true, id: data.id });
+    return Response.json({ success: true, id: data?.id });
   } catch (error) {
     console.error('sendEmail error:', error);
     return Response.json({ error: error.message }, { status: 500 });

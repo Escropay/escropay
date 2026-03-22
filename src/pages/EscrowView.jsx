@@ -142,26 +142,27 @@ export default function EscrowView() {
   };
 
   const handleDispute = async () => {
+    if (!escrow || !currentUser?.email || !disputeReason.trim()) return;
+
     await updateMutation.mutateAsync({
       status: 'disputed',
       disputed_at: new Date().toISOString(),
       dispute_reason: disputeReason,
-      dispute_raised_by: currentUser?.email
+      dispute_raised_by: currentUser.email
     });
-    
+
     // Notify both parties and admin
-    if (escrow) {
-      const otherPartyEmail = currentUser?.email === escrow.buyer_email ? escrow.seller_email : escrow.buyer_email;
-      if (otherPartyEmail) {
-        await base44.entities.Notification.create({
-          user_email: otherPartyEmail,
-          type: 'dispute_raised',
-          escrow_id: escrow.id,
-          title: 'Dispute raised',
-          message: `A dispute has been raised for "${escrow.title}". Funds are now frozen pending admin review.`,
-          action_url: `/EscrowView?id=${escrow.id}`
-        }).catch(() => {});
-      }
+    const otherPartyEmail = currentUser.email === escrow.buyer_email ? escrow.seller_email : escrow.buyer_email;
+    if (otherPartyEmail) {
+      await base44.entities.Notification.create({
+        user_email: otherPartyEmail,
+        type: 'dispute_raised',
+        escrow_id: escrow.id,
+        title: 'Dispute raised',
+        message: `A dispute has been raised for "${escrow.title}". Funds are now frozen pending admin review.`,
+        action_url: `/EscrowView?id=${escrow.id}`
+      }).catch(() => {});
+    }
 
       // Notify admins via backend function (avoids user listing permission issues)
       await base44.functions.invoke('notifyAdmins', {
