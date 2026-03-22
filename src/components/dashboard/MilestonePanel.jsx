@@ -44,7 +44,7 @@ export default function MilestonePanel({ escrow, onUpdate, isLoading, currentUse
   const handleAddMilestone = () => {
     if (!newMilestone.title || !newMilestone.amount) return;
     const newAmount = parseFloat(newMilestone.amount);
-    if (totalMilestoneAmount + newAmount > escrow.amount) return; // prevent overage
+    if (isNaN(newAmount) || newAmount <= 0 || totalMilestoneAmount + newAmount > escrow.amount) return;
     
     const milestone = {
       id: Date.now().toString(),
@@ -80,8 +80,8 @@ export default function MilestonePanel({ escrow, onUpdate, isLoading, currentUse
     // Notify buyer when seller marks milestone as complete
     if (newStatus === 'completed') {
       const milestone = updatedMilestones.find(m => m.id === milestoneId);
-      if (escrow.buyer_email) {
-        base44.entities.Notification.create({
+      if (escrow.buyer_email && milestone) {
+        await base44.entities.Notification.create({
           user_email: escrow.buyer_email,
           type: 'milestone_completed',
           escrow_id: escrow.id,
@@ -96,8 +96,8 @@ export default function MilestonePanel({ escrow, onUpdate, isLoading, currentUse
     if (newStatus === 'approved') {
       const milestone = updatedMilestones.find(m => m.id === milestoneId);
       // Notify seller
-      if (escrow.seller_email) {
-        base44.entities.Notification.create({
+      if (escrow.seller_email && milestone) {
+        await base44.entities.Notification.create({
           user_email: escrow.seller_email,
           type: 'milestone_completed',
           escrow_id: escrow.id,
@@ -107,13 +107,16 @@ export default function MilestonePanel({ escrow, onUpdate, isLoading, currentUse
         }).catch(() => {});
       }
       // Notify admins for payout processing via backend function
-      await base44.functions.invoke('notifyAdmins', {
-        title: 'Milestone Payout Required',
-        message: `Milestone "${milestone.title}" approved for ${escrow.title}. Process payout of ${formatCurrency(milestone.amount)} to ${escrow.seller_name || escrow.seller_email}.`,
-        escrow_id: escrow.id,
-        type: 'admin_action_required',
-        action_url: '/Admin'
-      }).catch(() => {});
+      const milestone = updatedMilestones.find(m => m.id === milestoneId);
+      if (milestone) {
+        await base44.functions.invoke('notifyAdmins', {
+          title: 'Milestone Payout Required',
+          message: `Milestone "${milestone.title}" approved for ${escrow.title}. Process payout of ${formatCurrency(milestone.amount)} to ${escrow.seller_name || escrow.seller_email}.`,
+          escrow_id: escrow.id,
+          type: 'admin_action_required',
+          action_url: '/Admin'
+        }).catch(() => {});
+      }
     }
   };
 
