@@ -75,15 +75,13 @@ export default function InAppChat({ escrowId, escrowTitle, currentUser, otherPar
       });
       
       // Send email notification
-      await base44.integrations.Core.SendEmail({
+      const appUrl = window.location.hostname === 'localhost' || window.location.hostname.includes('preview-sandbox') || window.location.hostname.includes('base44')
+        ? 'https://escropay.app'
+        : window.location.origin;
+      await base44.functions.invoke('sendEmail', {
         to: otherPartyEmail,
         subject: `New message in ${escrowTitle}`,
-        body: `
-          <h2>New Message Received</h2>
-          <p><strong>${currentUser.full_name || currentUser.email}</strong> sent you a message:</p>
-          <p style="padding: 10px; background: #f5f5f5; border-radius: 5px;">${data.content}</p>
-          <p><a href="${window.location.origin}/EscrowView?id=${escrowId}">View conversation</a></p>
-        `
+        body: `<h2>New Message Received</h2><p><strong>${currentUser.full_name || currentUser.email}</strong> sent you a message:</p><p style="padding: 10px; background: #f5f5f5; border-radius: 5px;">${data.content}</p><p><a href="${appUrl}/EscrowView?id=${escrowId}">View conversation</a></p>`
       });
       
       return message;
