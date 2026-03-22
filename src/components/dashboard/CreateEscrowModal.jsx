@@ -22,9 +22,11 @@ export default function CreateEscrowModal({ isOpen, onClose, onSubmit, isLoading
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const amount = parseFloat(formData.amount);
+    if (!formData.title || !formData.buyer_email || !formData.seller_email || !amount || amount <= 0) return;
     onSubmit({
       ...formData,
-      amount: convertToZAR(parseFloat(formData.amount)),
+      amount: convertToZAR(amount),
       currency: currency.code
     });
     // Reset form after submit
