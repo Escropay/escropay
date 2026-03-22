@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
-  Code, Copy, CheckCircle2, Shield, Zap, Globe, Key,
+  Copy, CheckCircle2, Shield, Zap, Globe, Key,
   BookOpen, Terminal, ChevronRight, FileText, RefreshCw
 } from 'lucide-react';
 
