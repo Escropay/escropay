@@ -24,6 +24,7 @@ const STEPS = [
 ];
 
 export default function Onboarding() {
+  const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [uploadingDoc, setUploadingDoc] = useState(null);
