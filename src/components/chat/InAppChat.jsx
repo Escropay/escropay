@@ -115,6 +115,9 @@ export default function InAppChat({ escrowId, escrowTitle, currentUser, otherPar
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
+  const handleKeyPress = handleKeyDown; // kept for compatibility
+
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
