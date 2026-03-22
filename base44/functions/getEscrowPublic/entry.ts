@@ -17,12 +17,12 @@ Deno.serve(async (req) => {
   const base44 = createClientFromRequest(req);
 
   try {
+    // Try authenticated first, fall back to service role
     let escrow = null;
     try {
       escrow = await base44.asServiceRole.entities.Escrow.get(escrow_id);
     } catch (e) {
-      const msg = e?.message || '';
-      if (msg.includes('not found') || e?.status === 404 || msg.includes('404')) {
+      if (e.message?.includes('not found') || e.status === 404 || String(e.message).includes('404')) {
         return Response.json({ escrow: null }, { status: 200 });
       }
       throw e;
@@ -35,12 +35,11 @@ Deno.serve(async (req) => {
     delete safeEscrow.metadata;
 
     return Response.json({ escrow: safeEscrow });
-    } catch (error) {
-    const msg = error?.message || '';
-    if (msg.includes('not found') || error?.status === 404) {
+  } catch (error) {
+    if (error.message?.includes('not found') || error.status === 404) {
       return Response.json({ escrow: null }, { status: 200 });
     }
-    console.error('getEscrowPublic error:', msg);
-    return Response.json({ error: msg || 'Internal error' }, { status: 500 });
-    }
+    console.error('getEscrowPublic error:', error.message);
+    return Response.json({ error: error.message }, { status: 500 });
+  }
 });

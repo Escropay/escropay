@@ -23,15 +23,11 @@ export default function StatementGenerator({ escrows }) {
     const start = parseISO(startDate);
     const end = parseISO(endDate);
 
-    const filteredEscrows = (escrows || []).filter(e => {
-       if (!e?.created_date) return false;
-       try {
-         const created = new Date(e.created_date);
-         return isWithinInterval(created, { start, end });
-       } catch {
-         return false;
-       }
-     });
+    const filteredEscrows = escrows.filter(e => {
+      if (!e.created_date) return false;
+      const created = new Date(e.created_date);
+      return isWithinInterval(created, { start, end });
+    });
 
     // Calculate stats
     const totalVolume = filteredEscrows.reduce((sum, e) => sum + (e.amount || 0), 0);
