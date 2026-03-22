@@ -74,15 +74,17 @@ export default function InAppChat({ escrowId, escrowTitle, currentUser, otherPar
         action_url: `/EscrowView?id=${escrowId}`
       });
       
-      // Send email notification
-      const appUrl = window.location.hostname === 'localhost' || window.location.hostname.includes('preview-sandbox') || window.location.hostname.includes('base44')
-        ? 'https://escropay.app'
-        : window.location.origin;
-      await base44.functions.invoke('sendEmail', {
-        to: otherPartyEmail,
-        subject: `New message in ${escrowTitle}`,
-        body: `<h2>New Message Received</h2><p><strong>${currentUser.full_name || currentUser.email}</strong> sent you a message:</p><p style="padding: 10px; background: #f5f5f5; border-radius: 5px;">${data.content}</p><p><a href="${appUrl}/EscrowView?id=${escrowId}">View conversation</a></p>`
-      });
+      // Send email notification only if we have a valid recipient
+      if (otherPartyEmail) {
+        const appUrl = window.location.hostname === 'localhost' || window.location.hostname.includes('preview-sandbox') || window.location.hostname.includes('base44')
+          ? 'https://escropay.app'
+          : window.location.origin;
+        await base44.functions.invoke('sendEmail', {
+          to: otherPartyEmail,
+          subject: `New message in ${escrowTitle}`,
+          body: `<h2>New Message Received</h2><p><strong>${currentUser.full_name || currentUser.email}</strong> sent you a message:</p><p style="padding: 10px; background: #f5f5f5; border-radius: 5px;">${data.content}</p><p><a href="${appUrl}/EscrowView?id=${escrowId}">View conversation</a></p>`
+        }).catch(() => {});
+      }
       
       return message;
     },
