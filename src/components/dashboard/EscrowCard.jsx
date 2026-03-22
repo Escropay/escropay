@@ -96,17 +96,13 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
   const hasBanking = !!escrow.seller_banking_details?.account_number;
 
   const notifyAdmins = async (title, message) => {
-    const admins = await base44.entities.User.filter({ role: 'admin' });
-    for (const admin of admins) {
-      await base44.entities.Notification.create({
-        user_email: admin.email,
-        type: 'admin_action_required',
-        escrow_id: escrow.id,
-        title,
-        message,
-        action_url: `/Admin`
-      });
-    }
+    await base44.functions.invoke('notifyAdmins', {
+      title,
+      message,
+      escrow_id: escrow.id,
+      type: 'admin_action_required',
+      action_url: '/Admin'
+    }).catch(() => {});
   };
 
   const handleRequestPayout = async () => {
