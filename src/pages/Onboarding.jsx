@@ -74,7 +74,7 @@ export default function Onboarding() {
         user_email: user.email
       }).catch(() => {}); // fire-and-forget
     }
-    window.location.href = '/Dashboard';
+    navigate('/Dashboard');
   };
 
   const canProceed = () => {
