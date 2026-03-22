@@ -55,6 +55,7 @@ const getEmailTemplate = (content, title) => `
 export const EmailService = {
   // Welcome email for new users
   async sendWelcomeEmail(userEmail, userName) {
+    if (!userEmail) return;
     const content = `
       <h1>Welcome to Escropay, ${userName || 'there'}! 🎉</h1>
       <p>Thank you for joining Escropay, your trusted partner for secure escrow transactions.</p>
@@ -79,12 +80,13 @@ export const EmailService = {
 
   // Escrow created notification
   async sendEscrowCreatedEmail(escrow, recipientType) {
+    if (!escrow?.id) return;
     const isBuyer = recipientType === 'buyer';
-    const recipientEmail = isBuyer ? escrow.buyer_email : escrow.seller_email;
-    const recipientName = isBuyer ? escrow.buyer_name : escrow.seller_name;
+    const recipientEmail = isBuyer ? escrow?.buyer_email : escrow?.seller_email;
+    const recipientName = isBuyer ? escrow?.buyer_name : escrow?.seller_name;
     const otherParty = isBuyer 
-      ? (escrow.seller_name || escrow.seller_email)
-      : (escrow.buyer_name || escrow.buyer_email);
+      ? (escrow?.seller_name || escrow?.seller_email)
+      : (escrow?.buyer_name || escrow?.buyer_email);
 
     const content = `
       <h1>New Escrow Created</h1>
@@ -117,9 +119,10 @@ export const EmailService = {
 
   // Escrow funded notification
   async sendEscrowFundedEmail(escrow, recipientType) {
+    if (!escrow?.id) return;
     const isBuyer = recipientType === 'buyer';
-    const recipientEmail = isBuyer ? escrow.buyer_email : escrow.seller_email;
-    const recipientName = isBuyer ? escrow.buyer_name : escrow.seller_name;
+    const recipientEmail = isBuyer ? escrow?.buyer_email : escrow?.seller_email;
+    const recipientName = isBuyer ? escrow?.buyer_name : escrow?.seller_name;
 
     const content = `
       <h1>Escrow Funded <span class="status-badge status-funded">Funded</span></h1>
@@ -149,9 +152,10 @@ export const EmailService = {
 
   // Escrow released notification
   async sendEscrowReleasedEmail(escrow, recipientType) {
+    if (!escrow?.id) return;
     const isBuyer = recipientType === 'buyer';
-    const recipientEmail = isBuyer ? escrow.buyer_email : escrow.seller_email;
-    const recipientName = isBuyer ? escrow.buyer_name : escrow.seller_name;
+    const recipientEmail = isBuyer ? escrow?.buyer_email : escrow?.seller_email;
+    const recipientName = isBuyer ? escrow?.buyer_name : escrow?.seller_name;
 
     const content = `
       <h1>Funds Released <span class="status-badge status-released">Completed</span></h1>
@@ -184,9 +188,10 @@ export const EmailService = {
 
   // Dispute notification
   async sendDisputeEmail(escrow, recipientType) {
+    if (!escrow?.id) return;
     const isBuyer = recipientType === 'buyer';
-    const recipientEmail = isBuyer ? escrow.buyer_email : escrow.seller_email;
-    const recipientName = isBuyer ? escrow.buyer_name : escrow.seller_name;
+    const recipientEmail = isBuyer ? escrow?.buyer_email : escrow?.seller_email;
+    const recipientName = isBuyer ? escrow?.buyer_name : escrow?.seller_name;
 
     const content = `
       <h1>Dispute Raised <span class="status-badge status-disputed">Disputed</span></h1>
@@ -216,14 +221,15 @@ export const EmailService = {
 
   // Escrow invitation to recipient (seller)
   async sendEscrowInvitationEmail(escrow) {
+    if (!escrow?.id || !escrow?.seller_email) return;
     const baseUrl = typeof window !== 'undefined'
       ? (window.location.hostname === 'localhost' || window.location.hostname.includes('preview-sandbox') || window.location.hostname.includes('base44')
         ? 'https://escropay.app'
         : window.location.origin)
       : 'https://escropay.app';
     const escrowLink = `${baseUrl}/EscrowView?id=${escrow.id}`;
-    const sellerName = escrow.seller_name || 'there';
-    const buyerName = escrow.buyer_name || escrow.buyer_email;
+    const sellerName = escrow?.seller_name || 'there';
+    const buyerName = escrow?.buyer_name || escrow?.buyer_email;
 
     const content = `
       <h1>Action Required: Review Escrow Agreement</h1>
@@ -266,6 +272,7 @@ export const EmailService = {
 
   // KYC verification reminder
   async sendKycReminderEmail(userEmail, userName) {
+    if (!userEmail) return;
     const content = `
       <h1>Complete Your KYC Verification</h1>
       <p>Hi ${userName || 'there'},</p>

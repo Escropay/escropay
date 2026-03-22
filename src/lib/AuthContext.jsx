@@ -24,12 +24,13 @@ export const AuthProvider = ({ children }) => {
       // First, check app public settings (with token if available)
       // This will tell us if auth is required, user not registered, etc.
       try {
-        const headers = { 'X-App-Id': appParams.appId };
-        if (appParams.token) headers['Authorization'] = `Bearer ${appParams.token}`;
-        const res = await fetch(`/api/apps/public/prod/public-settings/by-id/${appParams.appId}`, { headers });
+        const headers = { 'X-App-Id': appParams?.appId };
+        if (appParams?.token) headers['Authorization'] = `Bearer ${appParams.token}`;
+        const res = await fetch(`/api/apps/public/prod/public-settings/by-id/${appParams?.appId}`, { headers });
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
-          const err = new Error(data.message || `HTTP ${res.status}`);
+          const msg = data?.message || `HTTP ${res.status}`;
+          const err = new Error(msg);
           err.status = res.status;
           err.data = data;
           throw err;
@@ -46,11 +47,11 @@ export const AuthProvider = ({ children }) => {
         }
         setIsLoadingPublicSettings(false);
       } catch (appError) {
-        console.error('App state check failed:', appError);
-        
+        console.error('App state check failed:', appError?.message);
+
         // Handle app-level errors
-        const reason = appError.data?.extra_data?.reason || appError.data?.reason;
-        if (appError.status === 403 && reason) {
+        const reason = appError?.data?.extra_data?.reason || appError?.data?.reason;
+        if (appError?.status === 403 && reason) {
           if (reason === 'auth_required') {
             setAuthError({
               type: 'auth_required',
@@ -77,10 +78,10 @@ export const AuthProvider = ({ children }) => {
         setIsLoadingAuth(false);
       }
     } catch (error) {
-      console.error('Unexpected error:', error);
+      console.error('Unexpected error:', error?.message);
       setAuthError({
         type: 'unknown',
-        message: error.message || 'An unexpected error occurred'
+        message: error?.message || 'An unexpected error occurred'
       });
       setIsLoadingPublicSettings(false);
       setIsLoadingAuth(false);
@@ -101,7 +102,7 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(false);
       
       // If user auth fails, it might be an expired token
-      if (error.status === 401 || error.status === 403) {
+      if (error?.status === 401 || error?.status === 403) {
         setAuthError({
           type: 'auth_required',
           message: 'Authentication required'
