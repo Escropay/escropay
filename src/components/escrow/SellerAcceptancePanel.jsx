@@ -42,21 +42,23 @@ export default function SellerAcceptancePanel({ escrow, currentUser, isLoadingUs
         status: 'pending'
       });
 
-      // Notify buyer
-      await base44.entities.Notification.create({
-        user_email: escrow.buyer_email,
-        type: 'escrow_accepted',
-        escrow_id: escrow.id,
-        title: 'Escrow accepted by seller',
-        message: `${escrow.seller_name || escrow.seller_email} has accepted the escrow for "${escrow.title}". Please fund it to proceed.`,
-        action_url: `/EscrowView?id=${escrow.id}`
-      });
+      // Notify buyer (fire-and-forget — don't let notification failure block acceptance)
+      if (escrow.buyer_email) {
+        base44.entities.Notification.create({
+          user_email: escrow.buyer_email,
+          type: 'escrow_accepted',
+          escrow_id: escrow.id,
+          title: 'Escrow accepted by seller',
+          message: `${escrow.seller_name || escrow.seller_email} has accepted the escrow for "${escrow.title}". Please fund it to proceed.`,
+          action_url: `/EscrowView?id=${escrow.id}`
+        }).catch(() => {});
 
-      await base44.functions.invoke('sendEmail', {
-        to: escrow.buyer_email,
-        subject: `Escrow Accepted – ${escrow.title}`,
-        body: `<h2>Your Escrow Has Been Accepted</h2><p><strong>${escrow.seller_name || escrow.seller_email}</strong> has accepted the escrow transaction.</p><p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p><p><strong>Amount:</strong> R${escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p><p>Please fund the escrow to proceed.</p><p><a href="${APP_BASE_URL}/EscrowView?id=${escrow.id}">View transaction</a></p>`
-      });
+        base44.functions.invoke('sendEmail', {
+          to: escrow.buyer_email,
+          subject: `Escrow Accepted – ${escrow.title}`,
+          body: `<h2>Your Escrow Has Been Accepted</h2><p><strong>${escrow.seller_name || escrow.seller_email}</strong> has accepted the escrow transaction.</p><p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p><p><strong>Amount:</strong> R${escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p><p>Please fund the escrow to proceed.</p><p><a href="${APP_BASE_URL}/EscrowView?id=${escrow.id}">View transaction</a></p>`
+        }).catch(() => {});
+      }
     } catch (err) {
       console.error('Accept failed:', err);
     }
@@ -68,20 +70,22 @@ export default function SellerAcceptancePanel({ escrow, currentUser, isLoadingUs
     try {
       await onUpdate({ status: 'rejected_by_seller' });
 
-      await base44.entities.Notification.create({
-        user_email: escrow.buyer_email,
-        type: 'escrow_rejected',
-        escrow_id: escrow.id,
-        title: 'Escrow rejected by seller',
-        message: `${escrow.seller_name || escrow.seller_email} has rejected the escrow for "${escrow.title}".`,
-        action_url: `/EscrowView?id=${escrow.id}`
-      });
+      if (escrow.buyer_email) {
+        base44.entities.Notification.create({
+          user_email: escrow.buyer_email,
+          type: 'escrow_rejected',
+          escrow_id: escrow.id,
+          title: 'Escrow rejected by seller',
+          message: `${escrow.seller_name || escrow.seller_email} has rejected the escrow for "${escrow.title}".`,
+          action_url: `/EscrowView?id=${escrow.id}`
+        }).catch(() => {});
 
-      await base44.functions.invoke('sendEmail', {
-        to: escrow.buyer_email,
-        subject: `Escrow Rejected – ${escrow.title}`,
-        body: `<h2>Your Escrow Has Been Rejected</h2><p><strong>${escrow.seller_name || escrow.seller_email}</strong> has rejected the escrow transaction.</p><p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p><p>You may create a new escrow with revised terms.</p>`
-      });
+        base44.functions.invoke('sendEmail', {
+          to: escrow.buyer_email,
+          subject: `Escrow Rejected – ${escrow.title}`,
+          body: `<h2>Your Escrow Has Been Rejected</h2><p><strong>${escrow.seller_name || escrow.seller_email}</strong> has rejected the escrow transaction.</p><p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p><p>You may create a new escrow with revised terms.</p>`
+        }).catch(() => {});
+      }
     } catch (err) {
       console.error('Reject failed:', err);
     }
@@ -101,20 +105,22 @@ export default function SellerAcceptancePanel({ escrow, currentUser, isLoadingUs
         }
       });
 
-      await base44.entities.Notification.create({
-        user_email: escrow.buyer_email,
-        type: 'modification_requested',
-        escrow_id: escrow.id,
-        title: 'Seller requested modifications',
-        message: `${escrow.seller_name || escrow.seller_email} has requested changes to "${escrow.title}".`,
-        action_url: `/EscrowView?id=${escrow.id}`
-      });
+      if (escrow.buyer_email) {
+        base44.entities.Notification.create({
+          user_email: escrow.buyer_email,
+          type: 'modification_requested',
+          escrow_id: escrow.id,
+          title: 'Seller requested modifications',
+          message: `${escrow.seller_name || escrow.seller_email} has requested changes to "${escrow.title}".`,
+          action_url: `/EscrowView?id=${escrow.id}`
+        }).catch(() => {});
 
-      await base44.functions.invoke('sendEmail', {
-        to: escrow.buyer_email,
-        subject: `Modification Requested – ${escrow.title}`,
-        body: `<h2>Modification Requested</h2><p><strong>${escrow.seller_name || escrow.seller_email}</strong> has requested changes to the escrow terms.</p><p><strong>Reason:</strong> ${modificationReason}</p>${requestedChanges ? `<p><strong>Requested Changes:</strong> ${requestedChanges}</p>` : ''}<p><a href="${APP_BASE_URL}/EscrowView?id=${escrow.id}">Review and update</a></p>`
-      });
+        base44.functions.invoke('sendEmail', {
+          to: escrow.buyer_email,
+          subject: `Modification Requested – ${escrow.title}`,
+          body: `<h2>Modification Requested</h2><p><strong>${escrow.seller_name || escrow.seller_email}</strong> has requested changes to the escrow terms.</p><p><strong>Reason:</strong> ${modificationReason}</p>${requestedChanges ? `<p><strong>Requested Changes:</strong> ${requestedChanges}</p>` : ''}<p><a href="${APP_BASE_URL}/EscrowView?id=${escrow.id}">Review and update</a></p>`
+        }).catch(() => {});
+      }
 
       setShowModificationForm(false);
       setModificationReason('');
