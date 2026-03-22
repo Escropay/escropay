@@ -33,22 +33,14 @@ export default function RefundRequestPanel({ escrow, currentUser, onUpdate }) {
         }
       });
 
-      const admins = await base44.entities.User.filter({ role: 'admin' });
-      for (const admin of admins) {
-        await base44.entities.Notification.create({
-          user_email: admin.email,
-          type: 'admin_action_required',
-          escrow_id: escrow.id,
-          title: 'Refund request requires approval',
-          message: `${currentUser.full_name || currentUser.email} has requested a refund for ${escrow.title}`,
-          action_url: `/Admin`
-        });
-        await base44.functions.invoke('sendEmail', {
-          to: admin.email,
-          subject: `Refund Request - ${escrow.title}`,
-          body: `<h2>Refund Request Pending Approval</h2><p><strong>${currentUser.full_name || currentUser.email}</strong> has requested a refund.</p><p><strong>Transaction ID:</strong> ${escrow.transaction_id || escrow.id}</p><p><strong>Amount:</strong> R${escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p><p><strong>Reason:</strong> ${reason}</p><p><a href="${APP_BASE_URL}/Admin">Review in Admin Panel</a></p>`
-        });
-      }
+      // Notify admins via backend function (avoids user listing permission issues)
+      await base44.functions.invoke('notifyAdmins', {
+        title: 'Refund request requires approval',
+        message: `${currentUser.full_name || currentUser.email} has requested a refund for ${escrow.title}`,
+        escrow_id: escrow.id,
+        type: 'admin_action_required',
+        action_url: '/Admin'
+      }).catch(() => {});
       setReason('');
     } catch (err) {
       console.error('Refund request failed:', err);
