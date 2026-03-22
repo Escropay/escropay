@@ -127,6 +127,11 @@ export default function PaymentModal({ isOpen, onClose, escrow, onPaymentComplet
     setIsProcessing(true);
 
     try {
+      // Fetch the logged-in user so payer_email satisfies RLS (data.payer_email == user.email)
+      const me = await base44.auth.me().catch(() => null);
+      const payerEmail = me?.email || escrow.buyer_email;
+      const payerName = me?.full_name || escrow.buyer_name;
+
       // Create payment record
       const payment = await base44.entities.Payment.create({
         escrow_id: escrow.id,
@@ -134,8 +139,8 @@ export default function PaymentModal({ isOpen, onClose, escrow, onPaymentComplet
         currency: 'ZAR',
         gateway: selectedGateway.id,
         status: selectedGateway.id === 'bank_transfer' || selectedGateway.id === 'zaru' ? 'pending' : 'processing',
-        payer_email: escrow.buyer_email,
-        payer_name: escrow.buyer_name,
+        payer_email: payerEmail,
+        payer_name: payerName,
         gateway_reference: `PAY-${Date.now()}`
       });
 

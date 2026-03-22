@@ -2,11 +2,13 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
-// Allowed sender domains — prevents abuse of this endpoint to spoof arbitrary senders
-const ALLOWED_TO_DOMAINS = null; // null = allow all (internal use only, protected by auth)
-
 Deno.serve(async (req) => {
   try {
+    if (!RESEND_API_KEY) {
+      console.error('RESEND_API_KEY is not set');
+      return Response.json({ error: 'Email service not configured' }, { status: 503 });
+    }
+
     // Require authenticated caller — prevents unauthenticated email abuse
     const base44 = createClientFromRequest(req);
     const caller = await base44.auth.me().catch(() => null);
