@@ -27,9 +27,9 @@ import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { useCurrency } from '@/components/common/CurrencyContext';
 import { EmailService } from '@/components/utils/EmailService';
-import SellerAcceptancePanel from '@/components/escrow/SellerAcceptancePanel.jsx';
-import RefundRequestPanel from '@/components/escrow/RefundRequestPanel.jsx';
-import BuyerModificationPanel from '@/components/escrow/BuyerModificationPanel.jsx';
+import SellerAcceptancePanel from '@/components/escrow/SellerAcceptancePanel';
+import RefundRequestPanel from '@/components/escrow/RefundRequestPanel';
+import BuyerModificationPanel from '@/components/escrow/BuyerModificationPanel';
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
 const APP_BASE_URL = typeof window !== 'undefined'
