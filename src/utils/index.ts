@@ -1,4 +1,6 @@
-export function createPageUrl(pageName: string) {
+export function createPageUrl(pageName?: string | null): string {
     if (!pageName || typeof pageName !== 'string') return '/';
-    return '/' + pageName.trim().replace(/ /g, '-').toLowerCase();
+    const trimmed = pageName.trim();
+    if (!trimmed) return '/';
+    return '/' + trimmed.replace(/\s+/g, '-').toLowerCase();
 }

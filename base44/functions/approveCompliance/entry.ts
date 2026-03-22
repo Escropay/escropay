@@ -20,15 +20,18 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
-    const { user_id, action, notes } = await req.json();
+    const body = await req.json();
+    const { user_id, action, notes } = body || {};
     // action: 'approve' | 'reject' | 'require_edd' | 'suspend' | 'terminate'
 
-    if (!user_id || !action) {
-      return Response.json({ error: 'user_id and action required' }, { status: 400 });
+    if (!user_id || !action || typeof user_id !== 'string' || typeof action !== 'string') {
+      return Response.json({ error: 'user_id (string) and action (string) required' }, { status: 400 });
     }
 
     const users = await base44.asServiceRole.entities.User.filter({ id: user_id });
-    if (!users || users.length === 0) return Response.json({ error: 'User not found' }, { status: 404 });
+    if (!users?.[0]) {
+      return Response.json({ error: 'User not found' }, { status: 404 });
+    }
     const user = users[0];
 
     // Determine new statuses
@@ -54,22 +57,22 @@ Deno.serve(async (req) => {
     // Update ComplianceRecord
     const records = await base44.asServiceRole.entities.ComplianceRecord.filter({ user_id });
     const reviewEntry = {
-      reviewed_by: actor.email,
+      reviewed_by: actor?.email || 'system',
       reviewed_at: new Date().toISOString(),
       action,
       notes: notes || ''
     };
 
-    if (records.length > 0) {
+    if (records?.[0]) {
       const existing = records[0];
-      const history = existing.review_history || [];
+      const history = existing?.review_history || [];
       await base44.asServiceRole.entities.ComplianceRecord.update(existing.id, {
         cdd_status: mapping.cdd_status,
         edd_required: action === 'require_edd',
         identity_verified: action === 'approve',
         identity_verified_at: action === 'approve' ? new Date().toISOString() : null,
         identity_verified_by: action === 'approve' ? actor.email : null,
-        review_history: [...history, reviewEntry],
+        review_history: [...(history || []), reviewEntry],
         last_review_date: new Date().toISOString(),
       });
     }
@@ -100,21 +103,24 @@ Deno.serve(async (req) => {
     }
 
     // Notify the user
-    await base44.asServiceRole.entities.Notification.create({
-      user_email: user.email,
-      type: action === 'approve' ? 'escrow_accepted' : 'admin_action_required',
-      title: action === 'approve'
-        ? '✅ Your account has been approved'
-        : `⚠️ Compliance Update: Your account has been ${mapping.account_status}`,
-      message: action === 'approve'
-        ? 'Your identity verification is complete. You can now create and fund escrow transactions.'
-        : `Your account status has been updated to: ${mapping.account_status}. Please contact compliance@escropay.co.za for assistance.`,
-      action_url: '/Profile'
-    });
+    if (user?.email) {
+      await base44.asServiceRole.entities.Notification.create({
+        user_email: user.email,
+        type: action === 'approve' ? 'escrow_accepted' : 'admin_action_required',
+        title: action === 'approve'
+          ? '✅ Your account has been approved'
+          : `⚠️ Compliance Update: Your account has been ${mapping?.account_status || 'updated'}`,
+        message: action === 'approve'
+          ? 'Your identity verification is complete. You can now create and fund escrow transactions.'
+          : `Your account status has been updated to: ${mapping?.account_status || 'pending'}. Please contact compliance@escropay.co.za for assistance.`,
+        action_url: '/Profile'
+      }).catch(() => {});
+    }
 
     return Response.json({ status: 'success', account_status: mapping.account_status });
 
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('approveCompliance error:', error?.message);
+    return Response.json({ error: error?.message || 'Internal server error' }, { status: 500 });
   }
 });

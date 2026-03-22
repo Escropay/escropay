@@ -9,6 +9,17 @@
  *     const { canTransact, blockReason, statusLabel } = useComplianceGuard(user);
  */
 export function useComplianceGuard(user) {
+  if (!user || typeof user !== 'object') {
+    return {
+      canTransact: false,
+      canMakePayments: false,
+      canUseEscrow: false,
+      paymentBlockReason: 'User not authenticated',
+      statusLabel: 'Not Authenticated',
+      accountStatus: null
+    };
+  }
+
   const status = user?.account_status;
 
   // Full payment actions (fund, release, payout) require verified/active account
@@ -31,7 +42,7 @@ export function useComplianceGuard(user) {
     blacklisted: 'Blacklisted',
   }[status] || 'Pending Compliance Approval';
 
-  const paymentBlockReason = !canMakePayments ? {
+  const paymentBlockReason = !canMakePayments && status ? {
     pending_compliance_approval:
       'Complete your KYC verification to fund or receive payouts.',
     restricted:
