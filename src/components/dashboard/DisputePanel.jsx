@@ -97,17 +97,13 @@ Be fair and consider both parties' perspectives.`,
       });
 
       // Notify admins that AI analysis is ready for review
-      const admins = await base44.entities.User.filter({ role: 'admin' });
-      for (const admin of admins) {
-        await base44.entities.Notification.create({
-          user_email: admin.email,
-          type: 'admin_action_required',
-          escrow_id: escrow.id,
-          title: 'Dispute — AI Analysis Ready',
-          message: `AI has analysed the dispute for "${escrow.title}". Recommendation: ${result.recommendation?.replace(/_/g, ' ')} (${result.confidence}% confidence). Admin action required.`,
-          action_url: '/Admin'
-        });
-      }
+      await base44.functions.invoke('notifyAdmins', {
+        title: 'Dispute — AI Analysis Ready',
+        message: `AI has analysed the dispute for "${escrow.title}". Recommendation: ${result.recommendation?.replace(/_/g, ' ')} (${result.confidence}% confidence). Admin action required.`,
+        escrow_id: escrow.id,
+        type: 'admin_action_required',
+        action_url: '/Admin'
+      }).catch(() => {});
 
       setStep('resolution');
     } catch (err) {
