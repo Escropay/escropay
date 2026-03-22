@@ -79,6 +79,7 @@ const statusConfig = {
 
 export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, currentUser, isLoadingUser }) {
   const { format: formatCurrency } = useCurrency();
+  const navigate = useNavigate();
   const [showDisputePanel, setShowDisputePanel] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const status = statusConfig[escrow.status] || statusConfig.pending;
