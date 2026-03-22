@@ -157,10 +157,10 @@ function HomeInner() {
                 <div className="text-gray-500 text-sm mt-1">{stat.label}</div>
               </div>
             ))}
-            </motion.div>
-            </section>
+          </motion.div>
+        </section>
 
-            {/* Features */}
+        {/* Features */}
         <section className="border-t border-gray-100 bg-gray-50/50 backdrop-blur-xl">
           <div className="max-w-7xl mx-auto px-6 py-24">
             <motion.div
@@ -312,6 +312,6 @@ function HomeInner() {
         );
         }
 
-        export default function Home() {
-        return <HomeInner />;
-        }
+export default function Home() {
+  return <HomeInner />;
+}

@@ -45,18 +45,12 @@ export default function Onboarding() {
   const update = (key, val) => setForm(f => ({ ...f, [key]: val }));
 
   const handleDocUpload = async (docType, e) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files[0];
     if (!file) return;
     setUploadingDoc(docType);
-    try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      if (file_url) {
-        const existing = form.kyc_documents?.filter(d => d?.type !== docType) || [];
-        update('kyc_documents', [...existing, { type: docType, url: file_url, uploaded_at: new Date().toISOString(), status: 'pending' }]);
-      }
-    } catch (err) {
-      console.error('Document upload failed:', err);
-    }
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    const existing = form.kyc_documents.filter(d => d.type !== docType);
+    update('kyc_documents', [...existing, { type: docType, url: file_url, uploaded_at: new Date().toISOString(), status: 'pending' }]);
     setUploadingDoc(null);
   };
 
@@ -188,20 +182,20 @@ export default function Onboarding() {
                   <div className="space-y-4">
                     <div>
                       <Label>Full Name *</Label>
-                      <Input value={form?.full_name || ''} onChange={e => update('full_name', e.target.value)} placeholder="As on your ID document" className="mt-1" />
+                      <Input value={form.full_name} onChange={e => update('full_name', e.target.value)} placeholder="As on your ID document" className="mt-1" />
                     </div>
                     <div>
                       <Label>Phone Number</Label>
-                      <Input value={form?.phone || ''} onChange={e => update('phone', e.target.value)} placeholder="+27 60 929 2499" className="mt-1" />
+                      <Input value={form.phone} onChange={e => update('phone', e.target.value)} placeholder="+27 60 929 2499" className="mt-1" />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <Label>City</Label>
-                        <Input value={form?.city || ''} onChange={e => update('city', e.target.value)} placeholder="Johannesburg" className="mt-1" />
+                        <Input value={form.city} onChange={e => update('city', e.target.value)} placeholder="Johannesburg" className="mt-1" />
                       </div>
                       <div>
                         <Label>Country</Label>
-                        <Input value={form?.country || ''} onChange={e => update('country', e.target.value)} placeholder="South Africa" className="mt-1" />
+                        <Input value={form.country} onChange={e => update('country', e.target.value)} placeholder="South Africa" className="mt-1" />
                       </div>
                     </div>
                   </div>
@@ -242,10 +236,10 @@ export default function Onboarding() {
                         {form.account_type === opt.id && <CheckCircle2 className="w-5 h-5 text-purple-600 ml-auto mt-0.5" />}
                       </button>
                     ))}
-                    {form?.account_type === 'business' && (
+                    {form.account_type === 'business' && (
                       <div className="mt-2">
                         <Label>Company Name</Label>
-                        <Input value={form?.company || ''} onChange={e => update('company', e.target.value)} placeholder="Company (Pty) Ltd" className="mt-1" />
+                        <Input value={form.company} onChange={e => update('company', e.target.value)} placeholder="Company (Pty) Ltd" className="mt-1" />
                       </div>
                     )}
                   </div>
@@ -267,7 +261,7 @@ export default function Onboarding() {
                   </p>
                   <div className="space-y-3">
                     {kycDocs.map(doc => {
-                      const uploaded = form?.kyc_documents?.find(d => d?.type === doc.id);
+                      const uploaded = form.kyc_documents.find(d => d.type === doc.id);
                       return (
                         <div key={doc.id} className={`p-4 rounded-xl border flex items-center justify-between gap-3 ${uploaded ? 'border-emerald-200 bg-emerald-50' : 'border-gray-200'}`}>
                           <div>
@@ -350,11 +344,11 @@ export default function Onboarding() {
                   >
                     <CheckCircle2 className="w-12 h-12 text-white" />
                   </motion.div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">You're all set, {form?.full_name?.split(' ')?.[0] || 'there'}! 🎉</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">You're all set, {form.full_name.split(' ')[0] || 'there'}! 🎉</h2>
                   <p className="text-gray-500 mb-6 leading-relaxed">
                     Your EscroPay account is ready. Start creating secure escrow transactions right away.
                   </p>
-                  {(form?.kyc_documents?.length || 0) === 0 && (
+                  {form.kyc_documents.length === 0 && (
                     <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 text-left">
                       <p className="text-sm text-amber-700 font-medium">⚠️ KYC not yet submitted</p>
                       <p className="text-xs text-amber-600 mt-1">You can complete your identity verification in your Profile settings. High-value transactions may be limited until KYC is approved.</p>
