@@ -34,8 +34,6 @@ import TwoFactorAuth from '@/components/profile/TwoFactorAuth';
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
 
-const Escrow = base44.entities.Escrow;
-
 const kycStatusConfig = {
   not_started: { label: 'Not Started', color: 'bg-gray-100 text-gray-700', icon: Clock },
   pending: { label: 'Pending Review', color: 'bg-amber-100 text-amber-700', icon: Clock },
@@ -67,7 +65,7 @@ export default function Profile() {
     queryKey: ['user-escrows', user?.email],
     queryFn: () => {
       if (!user?.email) return [];
-      return Escrow.filter({
+      return base44.entities.Escrow.filter({
         $or: [{ buyer_email: user.email }, { seller_email: user.email }]
       }, '-created_date', 100);
     },
