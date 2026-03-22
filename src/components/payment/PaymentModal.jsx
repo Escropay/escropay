@@ -101,7 +101,7 @@ const FEE_TIERS = [
 
 export default function PaymentModal({ isOpen, onClose, escrow, onPaymentComplete }) {
   const { format: formatCurrency } = useCurrency();
-  const feeCalc = escrow ? calculateFee(escrow.amount) : { rate: 0, fee: 0, total: 0 };
+  const feeCalc = calculateFee(escrow?.amount);
   const [selectedGateway, setSelectedGateway] = useState(null);
   const [step, setStep] = useState('select'); // select, process, complete
   const [isProcessing, setIsProcessing] = useState(false);
@@ -141,7 +141,7 @@ export default function PaymentModal({ isOpen, onClose, escrow, onPaymentComplet
         status: selectedGateway.id === 'bank_transfer' || selectedGateway.id === 'zaru' ? 'pending' : 'processing',
         payer_email: payerEmail,
         payer_name: payerName,
-        gateway_reference: `PAY-${escrow.id}-${Date.now()}`
+        gateway_reference: `PAY-${Date.now()}`
       });
 
       // Simulate gateway redirect for card payments

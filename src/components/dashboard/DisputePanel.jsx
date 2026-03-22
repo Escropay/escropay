@@ -49,7 +49,7 @@ export default function DisputePanel({ escrow, onUpdate, onClose }) {
 
 ESCROW DETAILS:
 - Title: ${escrow.title}
-- Amount: R${escrow?.amount ? escrow.amount.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}
+- Amount: R${escrow.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 - Buyer: ${escrow.buyer_name || escrow.buyer_email}
 - Seller: ${escrow.seller_name || escrow.seller_email}
 - Description: ${escrow.description || 'No description'}
@@ -99,7 +99,7 @@ Be fair and consider both parties' perspectives.`,
       // Notify admins that AI analysis is ready for review
       await base44.functions.invoke('notifyAdmins', {
         title: 'Dispute — AI Analysis Ready',
-        message: `AI has analysed the dispute for "${escrow.title}". Recommendation: ${result?.recommendation?.replace(/_/g, ' ') || 'pending'} (${result?.confidence || 0}% confidence). Admin action required.`,
+        message: `AI has analysed the dispute for "${escrow.title}". Recommendation: ${result.recommendation?.replace(/_/g, ' ')} (${result.confidence}% confidence). Admin action required.`,
         escrow_id: escrow.id,
         type: 'admin_action_required',
         action_url: '/Admin'

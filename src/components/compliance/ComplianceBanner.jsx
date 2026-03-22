@@ -79,10 +79,10 @@ const statusConfig = {
 export default function ComplianceBanner({ accountStatus }) {
   if (!accountStatus || accountStatus === 'active') return null;
 
-  const config = statusConfig[accountStatus] || null;
+  const config = statusConfig[accountStatus];
   if (!config) return null;
 
-  const Icon = config?.icon;
+  const Icon = config.icon;
 
   return (
     <motion.div
