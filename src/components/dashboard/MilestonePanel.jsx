@@ -107,7 +107,6 @@ export default function MilestonePanel({ escrow, onUpdate, isLoading, currentUse
         }).catch(() => {});
       }
       // Notify admins for payout processing via backend function
-      const milestone = updatedMilestones.find(m => m.id === milestoneId);
       if (milestone) {
         await base44.functions.invoke('notifyAdmins', {
           title: 'Milestone Payout Required',
