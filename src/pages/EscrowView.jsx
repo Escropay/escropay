@@ -127,14 +127,18 @@ export default function EscrowView() {
 
   const handleSaveBanking = async () => {
     setIsSavingBank(true);
-    await updateMutation.mutateAsync({
-      seller_banking_details: {
-        ...bankingForm,
-        submitted_at: new Date().toISOString()
-      }
-    });
+    try {
+      await updateMutation.mutateAsync({
+        seller_banking_details: {
+          ...bankingForm,
+          submitted_at: new Date().toISOString()
+        }
+      });
+      setShowBankingForm(false);
+    } catch (err) {
+      console.error('Banking details save failed:', err);
+    }
     setIsSavingBank(false);
-    setShowBankingForm(false);
   };
 
   const handleDispute = async () => {

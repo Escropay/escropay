@@ -148,9 +148,7 @@ export default function PaymentModal({ isOpen, onClose, escrow, onPaymentComplet
       if (selectedGateway.id === 'stripe' || selectedGateway.id === 'payfast' || selectedGateway.id === 'paypal') {
         // In production, redirect to actual gateway
         await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        // Update payment as completed (simulated)
-        await base44.entities.Payment.update(payment.id, { status: 'completed' });
+        // Note: Payment status update requires admin — handled server-side on webhook confirmation
       }
 
       setStep('complete');

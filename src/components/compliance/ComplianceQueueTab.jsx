@@ -270,7 +270,7 @@ export default function ComplianceQueueTab() {
           onClick={async () => {
             const unscored = allUsers.filter(u => !u.risk_rating);
             for (const u of unscored) {
-              await runComplianceMutation.mutateAsync({ user_id: u.id, user_email: u.email });
+              await runComplianceMutation.mutateAsync({ user_id: u.id, user_email: u.email }).catch(() => {});
             }
           }}
           disabled={runComplianceMutation.isPending}>
