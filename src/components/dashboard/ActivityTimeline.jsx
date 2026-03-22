@@ -59,7 +59,11 @@ export default function ActivityTimeline({ escrows }) {
       
       return acts;
     })
-    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .sort((a, b) => {
+      const dateA = a.date ? new Date(a.date).getTime() : 0;
+      const dateB = b.date ? new Date(b.date).getTime() : 0;
+      return dateB - dateA;
+    })
     .slice(0, 8);
 
   const getActivityMessage = (activity) => {
