@@ -150,7 +150,7 @@ export default function CreditApplicationModal({ isOpen, onClose, escrow, onCred
         total_repayment: totalRepayment,
         repayment_rate: 0.15
       }
-    });
+    }).catch(console.error);
     setIsSubmitting(false);
     setStep('complete');
     if (onCreditApproved) onCreditApproved(selectedAmount);

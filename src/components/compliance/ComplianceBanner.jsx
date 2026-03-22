@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 import { AlertTriangle, Shield, Clock, XCircle, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+
 
 const statusConfig = {
   pending_compliance_approval: {
@@ -101,7 +101,7 @@ export default function ComplianceBanner({ accountStatus }) {
               <p className={`text-sm mt-1 ${config.textColor}`}>{config.message}</p>
             </div>
             {config.action && config.actionUrl && (
-              <Link to={createPageUrl(config.actionUrl) + (config.actionTab || '')}>
+              <Link to={`/${config.actionUrl}${config.actionTab || ''}`}>
                 <Button size="sm" variant="outline" className="flex-shrink-0 border-current">
                   {config.action}
                   <ArrowRight className="w-3 h-3 ml-1" />

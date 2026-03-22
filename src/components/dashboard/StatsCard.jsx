@@ -2,14 +2,13 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { cn } from "@/lib/utils";
 import { useNavigate } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
 
 export default function StatsCard({ title, value, subtitle, icon: Icon, trend, delay = 0, linkToAnalytics = false }) {
   const navigate = useNavigate();
 
   const handleClick = () => {
     if (linkToAnalytics) {
-      navigate(createPageUrl('Profile') + '?tab=analytics');
+      navigate('/Profile?tab=analytics');
     }
   };
 

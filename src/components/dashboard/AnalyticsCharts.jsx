@@ -96,10 +96,10 @@ export default function AnalyticsCharts({ escrows }) {
               <YAxis 
                 tick={{ fontSize: 11, fill: '#9ca3af' }}
                 tickLine={false}
-                tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`}
+                tickFormatter={(v) => `R${(v / 1000).toFixed(0)}k`}
               />
               <Tooltip 
-                formatter={(value) => [`$${value.toLocaleString()}`, 'Volume']}
+                formatter={(value) => [`R${value.toLocaleString('en-ZA')}`, 'Volume']}
                 contentStyle={{ 
                   borderRadius: '8px', 
                   border: '1px solid #e5e7eb',
