@@ -110,12 +110,19 @@ export default function EscrowView() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['escrow', escrowId] })
   });
 
-  const handleAccept = () => {
-    updateMutation.mutate({
+  const handleAccept = async () => {
+    const updateData = {
       recipient_accepted: true,
       recipient_accepted_at: new Date().toISOString(),
       status: 'pending'
-    });
+    };
+    // Use authenticated mutation if logged in, otherwise fall back to public endpoint
+    if (currentUser) {
+      updateMutation.mutate(updateData);
+    } else {
+      await base44.functions.invoke('updateEscrowPublic', { escrow_id: escrowId, update_data: updateData });
+      queryClient.invalidateQueries({ queryKey: ['escrow', escrowId] });
+    }
   };
 
   const handleSaveBanking = async () => {
