@@ -7,8 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Code, Copy, CheckCircle2, Shield, Zap, Globe, Key,
-  BookOpen, Terminal, ChevronRight, AlertTriangle, ArrowRight,
-  Wallet, FileText, RefreshCw, Lock
+  BookOpen, Terminal, ChevronRight, FileText, RefreshCw
 } from 'lucide-react';
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69918ad956166c66b33e2ffc/048c9dd05_EscroPay-Brand-Logo2.png";
