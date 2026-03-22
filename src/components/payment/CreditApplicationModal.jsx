@@ -82,7 +82,7 @@ export default function CreditApplicationModal({ isOpen, onClose, escrow, onCred
 
     Promise.all([
       base44.auth.me().catch(() => null),
-      base44.entities.Escrow.list('-created_date').catch(() => [])
+      base44.entities.Escrow.list('-created_date', 100).catch(() => [])
     ]).then(([u, allEscrows]) => {
       setUser(u);
       const userEscrows = allEscrows.filter(e =>

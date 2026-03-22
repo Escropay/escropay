@@ -113,7 +113,7 @@ export default function TransactionAlertsTab() {
 
   const { data: alerts = [], isLoading } = useQuery({
     queryKey: ['transaction-alerts'],
-    queryFn: () => base44.entities.TransactionAlert.list('-triggered_at', 200)
+    queryFn: () => base44.entities.TransactionAlert.list('-created_date', 200)
   });
 
   const updateMutation = useMutation({

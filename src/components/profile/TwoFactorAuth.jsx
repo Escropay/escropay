@@ -21,7 +21,7 @@ export default function TwoFactorAuth({ user }) {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     setGeneratedCode(otp);
 
-    await base44.integrations.Core.SendEmail({
+    await base44.functions.invoke('sendEmail', {
       to: user.email,
       subject: 'Your Escropay 2FA Code',
       body: `
