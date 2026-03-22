@@ -102,18 +102,14 @@ export default function MilestonePanel({ escrow, onUpdate, isLoading, currentUse
         message: `Buyer approved "${milestone.title}" (${formatCurrency(milestone.amount)}). Payout will be processed.`,
         action_url: `/EscrowView?id=${escrow.id}`
       });
-      // Notify admins for payout processing
-      const admins = await base44.entities.User.filter({ role: 'admin' });
-      for (const admin of admins) {
-        await base44.entities.Notification.create({
-          user_email: admin.email,
-          type: 'admin_action_required',
-          escrow_id: escrow.id,
-          title: 'Milestone Payout Required',
-          message: `Milestone "${milestone.title}" approved for ${escrow.title}. Process payout of ${formatCurrency(milestone.amount)} to ${escrow.seller_name || escrow.seller_email}.`,
-          action_url: `/Admin`
-        });
-      }
+      // Notify admins for payout processing via backend function
+      await base44.functions.invoke('notifyAdmins', {
+        title: 'Milestone Payout Required',
+        message: `Milestone "${milestone.title}" approved for ${escrow.title}. Process payout of ${formatCurrency(milestone.amount)} to ${escrow.seller_name || escrow.seller_email}.`,
+        escrow_id: escrow.id,
+        type: 'admin_action_required',
+        action_url: '/Admin'
+      }).catch(() => {});
     }
   };
 
