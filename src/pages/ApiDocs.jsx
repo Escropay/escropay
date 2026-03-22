@@ -320,7 +320,7 @@ export default function ApiDocs() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/"><img src={LOGO_URL} alt="Escropay" className="h-8 md:h-10 w-auto" /></Link>
           <div className="flex items-center gap-3">
-            <Link to={createPageUrl('Documentation')}>
+            <Link to="/Documentation">
               <Button variant="outline" size="sm" className="border-purple-200 text-purple-600">
                 <BookOpen className="w-4 h-4 mr-1" /> Docs
               </Button>
