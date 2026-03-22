@@ -4,7 +4,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import {
   Sheet,
   SheetContent,
@@ -14,10 +13,7 @@ import {
 } from "@/components/ui/sheet";
 import { 
   MessageCircle, 
-  Send, 
-  X,
-  User,
-  Clock
+  Send
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -189,7 +185,7 @@ export default function InAppChat({ escrowId, escrowTitle, currentUser, otherPar
               <Input
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                onKeyDown={handleKeyPress}
+                onKeyDown={handleKeyDown}
                 placeholder="Type a message..."
                 className="flex-1"
               />

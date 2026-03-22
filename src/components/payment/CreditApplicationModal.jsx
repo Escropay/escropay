@@ -9,8 +9,6 @@ import {
   CheckCircle2,
   XCircle,
   Loader2,
-  Shield,
-  TrendingUp,
   AlertTriangle,
   Info,
   ChevronRight,

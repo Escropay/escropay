@@ -8,7 +8,6 @@ import { Shield, ShieldCheck, Mail, Smartphone, Loader2, CheckCircle2 } from 'lu
 
 export default function TwoFactorAuth({ user }) {
   const [step, setStep] = useState('idle'); // idle | sending | verify | done
-  const [method, setMethod] = useState('email');
   const [code, setCode] = useState('');
   const [generatedCode, setGeneratedCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
