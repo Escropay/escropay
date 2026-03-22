@@ -145,7 +145,7 @@ function HomeInner() {
             className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-24 max-w-4xl mx-auto"
           >
             {[
-              { value: '$2.5M+', label: 'Protected' },
+              { value: 'R2.5M+', label: 'Protected' },
               { value: '10K+', label: 'Transactions' },
               { value: '99.9%', label: 'Uptime' },
               { value: '24/7', label: 'Support' }

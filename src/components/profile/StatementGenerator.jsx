@@ -77,11 +77,11 @@ export default function StatementGenerator({ escrows }) {
         <div class="label">Total Transactions</div>
       </div>
       <div class="summary-item">
-        <div class="value">$${totalVolume.toLocaleString()}</div>
+        <div class="value">R${totalVolume.toLocaleString('en-ZA')}</div>
         <div class="label">Total Volume</div>
       </div>
       <div class="summary-item">
-        <div class="value">$${releasedVolume.toLocaleString()}</div>
+        <div class="value">R${releasedVolume.toLocaleString('en-ZA')}</div>
         <div class="label">Released</div>
       </div>
     </div>
@@ -104,7 +104,7 @@ export default function StatementGenerator({ escrows }) {
           <td>${e.created_date ? format(new Date(e.created_date), 'MMM d, yyyy') : '-'}</td>
           <td>${e.title}</td>
           <td>${e.buyer_email} / ${e.seller_email}</td>
-          <td>$${e.amount?.toLocaleString()}</td>
+          <td>R${e.amount?.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
           <td><span class="status status-${e.status}">${e.status}</span></td>
         </tr>
       `).join('')}
