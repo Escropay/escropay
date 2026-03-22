@@ -111,8 +111,8 @@ export const EmailService = {
     `;
 
     return sendEmail({
-      to: recipientEmail,
-      subject: `New Escrow: ${escrow.title} - R ${escrow.amount?.toLocaleString()}`,
+       to: recipientEmail,
+       subject: `New Escrow: ${escrow?.title} - R ${escrow?.amount ? escrow.amount.toLocaleString() : '0'}`,
       body: getEmailTemplate(content, 'New Escrow Created'),
     });
   },
