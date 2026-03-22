@@ -109,7 +109,7 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
 
   const handleRequestPayout = async () => {
     if (!hasBanking) {
-      window.location.href = `/EscrowView?id=${escrow.id}`;
+      navigate(`/EscrowView?id=${escrow.id}`);
       return;
     }
     await onUpdate(escrow.id, { payout_requested: true, payout_requested_at: new Date().toISOString() });
