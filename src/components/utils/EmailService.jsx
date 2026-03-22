@@ -216,9 +216,11 @@ export const EmailService = {
 
   // Escrow invitation to recipient (seller)
   async sendEscrowInvitationEmail(escrow) {
-    const baseUrl = window.location.hostname === 'localhost' || window.location.hostname.includes('preview-sandbox')
-      ? 'https://escropay.app'
-      : window.location.origin;
+    const baseUrl = typeof window !== 'undefined'
+      ? (window.location.hostname === 'localhost' || window.location.hostname.includes('preview-sandbox') || window.location.hostname.includes('base44')
+        ? 'https://escropay.app'
+        : window.location.origin)
+      : 'https://escropay.app';
     const escrowLink = `${baseUrl}/EscrowView?id=${escrow.id}`;
     const sellerName = escrow.seller_name || 'there';
     const buyerName = escrow.buyer_name || escrow.buyer_email;

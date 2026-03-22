@@ -20,7 +20,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
-    const { user_id, action, notes, edd_required } = await req.json();
+    const { user_id, action, notes } = await req.json();
     // action: 'approve' | 'reject' | 'require_edd' | 'suspend' | 'terminate'
 
     if (!user_id || !action) {
@@ -65,7 +65,7 @@ Deno.serve(async (req) => {
       const history = existing.review_history || [];
       await base44.asServiceRole.entities.ComplianceRecord.update(existing.id, {
         cdd_status: mapping.cdd_status,
-        edd_required: edd_required || false,
+        edd_required: action === 'require_edd',
         identity_verified: action === 'approve',
         identity_verified_at: action === 'approve' ? new Date().toISOString() : null,
         identity_verified_by: action === 'approve' ? actor.email : null,

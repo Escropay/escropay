@@ -242,9 +242,10 @@ function DashboardInner() {
                   <h3 className="text-lg font-medium text-gray-900 mb-2">No escrows found</h3>
                   <p className="text-gray-500 mb-6">Create your first escrow to get started</p>
                   <Button
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => canUseEscrow && setIsModalOpen(true)}
+                    disabled={!canUseEscrow}
                     variant="outline"
-                    className="border-purple-500/30 text-purple-600 hover:bg-purple-50"
+                    className="border-purple-500/30 text-purple-600 hover:bg-purple-50 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Create Escrow
