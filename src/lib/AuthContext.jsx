@@ -51,7 +51,6 @@ export const AuthProvider = ({ children }) => {
         // Handle app-level errors
         const reason = appError.data?.extra_data?.reason || appError.data?.reason;
         if (appError.status === 403 && reason) {
-          const reason = appError.data?.extra_data?.reason || appError.data?.reason;
           if (reason === 'auth_required') {
             setAuthError({
               type: 'auth_required',
