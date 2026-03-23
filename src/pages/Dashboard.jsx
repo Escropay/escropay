@@ -48,7 +48,7 @@ function DashboardInner() {
           { buyer_email: currentUser.email },
           { seller_email: currentUser.email }
         ]
-      }, '-created_date', 100);
+      }, '-created_date');
     },
     enabled: !!currentUser?.email
   });

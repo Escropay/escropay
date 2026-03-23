@@ -238,15 +238,15 @@ export default function EscrowCard({ escrow, onAction, onUpdate, index = 0, curr
                     </Badge>
                   ) : (
                     <Button
-                       size="sm"
-                       onClick={handleBuyerRequestRelease}
-                       disabled={escrow.milestones && escrow.milestones.length > 0 && !escrow.milestones.every(m => m.status === 'approved')}
-                       title={escrow.milestones && escrow.milestones.length > 0 && !escrow.milestones.every(m => m.status === 'approved') ? 'All milestones must be approved before releasing funds' : ''}
-                       className="bg-emerald-500 hover:bg-emerald-600 text-white disabled:opacity-50"
-                     >
-                       <CheckCircle2 className="w-4 h-4 mr-1" />
-                       Release
-                     </Button>
+                      size="sm"
+                      onClick={handleBuyerRequestRelease}
+                      disabled={!(escrow.milestones?.length === 0 || !escrow.milestones || escrow.milestones.every(m => m.status === 'approved'))}
+                      title={!(escrow.milestones?.every(m => m.status === 'approved') ?? true) ? 'All milestones must be approved before releasing funds' : ''}
+                      className="bg-emerald-500 hover:bg-emerald-600 text-white disabled:opacity-50"
+                    >
+                      <CheckCircle2 className="w-4 h-4 mr-1" />
+                      Release
+                    </Button>
                   )
                 )}
               </>
