@@ -218,9 +218,9 @@ Deno.serve(async (req) => {
 
     // ── 8. Notify Admins if restricted/terminated/high-risk ───────────────
     if (['restricted', 'terminated', 'blacklisted'].includes(newAccountStatus) || eddRequired) {
-      try {
-        const admins = await base44.asServiceRole.entities.User.filter({ role: 'admin' }, '-created_date', 100);
-        await Promise.all(admins.map(admin =>
+      // Fire-and-forget — don't let notification failure block the compliance result
+      base44.asServiceRole.entities.User.filter({ role: 'admin' }).then(admins => {
+        return Promise.all(admins.map(admin =>
           base44.asServiceRole.entities.Notification.create({
             user_email: admin.email,
             type: 'admin_action_required',
@@ -229,9 +229,7 @@ Deno.serve(async (req) => {
             action_url: '/Admin'
           }).catch(() => {})
         ));
-      } catch (err) {
-        console.error('Admin notification failed:', err.message);
-      }
+      }).catch(() => {});
     }
 
     return Response.json({

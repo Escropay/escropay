@@ -60,13 +60,12 @@ Deno.serve(async (req) => {
     for (const escrow of recentEscrows) {
       if (escrow.amount >= 45000 && escrow.amount < 50000) {
         const user = userMap[escrow.buyer_email];
-        if (!user) continue;
         alerts.push({
           alert_type: 'just_below_threshold',
           rule_id: 'RULE_012',
           severity: 'critical',
           user_email: escrow.buyer_email,
-          user_id: user.id,
+          user_id: user?.id,
           escrow_id: escrow.id,
           description: `RULE_012: Transaction R${escrow.amount.toLocaleString()} just below FICA reporting threshold`,
           triggered_at: now.toISOString(),

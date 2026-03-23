@@ -29,7 +29,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const admins = await base44.asServiceRole.entities.User.filter({ role: 'admin' }, '-created_date', 100);
+    const admins = await base44.asServiceRole.entities.User.filter({ role: 'admin' });
     for (const admin of admins) {
       await base44.asServiceRole.entities.Notification.create({
         user_email: admin.email,

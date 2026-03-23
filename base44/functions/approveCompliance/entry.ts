@@ -28,7 +28,7 @@ Deno.serve(async (req) => {
     }
 
     const users = await base44.asServiceRole.entities.User.filter({ id: user_id });
-    if (!users || users.length === 0) return Response.json({ error: 'User not found' }, { status: 404 });
+    if (!users.length) return Response.json({ error: 'User not found' }, { status: 404 });
     const user = users[0];
 
     // Determine new statuses
