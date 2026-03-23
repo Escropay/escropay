@@ -72,7 +72,7 @@ export default function Onboarding() {
       base44.functions.invoke('runOnboardingCompliance', {
         user_id: user.id,
         user_email: user.email
-      }).catch(() => {});
+      }).catch(() => {}); // fire-and-forget
     }
     navigate('/Dashboard');
   };

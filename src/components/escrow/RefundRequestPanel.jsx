@@ -49,7 +49,7 @@ export default function RefundRequestPanel({ escrow, currentUser, onUpdate }) {
   };
 
   const handleAdminDecision = async (approved, notes = '') => {
-    if (!isAdmin || !escrow.refund_request) return;
+    if (!isAdmin) return;
     setIsSubmitting(true);
     try {
       const updates = {
